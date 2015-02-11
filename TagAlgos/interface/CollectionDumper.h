@@ -25,6 +25,10 @@
 #include "RooWorkspace.h"
 #include "RooMsgService.h"
 
+#include "flashgg/MicroAODAlgos/interface/CutBasedClassifier.h"
+#include "flashgg/TagAlgos/interface/GlobalVariablesDumper.h"
+
+
 /**
    \class CollectionDumper
    \brief Example class that can be used to analyze pat::Photons both within FWLite and within the full framework
@@ -44,34 +48,6 @@ namespace flashgg {
 		TrivialClassifier(const edm::ParameterSet &cfg) {}
 		
 		std::pair<std::string,int> operator()(const T& obj) const { return std::make_pair("",0); }
-	};
-
-	template <class T>
-	class CutBasedClassifier {
-	public:
-		typedef StringCutObjectSelector<T,true> functor_type;
-
-		CutBasedClassifier(const edm::ParameterSet &cfg) {
-			auto categories = cfg.getParameter<std::vector<edm::ParameterSet> >("categories");
-			
-			for(auto & cat : categories ) {
-				auto cut = cat.getParameter<std::string>("cut");
-				auto name = cat.getUntrackedParameter<std::string>("name",Form("cat%lu",cuts_.size()));
-				
-				cuts_.push_back( std::make_pair(functor_type(cut),name) );
-			}
-		}
-		
-		std::pair<std::string,int> operator()(const T& obj) const { 
-			for(auto & cut : cuts_) {
-				if( cut.first(obj) ) { return std::make_pair(cut.second,0); }
-			}
-			return std::make_pair("",0); 
-		}
-		
-	private:
-		std::vector<std::pair<functor_type,std::string> > cuts_;
-		
 	};
 		
 	template <class T>
@@ -116,6 +92,7 @@ namespace flashgg {
 		
 		/// default constructor
 		CollectionDumper(const edm::ParameterSet& cfg, TFileDirectory& fs);
+		CollectionDumper(const edm::ParameterSet& cfg, TFileDirectory& fs,const edm::ConsumesCollector & cc) : CollectionDumper(cfg,fs) {};
 		/// default destructor
 		/// ~CollectionDumper();
 		/// everything that needs to be done before the event loop
@@ -140,7 +117,7 @@ namespace flashgg {
 		bool dumpTrees_; 
 		bool dumpWorkspace_;
 		std::string workspaceName_;
-		bool dumpHistos_;
+		bool dumpHistos_, dumpGlobalVariables_;
 		
 		classifier_type classifier_;
 		std::map<std::string,bool> hasSubcat_;
@@ -152,7 +129,8 @@ namespace flashgg {
 		RooWorkspace * ws_;
 		/// TTree * bookTree(const std::string & name, TFileDirectory& fs);
 		/// void fillTreeBranches(const flashgg::Photon & pho)
-
+		
+		GlobalVariablesDumper * globalVarsDumper_;
 	};
 	
 	template<class C, class T, class U>
@@ -169,7 +147,9 @@ namespace flashgg {
 		dumpWorkspace_(cfg.getUntrackedParameter<bool>("dumpWorkspace",false)),
 		workspaceName_(cfg.getUntrackedParameter<std::string>("workspaceName",src_.label())),
 		dumpHistos_(cfg.getUntrackedParameter<bool>("dumpHistos",false)),
-		classifier_(cfg.getParameter<edm::ParameterSet>("classifierCfg"))
+		dumpGlobalVariables_(cfg.getUntrackedParameter<bool>("dumpGlobalVariables",true)),
+		classifier_(cfg.getParameter<edm::ParameterSet>("classifierCfg")),
+		globalVarsDumper_(0)
 		
 	{
 		if( cfg.getUntrackedParameter<bool>("quietRooFit",false) ) {
@@ -182,6 +162,10 @@ namespace flashgg {
 		replacements.insert(std::make_pair("$SQRTS",Form("%1.0fTeV",sqrtS_)));
 		nameTemplate_ = formatString(nameTemplate_,replacements);
 		
+		if(dumpGlobalVariables_) {
+			globalVarsDumper_ = new GlobalVariablesDumper(cfg.getParameter<edm::ParameterSet>("globalVariables"));
+		}
+
 		auto categories = cfg.getParameter<std::vector<edm::ParameterSet> >("categories");
 		for( auto & cat : categories ) {
 			auto label   = cat.getParameter<std::string>("label");
@@ -191,11 +175,11 @@ namespace flashgg {
 			auto & dumpers = dumpers_[label];
 			if(subcats == 0 ) {
 				name=replaceString( replaceString( replaceString( name, "_$SUBCAT", "" ), "$SUBCAT_", ""), "$SUBCAT", "");
-				dumpers.push_back(dumper_type(name,cat));
+				dumpers.push_back(dumper_type(name,cat,globalVarsDumper_));
 			} else {
 				for(int isub=0; isub<subcats; ++isub) {
 					name=replaceString( name, "$SUBCAT", Form("%d",isub) );
-					dumpers.push_back(dumper_type(name,cat));
+					dumpers.push_back(dumper_type(name,cat,globalVarsDumper_));
 				}
 			}
 		}
@@ -254,6 +238,8 @@ namespace flashgg {
 		const auto & collection = *collectionH;
 		
 		weight_ = getEventWeight(event);
+		
+		if(globalVarsDumper_) { globalVarsDumper_->fill(event); }
 		
 		int nfilled = maxCandPerEvent_;
 		for(auto & cand : collection) {
