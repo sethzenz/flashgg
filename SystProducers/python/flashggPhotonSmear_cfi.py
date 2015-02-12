@@ -2,5 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 flashggSmearPhoton = cms.EDProducer('FlashggPhotonSystematicProducer',
 		PhotonTag = cms.untracked.InputTag('flashggPhotons'),
-		SystMethodName=cms.string("FlashggSimplePhotonSmear")
+		SystMethodNames = cms.VPSet(cms.PSet( name = cms.untracked.string("FlashggSimplePhotonSmear")),
+			                    cms.PSet( name = cms.untracked.string("FlashggShiftPhotonId"))	
+			)
 		)

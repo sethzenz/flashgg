@@ -8,6 +8,7 @@
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
 #include "flashgg/SystAlgos/interface/BaseSystMethods.h"
+//#include "flashgg/SystAlgos/interface/ApplySystVariations.h"
 
 using namespace edm;
 using namespace std;
@@ -25,41 +26,125 @@ namespace flashgg {
 
 			edm::EDGetTokenT<View<flashgg::Photon> > PhotonToken_; 	
 
-			unique_ptr<BaseSystMethods> systematicMethod_;
+			std::vector<shared_ptr<BaseSystMethods> > Corrections_;
+			//std::vector<BaseSystMethods*> Corrections_;
 	};
 
 	PhotonSystematicProducer::PhotonSystematicProducer(const ParameterSet & iConfig) :
 
 		PhotonToken_(consumes<View<flashgg::Photon> >(iConfig.getUntrackedParameter<InputTag>("PhotonTag", InputTag("flashggPhotons"))))
 		{
-			const std::string& SystematicMethod = iConfig.getParameter<std::string>("SystMethodName");
-			systematicMethod_.reset(FlashggSystematicMethodsFactory::get()->create(SystematicMethod,iConfig));
-			produces<vector<flashgg::Photon> >("A");
-			produces<vector<flashgg::Photon> >("B");
+			//const std::vector<std::string>& SystematicMethod = iConfig.getParameter<std::vector<string> >("SystMethodName");
 
-		}	
+			std::vector<edm::ParameterSet> vpset = iConfig.getParameterSetVector("SystMethodNames");
+
+			int size = vpset.size();
+
+			std::vector<std::string> names;
+
+			for(int s = 0; s < size ; s++){
+
+				std::string name = vpset.at(s).getUntrackedParameter<std::string>("name");//problem here at runtime, seems I am not actually doing this right. This parameter is needed for the constructor in the Base Class, BaseSystMethods.h line # 18
+
+				names.push_back(name); 
+
+				Corrections_.at(s).reset(FlashggSystematicPhotonMethodsFactory::get()->create(name,iConfig));
+
+				produces<vector<flashgg::Photon> >(Form("collection%i,%i",s,s));
+
+				//			int correction_num = SystematicMethod.size();
+
+				//			for (int i = 0 ; i < correction_num; i++){
+				//
+				//				Corrections_.at(i).reset(FlashggSystematicPhotonMethodsFactory::get()->create(SystematicMethod.at(i),iConfig));
+				//
+				//				produces<vector<flashgg::Photon> >(Form("collection%i,%i",i,i));
+				//
+				//			}
+			}
+		}
+
+///fucntion takes in the current corection one is looping through and compares with its own internal loop, given that this will be within the corr and sys loop it takes care of the 2n+1 collection number////
+
+	void ApplyCorrection(flashgg::Photon & y, std::vector<shared_ptr<BaseSystMethods> > Corr, shared_ptr<BaseSystMethods> CorrToShift, double syst_shift, int corr_size){
+
+
+		for( int shift = 0; shift < corr_size; shift++){
+
+			if(CorrToShift == Corr.at(shift)){
+
+				CorrToShift->applyCorrection(y,syst_shift);	
+
+			}else{
+
+				CorrToShift->applyCorrection(y,0.);
+
+			}
+		}
+
+	}
 
 	void PhotonSystematicProducer::produce( Event & evt, const EventSetup & ) {
 
 		Handle<View<flashgg::Photon> > photons;
 		evt.getByToken(PhotonToken_,photons);
-		const PtrVector<flashgg::Photon>& photonPointers = photons->ptrVector();	
-	
-		auto_ptr<vector<flashgg::Photon> > correctionA(new vector<flashgg::Photon>);
-		auto_ptr<vector<flashgg::Photon> > correctionB(new vector<flashgg::Photon>);
+		const PtrVector<flashgg::Photon>& photonPointers = photons->ptrVector();
 
-		for(unsigned int i = 0; i < photonPointers.size(); i++){
+		int num_corr = Corrections_.size();
 
-			flashgg::Photon pho = *photonPointers[i]; 		
+		std::vector<int> syst_shift = {-1,0,1};
 
-			systematicMethod_->applySystematic(pho,0.5);				
-			correctionA->push_back(pho);
-			systematicMethod_->applySystematic(pho,2.0);				
-			correctionB->push_back(pho);	
+		//		std::vector<std::vector<flashgg::Photon>* > collections;
+
+		std::vector<flashgg::Photon> ** collections;////////create 2D array where rows are the # of systematci variations and colums are the # of corrections
+
+		collections = new std::vector<flashgg::Photon> * [3];
+
+		for(int l = 0; l<num_corr; l++){
+
+			collections[l] = new std::vector<flashgg::Photon>[num_corr];
 		}
 
-		evt.put(correctionA,"A");
-		evt.put(correctionB,"B");
+
+		//	 uses vector instead of an array, problem when running through the loop, there is no loop with 2n+1 indices to cover the whole vector///
+		//
+		//		for(int l = 0; l<2*num_corr+1; l++){
+		//
+		//			std::vector<flashgg::Photon> * vec = new std::vector<flashgg::Photon>;
+		//
+		//			collections.push_back(vec);
+		//		}
+
+		int photon_size = photonPointers.size();
+
+		for(int sys = 0; sys < 3 ; sys++){
+
+			for(int corr = 0; corr < num_corr; corr++){
+
+				for(int i = 0; i < photon_size; i++){
+
+					flashgg::Photon pho = *photonPointers[i];
+					//					ApplyCorrections(pho, Corrections_, sys , num_corr);
+					ApplyCorrection(pho,Corrections_,Corrections_.at(corr),sys,num_corr);
+					collections[sys][corr].push_back(pho);
+
+				}	
+
+			}
+		}
+
+
+		for(int j = 0; j<3;j++){	
+			for(int i = 0; i<num_corr; i++){
+
+				auto_ptr<std::vector<flashgg::Photon> > p(new std::vector<flashgg::Photon>);	
+
+				p.reset(&collections[j][i]);//transfers the owner ship of the pointer  "p"  //
+
+				evt.put(p,names.at(i));////ran out of ideas on how exactly to dynamically name the collections, this doesn't compile///
+			}
+		}
+
 	}
 }
 

@@ -5,6 +5,7 @@
 
 namespace flashgg {
 
+//	class SimplePhotonSmear: public BaseSystMethods<flashgg::Photon,float> {
 	class SimplePhotonSmear: public BaseSystMethods {
 
 
@@ -14,16 +15,16 @@ namespace flashgg {
 		//	SimplePhotonSmear();
 			
 		
-			void applySystematic( flashgg::Photon & y, float syst_shift) override;
+			void applyCorrection( flashgg::Photon & y, float syst_shift) override;
 	};
 
-	void SimplePhotonSmear::applySystematic( flashgg::Photon & y, float syst_shift=0.5)
+	void SimplePhotonSmear::applyCorrection( flashgg::Photon & y, float syst_shift=0.5)
 	{
 		y.updateEnergy("smearedEnergy",y.energy()*syst_shift);
 	}
 
 }
 
-DEFINE_EDM_PLUGIN(FlashggSystematicMethodsFactory,
+DEFINE_EDM_PLUGIN(FlashggSystematicPhotonMethodsFactory,
 		flashgg::SimplePhotonSmear,
 		"FlashggSimplePhotonSmear");	
