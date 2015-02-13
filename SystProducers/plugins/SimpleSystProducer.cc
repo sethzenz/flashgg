@@ -119,7 +119,7 @@ namespace flashgg {
 
 		collections = new std::vector<flashgg::Photon> * [3];
 
-		for(int l = 0; l<num_corr; l++){
+		for(int l = 0; l<3; l++){
 
 			collections[l] = new std::vector<flashgg::Photon>[num_corr];
 		}
