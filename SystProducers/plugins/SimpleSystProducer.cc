@@ -36,19 +36,31 @@ namespace flashgg {
 		{
 			//const std::vector<std::string>& SystematicMethod = iConfig.getParameter<std::vector<string> >("SystMethodName");
 
-			std::vector<edm::ParameterSet> vpset = iConfig.getParameterSetVector("SystMethodNames");
+			const std::vector<edm::ParameterSet> vpset = iConfig.getParameterSetVector("SystMethodNames");
 
 			int size = vpset.size();
 
-			std::vector<std::string> names;
+			std::vector<std::string> Names;
+
+			for(const auto&  pset : vpset){
+
+				std::string Name =  pset.getParameter<std::string>("MethodName");
+				std::cout << Name << std::endl;
+				Names.push_back(Name);	
+
+			}	
 
 			for(int s = 0; s < size ; s++){
 
-				std::string name = vpset.at(s).getUntrackedParameter<std::string>("name");//problem here at runtime, seems I am not actually doing this right. This parameter is needed for the constructor in the Base Class, BaseSystMethods.h line # 18
+				//	std::string name = vpset.at(s).getUntrackedParameter<std::string>("name");//problem here at runtime, seems I am not actually doing this right. This parameter is needed for the constructor in the Base Class, BaseSystMethods.h line # 18
 
-				names.push_back(name); 
+				//	names.push_back(name);
+				//
+				std::string& MethodName = Names.at(s); 
 
-				Corrections_.at(s).reset(FlashggSystematicPhotonMethodsFactory::get()->create(name,iConfig));
+				std::cout << MethodName << std::endl;
+
+				Corrections_.at(s).reset(FlashggSystematicPhotonMethodsFactory::get()->create(MethodName,iConfig));
 
 				produces<vector<flashgg::Photon> >(Form("collection%i,%i",s,s));
 
@@ -64,7 +76,7 @@ namespace flashgg {
 			}
 		}
 
-///fucntion takes in the current corection one is looping through and compares with its own internal loop, given that this will be within the corr and sys loop it takes care of the 2n+1 collection number////
+	///fucntion takes in the current corection one is looping through and compares with its own internal loop, given that this will be within the corr and sys loop it takes care of the 2n+1 collection number////
 
 	void ApplyCorrection(flashgg::Photon & y, std::vector<shared_ptr<BaseSystMethods> > Corr, shared_ptr<BaseSystMethods> CorrToShift, double syst_shift, int corr_size){
 
@@ -94,7 +106,7 @@ namespace flashgg {
 
 		std::vector<int> syst_shift = {-1,0,1};
 
-		//		std::vector<std::vector<flashgg::Photon>* > collections;
+		//				std::vector<std::vector<flashgg::Photon>* > collections;
 
 		std::vector<flashgg::Photon> ** collections;////////create 2D array where rows are the # of systematci variations and colums are the # of corrections
 
@@ -106,14 +118,14 @@ namespace flashgg {
 		}
 
 
-		//	 uses vector instead of an array, problem when running through the loop, there is no loop with 2n+1 indices to cover the whole vector///
-		//
-		//		for(int l = 0; l<2*num_corr+1; l++){
-		//
-		//			std::vector<flashgg::Photon> * vec = new std::vector<flashgg::Photon>;
-		//
-		//			collections.push_back(vec);
-		//		}
+		//uses vector instead of an array, problem when running through the loop, there is no loop with 2n+1 indices to cover the whole vector///
+
+		//				for(int l = 0; l<2*num_corr+1; l++){
+		//		
+		//					std::vector<flashgg::Photon> * vec = new std::vector<flashgg::Photon>;
+		//		
+		//					collections.push_back(vec);
+		//				}
 
 		int photon_size = photonPointers.size();
 
@@ -124,9 +136,10 @@ namespace flashgg {
 				for(int i = 0; i < photon_size; i++){
 
 					flashgg::Photon pho = *photonPointers[i];
-					//					ApplyCorrections(pho, Corrections_, sys , num_corr);
+					//				ApplyCorrections(pho, Corrections_, sys , num_corr);
 					ApplyCorrection(pho,Corrections_,Corrections_.at(corr),sys,num_corr);
 					collections[sys][corr].push_back(pho);
+					//	collections.at(i)->push_back(pho);
 
 				}	
 
@@ -140,8 +153,8 @@ namespace flashgg {
 				auto_ptr<std::vector<flashgg::Photon> > p(new std::vector<flashgg::Photon>);	
 
 				p.reset(&collections[j][i]);//transfers the owner ship of the pointer  "p"  //
-
-				evt.put(p,names.at(i));////ran out of ideas on how exactly to dynamically name the collections, this doesn't compile///
+				//p.reset(collections.at(i));
+				evt.put(p,Form("%i_%i",i,j));////ran out of ideas on how exactly to dynamically name the collections, this doesn't compile///
 			}
 		}
 

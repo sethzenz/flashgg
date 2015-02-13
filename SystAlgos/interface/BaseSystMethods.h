@@ -15,7 +15,7 @@ namespace flashgg {
 		public:
 
 			BaseSystMethods( const edm::ParameterSet& conf):
-			_SystematicName( conf.getUntrackedParameter<std::string>("name") ){ }
+			_SystematicName( conf.getParameter<std::string>("MethodName") ){ }
 			//BaseSystMethods();
 			//virtual ~BaseSystMethods();
 
