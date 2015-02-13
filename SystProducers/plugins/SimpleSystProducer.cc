@@ -36,19 +36,21 @@ namespace flashgg {
 		{
 			//const std::vector<std::string>& SystematicMethod = iConfig.getParameter<std::vector<string> >("SystMethodName");
 
-			const std::vector<edm::ParameterSet> vpset = iConfig.getParameterSetVector("SystMethodNames");
+			std::vector<edm::ParameterSet> vpset = iConfig.getParameter<std::vector<edm::ParameterSet> >("SystMethodNames");
 
 			int size = vpset.size();
 
 			std::vector<std::string> Names;
 
-			for(const auto&  pset : vpset){
+			for(std::vector<edm::ParameterSet>::const_iterator it = vpset.begin(); it < vpset.end() ; it++){
 
-				std::string Name =  pset.getParameter<std::string>("MethodName");
-				std::cout << Name << std::endl;
+
+				std::string Name =  it->getParameter<std::string>("MethodName");
+					
 				Names.push_back(Name);	
 
-			}	
+			}
+
 
 			for(int s = 0; s < size ; s++){
 
@@ -56,11 +58,16 @@ namespace flashgg {
 
 				//	names.push_back(name);
 				//
+				//
 				std::string& MethodName = Names.at(s); 
 
-				std::cout << MethodName << std::endl;
+				Corrections_.push_back(NULL);
 
-				Corrections_.at(s).reset(FlashggSystematicPhotonMethodsFactory::get()->create(MethodName,iConfig));
+				std::cout << Corrections_.size() << std::endl; 
+
+				Corrections_.at(s).reset(FlashggSystematicPhotonMethodsFactory::get()->create(MethodName,vpset[s]));
+
+				std::cout << "worked" << std::endl;
 
 				produces<vector<flashgg::Photon> >(Form("collection%i,%i",s,s));
 
