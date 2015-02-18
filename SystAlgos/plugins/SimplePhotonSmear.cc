@@ -5,24 +5,31 @@
 
 namespace flashgg {
 
-//	class SimplePhotonSmear: public BaseSystMethods<flashgg::Photon,float> {
+	//	class SimplePhotonSmear: public BaseSystMethods<flashgg::Photon,float> {
 	class SimplePhotonSmear: public BaseSystMethods {
 
 
 		public:
 			SimplePhotonSmear(const edm::ParameterSet& conf):
 				BaseSystMethods(conf){}
-		//	SimplePhotonSmear();
-			
-		
+			//	SimplePhotonSmear();
+
+
 			void applyCorrection( flashgg::Photon & y, float syst_shift) override;
 	};
 
-	void SimplePhotonSmear::applyCorrection( flashgg::Photon & y, float syst_shift=0.5)
+	void SimplePhotonSmear::applyCorrection( flashgg::Photon & y, float syst_shift)
 	{
-		y.updateEnergy("smearedEnergy",y.energy()*syst_shift);
-	}
+		if(syst_shift == 0 ){
+			
+			std::cout << "Nominal correction" << std::endl;
 
+		}else{
+			std::cout <<"momentum before correction  " << y.pt() << std::endl; 
+			y.updateEnergy("smearedEnergy",y.energy()+syst_shift);
+			std::cout << "corrected momentum value  " << y.pt() << std::endl;
+		}
+	}
 }
 
 DEFINE_EDM_PLUGIN(FlashggSystematicPhotonMethodsFactory,

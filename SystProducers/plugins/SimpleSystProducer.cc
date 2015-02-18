@@ -27,15 +27,12 @@ namespace flashgg {
 			edm::EDGetTokenT<View<flashgg::Photon> > PhotonToken_; 	
 
 			std::vector<shared_ptr<BaseSystMethods> > Corrections_;
-			//std::vector<BaseSystMethods*> Corrections_;
 	};
 
 	PhotonSystematicProducer::PhotonSystematicProducer(const ParameterSet & iConfig) :
 
 		PhotonToken_(consumes<View<flashgg::Photon> >(iConfig.getUntrackedParameter<InputTag>("PhotonTag", InputTag("flashggPhotons"))))
 		{
-			//const std::vector<std::string>& SystematicMethod = iConfig.getParameter<std::vector<string> >("SystMethodName");
-
 			std::vector<edm::ParameterSet> vpset = iConfig.getParameter<std::vector<edm::ParameterSet> >("SystMethodNames");
 
 			int size = vpset.size();
@@ -44,9 +41,8 @@ namespace flashgg {
 
 			for(std::vector<edm::ParameterSet>::const_iterator it = vpset.begin(); it < vpset.end() ; it++){
 
-
 				std::string Name =  it->getParameter<std::string>("MethodName");
-					
+
 				Names.push_back(Name);	
 
 			}
@@ -54,32 +50,23 @@ namespace flashgg {
 
 			for(int s = 0; s < size ; s++){
 
-				//	std::string name = vpset.at(s).getUntrackedParameter<std::string>("name");//problem here at runtime, seems I am not actually doing this right. This parameter is needed for the constructor in the Base Class, BaseSystMethods.h line # 18
-
-				//	names.push_back(name);
-				//
-				//
 				std::string& MethodName = Names.at(s); 
 
 				Corrections_.push_back(NULL);
 
-				std::cout << Corrections_.size() << std::endl; 
-
 				Corrections_.at(s).reset(FlashggSystematicPhotonMethodsFactory::get()->create(MethodName,vpset[s]));
 
-				std::cout << "worked" << std::endl;
+			}
 
-				produces<vector<flashgg::Photon> >(Form("collection%i,%i",s,s));
 
-				//			int correction_num = SystematicMethod.size();
+			for(int sys_size = 0; sys_size<3;sys_size++){
+				for( int g = 0; g<size; g++){
 
-				//			for (int i = 0 ; i < correction_num; i++){
-				//
-				//				Corrections_.at(i).reset(FlashggSystematicPhotonMethodsFactory::get()->create(SystematicMethod.at(i),iConfig));
-				//
-				//				produces<vector<flashgg::Photon> >(Form("collection%i,%i",i,i));
-				//
-				//			}
+					if(g == 1 && sys_size == 1)continue;
+					std::cout << Form("%i_%i",sys_size,g) << std::endl;
+					produces<vector<flashgg::Photon> >(Form("collection-%i-%i",sys_size,g));
+
+				}
 			}
 		}
 
@@ -89,6 +76,7 @@ namespace flashgg {
 
 
 		for( int shift = 0; shift < corr_size; shift++){
+
 
 			if(CorrToShift == Corr.at(shift)){
 
@@ -113,59 +101,78 @@ namespace flashgg {
 
 		std::vector<int> syst_shift = {-1,0,1};
 
-		//				std::vector<std::vector<flashgg::Photon>* > collections;
-
 		std::vector<flashgg::Photon> ** collections;////////create 2D array where rows are the # of systematci variations and colums are the # of corrections
 
-		collections = new std::vector<flashgg::Photon> * [3];
+		collections = new std::vector<flashgg::Photon> * [3];//width
 
 		for(int l = 0; l<3; l++){
 
-			collections[l] = new std::vector<flashgg::Photon>[num_corr];
+			collections[l] = new std::vector<flashgg::Photon>[num_corr];//height
 		}
 
-
-		//uses vector instead of an array, problem when running through the loop, there is no loop with 2n+1 indices to cover the whole vector///
-
-		//				for(int l = 0; l<2*num_corr+1; l++){
-		//		
-		//					std::vector<flashgg::Photon> * vec = new std::vector<flashgg::Photon>;
-		//		
-		//					collections.push_back(vec);
-		//				}
+		std::cout << sizeof(collections) << " " << sizeof(collections[0]) << std::endl;
 
 		int photon_size = photonPointers.size();
 
+		
+
 		for(int sys = 0; sys < 3 ; sys++){
 
-			for(int corr = 0; corr < num_corr; corr++){
+			std::cout << "sys iteration " << sys << std::endl;
+			std::cout << "Number of photons " << photon_size << std::endl;
 
-				for(int i = 0; i < photon_size; i++){
+			for(int i = 0; i < photon_size; i++){
+				
+				std::cout  << "photon #  "  << i << std::endl;
 
-					flashgg::Photon pho = *photonPointers[i];
-					//				ApplyCorrections(pho, Corrections_, sys , num_corr);
-					ApplyCorrection(pho,Corrections_,Corrections_.at(corr),sys,num_corr);
-					collections[sys][corr].push_back(pho);
-					//	collections.at(i)->push_back(pho);
+				for(int corr = 0; corr < num_corr; corr++){
 
+					if(sys == 1 && corr == 1)continue;	
+
+					if(sys==0){
+						flashgg::Photon pho = *photonPointers[i];
+						std::cout << "corrections name  " << Corrections_.at(corr)->name() << std::endl;
+						Corrections_.at(corr)->applyCorrection(pho,syst_shift.at(sys));
+						collections[sys][corr].push_back(pho);
+					}else{
+						std::cout << "correction index " << corr << std::endl;
+						flashgg::Photon pho = *photonPointers[i];
+						std::cout << "corrections name  " << Corrections_.at(corr)->name() << std::endl;
+						ApplyCorrection(pho,Corrections_,Corrections_.at(corr),syst_shift.at(sys),num_corr);
+						collections[sys][corr].push_back(pho);
+						
+					}
 				}	
 
 			}
 		}
-
+			
+		
 
 		for(int j = 0; j<3;j++){	
 			for(int i = 0; i<num_corr; i++){
-
-				auto_ptr<std::vector<flashgg::Photon> > p(new std::vector<flashgg::Photon>);	
-
+				if(j==1 && i==1)continue;
+				std::cout << Form("%i-%i",j,i) << std::endl;
+				auto_ptr<std::vector<flashgg::Photon> > p(new std::vector<flashgg::Photon>);
+				std::cout << "photon momentum before reseting " << collections[j][i].at(0).pt() << std::endl;
+				std::cout << "photon momentum before reseting " << collections[j][i].at(1).pt() << std::endl;
+				std::cout << "photon momentum before reseting " << collections[j][i].at(2).pt() << std::endl;
+				std::cout << "photon momentum before reseting " << collections[j][i].at(3).pt() << std::endl;
 				p.reset(&collections[j][i]);//transfers the owner ship of the pointer  "p"  //
-				//p.reset(collections.at(i));
-				evt.put(p,Form("%i_%i",i,j));////ran out of ideas on how exactly to dynamically name the collections, this doesn't compile///
+				//p = collections[i][j];	
+				std::cout << "momentum after reseting the pointer Photon 1  " << (*p).at(0).pt() << std::endl;
+				std::cout << "momentum after reseting the pointer Photon 2  " << (*p).at(1).pt() << std::endl;
+				std::cout << "momentum after reseting the pointer Photon 3  " << (*p).at(2).pt() << std::endl;
+				std::cout << "momentum after reseting the pointer Photon 4  " << (*p).at(3).pt() << std::endl;
+		
+				evt.put(p,Form("collection-%i-%i",j,i));////ran out of ideas on how exactly to dynamically name the collections, this doesn't compile///
+				std::cout << "worked put step" << std::endl;
 			}
+				//std::cout << "worked after pu loop " << std::endl;
 		}
-
+		//std::cout << "end of produce function" << std::endl;
 	}
+
 }
 
 
