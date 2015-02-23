@@ -21,74 +21,69 @@ namespace flashgg {
 			PhotonSystematicProducer(const edm::ParameterSet&);
 
 		private:
-
+	  		
 			void produce(edm::Event&, const edm::EventSetup&) override;
-
 			edm::EDGetTokenT<View<flashgg::Photon> > PhotonToken_; 	
-
 			std::vector<shared_ptr<BaseSystMethods> > Corrections_;
+			std::vector<std::vector<double> > sigmas_;
+			unsigned int nOutputsNonCentral_;
+
+			void ApplyCorrections(flashgg::Photon & y, shared_ptr<BaseSystMethods> CorrToShift, double syst_shift);
+	  //			std::vector<std::vector<std::string> > labels_;
+
+	  //			unsigned int Index2Np1(unsigned int indN, unsigned int indSigma);
+	  //			unsigned int IndexSigma(unsigned int ind2Np1);
+	  //	  		unsigned int IndexN(unsigned int ind2Np1);
+
 	};
 
 	PhotonSystematicProducer::PhotonSystematicProducer(const ParameterSet & iConfig) :
-
 		PhotonToken_(consumes<View<flashgg::Photon> >(iConfig.getUntrackedParameter<InputTag>("PhotonTag", InputTag("flashggPhotons"))))
-		{
-			std::vector<edm::ParameterSet> vpset = iConfig.getParameter<std::vector<edm::ParameterSet> >("SystMethodNames");
+	{
+		produces<std::vector<flashgg::Photon> >("Central"); // Central value
+		std::vector<edm::ParameterSet> vpset = iConfig.getParameter<std::vector<edm::ParameterSet> >("SystMethodNames");
 
-			int size = vpset.size();
+		std::vector<double> default_sigmas; 
+		default_sigmas.push_back(-1.); 
+		default_sigmas.push_back(1.);
 
-			std::vector<std::string> Names;
+		// TODO Set size of Corrections_ here!!! (is labels_ needed too???)
+		Corrections_.resize(vpset.size());
 
-			for(std::vector<edm::ParameterSet>::const_iterator it = vpset.begin(); it < vpset.end() ; it++){
-
-				std::string Name =  it->getParameter<std::string>("MethodName");
-
-				Names.push_back(Name);	
-
-			}
-
-
-			for(int s = 0; s < size ; s++){
-
-				std::string& MethodName = Names.at(s); 
-
-				Corrections_.push_back(NULL);
-
-				Corrections_.at(s).reset(FlashggSystematicPhotonMethodsFactory::get()->create(MethodName,vpset[s]));
-
-			}
-
-
-			for(int sys_size = 0; sys_size<3;sys_size++){
-				for( int g = 0; g<size; g++){
-
-					if(g == 1 && sys_size == 1)continue;
-					std::cout << Form("%i_%i",sys_size,g) << std::endl;
-					produces<vector<flashgg::Photon> >(Form("collection-%i-%i",sys_size,g));
-
+		nOutputsNonCentral_ = 0;
+		unsigned int ipset = 0;
+		for( const auto& pset : vpset ) {
+			std::string methodName = pset.getParameter<string>("MethodName");
+			sigmas_.push_back(pset.getUntrackedParameter<vector<double> >("NSigmas",default_sigmas));
+			std::vector<double> nsigmas = pset.getUntrackedParameter<vector<double> >("NSigmas",default_sigmas);
+			nsigmas.erase(std::remove(nsigmas.begin(), nsigmas.end(), 0.), nsigmas.end()); // remove 0 values
+			// TODO remove 0 if present
+			sigmas_.push_back(nsigmas);
+			Corrections_.at(ipset).reset(FlashggSystematicPhotonMethodsFactory::get()->create(methodName,vpset[s]));
+			for (const auto &sig : sigmas_.at(ipset)) {
+				if (sig < 0.) {
+					std::string label = Form("%sUp%.2d_sigma",methodName.c_str(),sig);
+				} else {
+					std::string label = Form("%sDown%.2d_sigma",methodName.c_str(),sig);
 				}
+				produces<vector<flashgg::Photon> >(label);
+				nOutputsNonCentral_++;
 			}
+			ipset++;
 		}
-
+	}
+  
 	///fucntion takes in the current corection one is looping through and compares with its own internal loop, given that this will be within the corr and sys loop it takes care of the 2n+1 collection number////
 
-	void ApplyCorrection(flashgg::Photon & y, std::vector<shared_ptr<BaseSystMethods> > Corr, shared_ptr<BaseSystMethods> CorrToShift, double syst_shift, int corr_size){
-
-
-		for( int shift = 0; shift < corr_size; shift++){
-
-
-			if(CorrToShift == Corr.at(shift)){
-
+	void PhotonSystematicProducer::ApplyCorrections(flashgg::Photon & y, shared_ptr<BaseSystMethods> CorrToShift, double syst_shift)
+	{
+		for( unsigned int shift = 0; shift < Corrections_.size(); shift++){
+			if(CorrToShift == Corrections_.at(shift)){
 				CorrToShift->applyCorrection(y,syst_shift);	
-
 			}else{
-
 				CorrToShift->applyCorrection(y,0.);
-
 			}
 		}
-
 	}
 
 	void PhotonSystematicProducer::produce( Event & evt, const EventSetup & ) {
@@ -97,82 +92,39 @@ namespace flashgg {
 		evt.getByToken(PhotonToken_,photons);
 		const PtrVector<flashgg::Photon>& photonPointers = photons->ptrVector();
 
-		int num_corr = Corrections_.size();
-
-		std::vector<int> syst_shift = {-1,0,1};
-
-		std::vector<flashgg::Photon> ** collections;////////create 2D array where rows are the # of systematci variations and colums are the # of corrections
-
-		collections = new std::vector<flashgg::Photon> * [3];//width
-
-		for(int l = 0; l<3; l++){
-
-			collections[l] = new std::vector<flashgg::Photon>[num_corr];//height
-		}
-
-		std::cout << sizeof(collections) << " " << sizeof(collections[0]) << std::endl;
-
+		std::vector<std::vector<flashgg::Photon> > all_collections;
+		all_collections.resize(nOutputsNonCentral_);
+		
 		int photon_size = photonPointers.size();
-
-		
-
-		for(int sys = 0; sys < 3 ; sys++){
-
-			std::cout << "sys iteration " << sys << std::endl;
-			std::cout << "Number of photons " << photon_size << std::endl;
-
-			for(int i = 0; i < photon_size; i++){
-				
-				std::cout  << "photon #  "  << i << std::endl;
-
-				for(int corr = 0; corr < num_corr; corr++){
-
-					if(sys == 1 && corr == 1)continue;	
-
-					if(sys==0){
-						flashgg::Photon pho = *photonPointers[i];
-						std::cout << "corrections name  " << Corrections_.at(corr)->name() << std::endl;
-						Corrections_.at(corr)->applyCorrection(pho,syst_shift.at(sys));
-						collections[sys][corr].push_back(pho);
-					}else{
-						std::cout << "correction index " << corr << std::endl;
-						flashgg::Photon pho = *photonPointers[i];
-						std::cout << "corrections name  " << Corrections_.at(corr)->name() << std::endl;
-						ApplyCorrection(pho,Corrections_,Corrections_.at(corr),syst_shift.at(sys),num_corr);
-						collections[sys][corr].push_back(pho);
-						
-					}
-				}	
-
+`
+		// Build central collection
+		auto_ptr<vector<flashgg::Photon> > centralPhotonColl(new vector<flashgg::Photon>);
+		for(int i = 0; i < photon_size; i++) {
+			for (unsigned int ncorr = 0 ; ncorr < Corrections_.size() ; ncorr++) {
+				flashgg::Photon pho = flashgg::Photon(*photonPointers[i]);
+				ApplyCorrections(pho, Corrections_.at(ncorr), 0.);
+				centralPhotonColl->push_back(pho);
 			}
 		}
-			
-		
-
-		for(int j = 0; j<3;j++){	
-			for(int i = 0; i<num_corr; i++){
-				if(j==1 && i==1)continue;
-				std::cout << Form("%i-%i",j,i) << std::endl;
-				auto_ptr<std::vector<flashgg::Photon> > p(new std::vector<flashgg::Photon>);
-				std::cout << "photon momentum before reseting " << collections[j][i].at(0).pt() << std::endl;
-				std::cout << "photon momentum before reseting " << collections[j][i].at(1).pt() << std::endl;
-				std::cout << "photon momentum before reseting " << collections[j][i].at(2).pt() << std::endl;
-				std::cout << "photon momentum before reseting " << collections[j][i].at(3).pt() << std::endl;
-				p.reset(&collections[j][i]);//transfers the owner ship of the pointer  "p"  //
-				//p = collections[i][j];	
-				std::cout << "momentum after reseting the pointer Photon 1  " << (*p).at(0).pt() << std::endl;
-				std::cout << "momentum after reseting the pointer Photon 2  " << (*p).at(1).pt() << std::endl;
-				std::cout << "momentum after reseting the pointer Photon 3  " << (*p).at(2).pt() << std::endl;
-				std::cout << "momentum after reseting the pointer Photon 4  " << (*p).at(3).pt() << std::endl;
-		
-				evt.put(p,Form("collection-%i-%i",j,i));////ran out of ideas on how exactly to dynamically name the collections, this doesn't compile///
-				std::cout << "worked put step" << std::endl;
+		event.put(centralPhotonColl); // put central collection in event
+		      
+		// build shifted collections
+		for(int i = 0; i < photon_size; i++) {
+			unsigned int ncoll = 0;  
+			for (unsigned int ncorr = 0 ; ncorr < Corrections_.size() ; ncorr++) {
+				for (  const auto & sig : sigmas_at(ncorr)) {
+					flashgg::Photon pho = flashgg::Photon(*photonPointers[i]);
+					ApplyCorrections(pho, Corrections_.at(ncorr), sig);
+					all_collections[ncoll++].push_back(pho);
+				}
 			}
-				//std::cout << "worked after pu loop " << std::endl;
 		}
-		//std::cout << "end of produce function" << std::endl;
-	}
 
+		for (unsigned int ncoll = 0 ; ncoll < all_collections.size() ; ncoll++) {
+			auto_ptr<vector<flashgg::Photon> > nonCentralPhotonColl (all_collections[ncoll]);
+			event.put(nonCentralPhotonColl)
+		}
+	} // event of event
 }
 
 

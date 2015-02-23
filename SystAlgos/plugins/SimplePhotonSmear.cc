@@ -20,7 +20,7 @@ namespace flashgg {
 
 	void SimplePhotonSmear::applyCorrection( flashgg::Photon & y, float syst_shift)
 	{
-		if(syst_shift == 0 ){
+		if(syst_shift == 0. ){
 			
 			std::cout << "Nominal correction" << std::endl;
 
