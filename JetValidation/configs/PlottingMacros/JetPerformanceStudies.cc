@@ -58,7 +58,8 @@ void JetPerformanceStudies(int catbin=1, bool withPUJID=false){
   std::map<TString,TGraphAsymmErrors*>   eff_vs_eat;	  
   std::map<TString,TGraph*>              roc_curve;       
   
-  TFile *file        = TFile::Open("/afs/cern.ch/work/y/yhaddad/jetValidationTrees_VBF_HToGG_PU20bx25.root");
+  //  TFile *file        = TFile::Open("/afs/cern.ch/work/y/yhaddad/jetValidationTrees_VBF_HToGG_PU20bx25.root");
+  TFile *file = TFile::Open("../Seth_V6_VBF.root");
   JetTree["PF"]      = (TTree*)file->Get("flashggJetValidationTreeMaker/jetTree_PF");
   JetTree["PFCHS0"]  = (TTree*)file->Get("flashggJetValidationTreeMakerPFCHS0/jetTree_PFCHS0"); 
   JetTree["PFCHSLeg"]= (TTree*)file->Get("flashggJetValidationTreeMakerPFCHSLeg/jetTree_PFCHSLeg"); 
@@ -95,13 +96,13 @@ void JetPerformanceStudies(int catbin=1, bool withPUJID=false){
   TCut cut_genjetmatch    = "genJetMatch>0";
   TCut cut_recojetmatch   = "recoJetMatch>0";
   
-  TCut cut_all = cut_pt && && cat;
+  TCut cut_all = cut_pt && cat;
   if(withPUJID) cut_all = cut_all && cut_PUJID;
   
   TCut cut_gen_all = cut_gen_pt && cut_gen_photon_rej && cat;
   // ===> Only for def
   
-  TFile *fplots = new TFile(Form("plots/perfomances_cat_%i_PUJID_%i.root",catbin,withPUJID),"UPDATE");
+  TFile *fplots = new TFile(Form("plots/perfomances_cat_%i_PUJID_%i.root",catbin,withPUJID),"RECREATE");
   fplots->cd();
   for (std::map<TString,TTree*>::iterator it=JetTree.begin(); it!=JetTree.end(); ++it){
     h_pt_all[it->first] = new TH1F(Form("h_pt_all_%s",it->first.Data()),

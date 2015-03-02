@@ -56,7 +56,8 @@ void JetPerformanceStudies_ETA(int catbin=1, bool withPUJID=true){
   std::map<TString,TGraph*>              roc_curve;       
     
   
-  TFile *file        = TFile::Open("/afs/cern.ch/work/y/yhaddad/jetValidationTrees_VBF_HToGG_PU20bx25.root");
+  //  TFile *file        = TFile::Open("/afs/cern.ch/work/y/yhaddad/jetValidationTrees_VBF_HToGG_PU20bx25.root");
+  TFile *file = TFile::Open("../Seth_V6_VBF.root");
   JetTree["PF"]      = (TTree*)file->Get("flashggJetValidationTreeMaker/jetTree_PF");
   JetTree["PFCHS0"]  = (TTree*)file->Get("flashggJetValidationTreeMakerPFCHS0/jetTree_PFCHS0"); 
   JetTree["PFCHSLeg"]= (TTree*)file->Get("flashggJetValidationTreeMakerPFCHSLeg/jetTree_PFCHSLeg"); 

@@ -281,7 +281,7 @@ void PFCHSLegVsPFCHS0(int catbin=1, TString sample ="VBF", bool vetex=true){
   TFile *file;
   
   if     (sample == "VBF") 
-    file = TFile::Open("../SethTEST_GluGluToHToGG_M-125_13TeV_JetValidationTree_v02.root");
+    file = TFile::Open("../Seth_V6_VBF.root");
   else if(sample == "GGF") 
     file = TFile::Open("/afs/cern.ch/work/y/yhaddad/GluGluToHToGG_M-125_13TeV_JetValidationTree.root");
   else return;

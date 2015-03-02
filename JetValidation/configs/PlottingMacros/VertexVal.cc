@@ -33,7 +33,7 @@ void VertexVal(int event=-1){
   
   
   double cut_pt= 0;
-  double step  = 5;
+  double step  = 1;
   for(int i=0; i < 5; i++){
     cut_pt = i*step; 
     if(event ==-1){
@@ -58,13 +58,14 @@ void VertexVal(int event=-1){
     //latex.DrawLatex(.7,.9,Form("Tracks with : p_{t} > %3.1f",cut_pt));
     h_varpt_CHS0  [cut_pt]->GetYaxis()->SetRangeUser(0.1,1.5e5);
     h_varpt_CHS0  [cut_pt]->Draw();
+    h_varpt_CHSLeg[cut_pt]->SetLineStyle(2);
     h_varpt_CHSLeg[cut_pt]->Draw("same");
     if(event ==-1){
       varpt_Canv[cut_pt]->SaveAs(Form("plots/vertex_CHS0_CHSLeg_pt_%i.pdf",i));
       varpt_Canv[cut_pt]->SaveAs(Form("plots/vertex_CHS0_CHSLeg_pt_%i.png",i));
     }else{
-      varpt_Canv[cut_pt]->SaveAs(Form("plots/vertex_CHS0_CHSLeg_evtNo_%i_pt_%i.pdf",i,event));
-      varpt_Canv[cut_pt]->SaveAs(Form("plots/vertex_CHS0_CHSLeg_evtNo_%i_pt_%i.png",i,event));
+      varpt_Canv[cut_pt]->SaveAs(Form("plots/vertex_CHS0_CHSLeg_evtNo_%i_pt_%i.pdf",event,int(cut_pt)));
+      varpt_Canv[cut_pt]->SaveAs(Form("plots/vertex_CHS0_CHSLeg_evtNo_%i_pt_%i.png",event,int(cut_pt)));
     }
   }
 

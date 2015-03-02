@@ -15,14 +15,17 @@ process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 100 )
 
 # +++++ the input source file
 process.source = cms.Source("PoolSource",                #fileNames=cms.untracked.vstring("file:/afs/cern.ch/work/y/yhaddad/JobSending/HggPUJIDValPhys14/crab_Phys14MicroAODV1_VBF_HToGG_M-125_13TeV-powheg-pythia6_00/results/JetValidationMicroAOD_1.root")) 
-                        fileNames=cms.untracked.vstring("file:myMicroAODOutputFile.root"))
+                        fileNames=cms.untracked.vstring("/store/group/phys_higgs/cmshgg/sethzenz/flashgg/HggPhys14/Phys14MicroAODJetV6/VBF_HToGG_M-125_13TeV-powheg-pythia6/HggPhys14-Phys14MicroAODJetV6-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150228_112259/0000/myMicroAODOutputFile_1.root",
+"/store/group/phys_higgs/cmshgg/sethzenz/flashgg/HggPhys14/Phys14MicroAODJetV6/VBF_HToGG_M-125_13TeV-powheg-pythia6/HggPhys14-Phys14MicroAODJetV6-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150228_112259/0000/myMicroAODOutputFile_2.root",
+"/store/group/phys_higgs/cmshgg/sethzenz/flashgg/HggPhys14/Phys14MicroAODJetV6/VBF_HToGG_M-125_13TeV-powheg-pythia6/HggPhys14-Phys14MicroAODJetV6-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150228_112259/0000/myMicroAODOutputFile_3.root",
+"/store/group/phys_higgs/cmshgg/sethzenz/flashgg/HggPhys14/Phys14MicroAODJetV6/VBF_HToGG_M-125_13TeV-powheg-pythia6/HggPhys14-Phys14MicroAODJetV6-v0-Phys14DR-PU20bx25_PHYS14_25_V1-v1/150228_112259/0000/myMicroAODOutputFile_4.root"))
 
 process.MessageLogger.cerr.threshold = 'ERROR'
 
 # +++++ the output files
 process.TFileService = cms.Service("TFileService",fileName = 
                                    #cms.string("/afs/cern.ch/work/y/yhaddad/VBF_HToGG_M-125_13TeV_JetValidationTree_v02.root"))
-                                   cms.string("SethTEST_GluGluToHToGG_M-125_13TeV_JetValidationTree_v02.root"))
+                                   cms.string("Seth_V6_VBF.root"))
 
 # +++++ the processes
 process.flashggJetValidationTreeMaker         = cms.EDAnalyzer('FlashggJetValidationTreeMaker',
