@@ -122,6 +122,15 @@ cd $CMSSW_BASE/src/flashgg/MetaData/work
 cd HggPhys14
 echo crabConfig_*Phys14MicroAODJetV6*.py | xargs -n 1 crab sub
 
+### PHYS14 JetV7, 3 March 2015
+
+Get JEC from PHYS14_25_V2
+
+cd $CMSSW_BASE/src/flashgg/MetaData/work
+./prepareCrabJobs.py -C HggPhys14 -U 1 -s campaigns/Phys14_GGF_VBF_samples.json -V Phys14MicroAODJetV7 -p $CMSSW_BASE/src/flashgg/JetValidation/configs/MicroAODProducer_jets_grid.py
+cd HggPhys14
+echo crabConfig_*Phys14MicroAODJetV7*.py | xargs -n 1 crab sub
+
 
 ## Running on microAODs
 
