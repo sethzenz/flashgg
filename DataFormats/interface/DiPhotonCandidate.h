@@ -8,7 +8,7 @@
 namespace flashgg {
     class SinglePhotonView;
 
-    class DiPhotonCandidate : public reco::CompositeCandidate
+    class DiPhotonCandidate
     {
     public:
         DiPhotonCandidate();
@@ -17,14 +17,12 @@ namespace flashgg {
         ~DiPhotonCandidate();
 
         const edm::Ptr<reco::Vertex> vtx() const { return vertex_; }
-        const flashgg::Photon *leadingPhoton() const;
-        const flashgg::Photon *subLeadingPhoton() const;
 
-        flashgg::Photon &getLeadingPhoton();
-        flashgg::Photon &getSubLeadingPhoton();
+        const edm::Ptr<flashgg::Photon> leadingPhoton() const { return phoView1.photonRef(); }
+        const edm::Ptr<flashgg::Photon> subLeadingPhoton() const { return phoView2.photonRef(); }
 
-        flashgg::SinglePhotonView leadingView() const;
-        flashgg::SinglePhotonView subLeadingView() const;
+        flashgg::SinglePhotonView leadingView() const { return phoView1_; }
+        flashgg::SinglePhotonView subLeadingView() const { return phoView2_; }
 
         void setLogSumPt2( float val ) { logsumpt2_ = val; }
         void setPtBal( float val ) { ptbal_ = val; }
@@ -106,6 +104,9 @@ namespace flashgg {
         std::vector<float> vmva_value_;
         std::vector<unsigned int> vmva_sortedindex_;
         std::vector<edm::Ptr<reco::Vertex> > vVtxPtr_;
+		
+		flashgg::SinglePhotonView phoView1_;
+		flashgg::SinglePhotonView phoView2_;
 
     };
 
