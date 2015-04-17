@@ -21,21 +21,21 @@ namespace flashgg {
         SinglePhotonView() : pho_( 0 ), dipho_( 0 ), isRef_( 0 ) {}
         SinglePhotonView( dipho_ptr_type dipho, int daughter ) : edmdipho_( dipho ), daughter_( daughter ), pho_( 0 ), dipho_( 0 ), isRef_( 0 ) {}
         SinglePhotonView( const DiPhotonCandidate *dipho, int daughter ) : daughter_( daughter ), pho_( 0 ), dipho_( dipho ), isRef_( 0 ) {}
-        SinglePhotonView( pho_ptr_type pho, vtx_ptr_type vtx ) : phoRef_( pho ), vtxRef_( vtx ), isRef_( 1 ) {}
+        SinglePhotonView( pho_ptr_type pho, vtx_ptr_type vtx ) : pho_( 0 ), dipho_( 0 ), phoRef_( pho ), vtxRef_( vtx ), isRef_( 1 ) {}
 
         const cand_type &photon() const { daughterMaybe(); return *pho_; }
-        const pho_ptr_type &photonRefPtr() const { return *phoRef_; }
-
+		
         const cand_type *operator->() const { daughterMaybe(); return pho_; }
+		
         const pho_ptr_type photonRef() const { return phoRef_; }
 
-        float pfChIso02WrtChosenVtx() const { return ( (isRef_) ? photonRef().pfChgIso02WrtVtx( vtxRef_ ) : photon().pfChgIso02WrtVtx( dipho_->vtx() ) ); }
-        float pfChIso03WrtChosenVtx() const { return ( (isRef_) ? photonRef().pfChgIso03WrtVtx( vtxRef_ ) : photon().pfChgIso03WrtVtx( dipho_->vtx() ) ); }
-        float pfChIso04WrtChosenVtx() const { return ( (isRef_) ? photonRef().pfChgIso04WrtVtx( vtxRef_ ) : photon().pfChgIso04WrtVtx( dipho_->vtx() ) ); }
+        float pfChIso02WrtChosenVtx() const { return ( (isRef_) ? photonRef()->pfChgIso02WrtVtx( vtxRef_ ) : photon().pfChgIso02WrtVtx( dipho_->vtx() ) ); }
+        float pfChIso03WrtChosenVtx() const { return ( (isRef_) ? photonRef()->pfChgIso03WrtVtx( vtxRef_ ) : photon().pfChgIso03WrtVtx( dipho_->vtx() ) ); }
+        float pfChIso04WrtChosenVtx() const { return ( (isRef_) ? photonRef()->pfChgIso04WrtVtx( vtxRef_ ) : photon().pfChgIso04WrtVtx( dipho_->vtx() ) ); }
 
-        float phoIdMvaWrtChosenVtx() const { return photon().phoIdMvaDWrtVtx( dipho_->vtx() ); }
+        float phoIdMvaWrtChosenVtx() const { return ( (isRef_) ? photonRef()->phoIdMvaDWrtVtx( vtxRef_ ) : photon().phoIdMvaDWrtVtx( dipho_->vtx() ) ); }
 
-        float extraChIsoWrtChoosenVtx( const std::string &key ) const { return ( (isRef_) ? photonRef().extraChgIsoWrtVtx( key, vtxRef_ ) : photon().extraChgIsoWrtVtx( key, dipho_->vtx() ) ); }
+        float extraChIsoWrtChoosenVtx( const std::string &key ) const { return ( (isRef_) ? photonRef()->extraChgIsoWrtVtx( key, vtxRef_ ) : photon().extraChgIsoWrtVtx( key, dipho_->vtx() ) ); }
 
         bool isRef() const { return isRef_; }
 
@@ -43,13 +43,12 @@ namespace flashgg {
         void daughterMaybe() const;
 
         dipho_ptr_type edmdipho_;
-        pho_ptr_type phoRef_;
-        vtx_ptr_type vtxRef_;
         int daughter_;
-        bool isRef_;
         mutable const Photon *pho_;
         mutable const DiPhotonCandidate *dipho_;
-
+        pho_ptr_type phoRef_;
+        vtx_ptr_type vtxRef_;
+        bool isRef_;
     };
 }
 
