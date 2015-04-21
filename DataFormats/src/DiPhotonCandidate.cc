@@ -44,18 +44,18 @@ DiPhotonCandidate::DiPhotonCandidate( edm::Ptr<flashgg::Photon> photon1, edm::Pt
 //	corrPho2_ = phoIDutils.pho4MomCorrectionTLVector(photon2, vertex);
 }
 
-DiPhotonCandidate::DiPhotonCandidate( const flashgg::Photon &photon1, const flashgg::Photon &photon2, edm::Ptr<reco::Vertex> vertex )
-{
-//    addDaughter( photon1 );
-//    addDaughter( photon2 );
-//    vertex_ = vertex;
-
-    // Adding momenta
-    // Needs its own object - but why?
-    // Copied from example
-//    AddFourMomenta addP4;
-//    addP4.set( *this );
-}
+// DiPhotonCandidate::DiPhotonCandidate( const flashgg::Photon &photon1, const flashgg::Photon &photon2, edm::Ptr<reco::Vertex> vertex )
+// {
+// //    addDaughter( photon1 );
+// //    addDaughter( photon2 );
+// //    vertex_ = vertex;
+//
+//     // Adding momenta
+//     // Needs its own object - but why?
+//     // Copied from example
+// //    AddFourMomenta addP4;
+// //    addP4.set( *this );
+// }
 
 const edm::Ptr<flashgg::Photon> DiPhotonCandidate::leadingPhotonPtr() const
 {

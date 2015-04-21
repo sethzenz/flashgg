@@ -7,14 +7,14 @@
 #include "DataFormats/VertexReco/interface/Vertex.h"
 
 namespace flashgg {
-    class SinglePhotonView;
+//    class SinglePhotonView;
 
     class DiPhotonCandidate : public math::XYZTLorentzVector
     {
     public:
         DiPhotonCandidate();
         DiPhotonCandidate( edm::Ptr<flashgg::Photon>, edm::Ptr<flashgg::Photon>, edm::Ptr<reco::Vertex>);
-        DiPhotonCandidate( const flashgg::Photon &, const flashgg::Photon &, edm::Ptr<reco::Vertex>);
+//        DiPhotonCandidate( const flashgg::Photon &, const flashgg::Photon &, edm::Ptr<reco::Vertex>);
         ~DiPhotonCandidate();
 
         const edm::Ptr<reco::Vertex> vtx() const { return vertex_; }
