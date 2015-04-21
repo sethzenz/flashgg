@@ -107,7 +107,7 @@ namespace flashgg {
                 photon1_corr.setpfChgIsoWrtChosenVtx03( photon1_corr.pfChgIso03WrtVtx( pvx ) );
                 photon2_corr.setpfChgIsoWrtChosenVtx03( photon2_corr.pfChgIso03WrtVtx( pvx ) );
 
-                DiPhotonCandidate dipho( photon1_corr, photon2_corr, pvx );
+                DiPhotonCandidate dipho( photon1_corr, photon2_corr, pvx);
                 dipho.setVertexIndex( ivtx );
 
                 // Obviously the last selection has to be for this diphoton or this is wrong

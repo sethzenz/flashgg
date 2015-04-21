@@ -2,28 +2,36 @@
 #define FLASHgg_DiPhotonCandidate_h
 
 #include "DataFormats/Candidate/interface/CompositeCandidate.h"
+#include "DataFormats/Candidate/interface/ShallowCloneCandidate.h"
 #include "flashgg/DataFormats/interface/Photon.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 
 namespace flashgg {
     class SinglePhotonView;
 
-    class DiPhotonCandidate
+    class DiPhotonCandidate : public math::XYZTLorentzVector
     {
     public:
         DiPhotonCandidate();
-        DiPhotonCandidate( edm::Ptr<flashgg::Photon>, edm::Ptr<flashgg::Photon>, edm::Ptr<reco::Vertex> );
-        DiPhotonCandidate( const flashgg::Photon &, const flashgg::Photon &, edm::Ptr<reco::Vertex> );
+        DiPhotonCandidate( edm::Ptr<flashgg::Photon>, edm::Ptr<flashgg::Photon>, edm::Ptr<reco::Vertex>);
+        DiPhotonCandidate( const flashgg::Photon &, const flashgg::Photon &, edm::Ptr<reco::Vertex>);
         ~DiPhotonCandidate();
 
         const edm::Ptr<reco::Vertex> vtx() const { return vertex_; }
+        const edm::Ptr<flashgg::Photon> leadingPhotonPtr() const;
+        const edm::Ptr<flashgg::Photon> subLeadingPhotonPtr() const;
 
-        const edm::Ptr<flashgg::Photon> leadingPhoton() const { return phoView1.photonRef(); }
-        const edm::Ptr<flashgg::Photon> subLeadingPhoton() const { return phoView2.photonRef(); }
-
-        flashgg::SinglePhotonView leadingView() const { return phoView1_; }
-        flashgg::SinglePhotonView subLeadingView() const { return phoView2_; }
-
+		
+        const flashgg::Photon *leadingPhoton() const;
+        const flashgg::Photon *subLeadingPhoton() const;
+		
+        flashgg::Photon &getLeadingPhoton();
+        flashgg::Photon &getSubLeadingPhoton();
+/*
+        flashgg::SinglePhotonView leadingView() const;
+        flashgg::SinglePhotonView subLeadingView() const;
+*/
+		
         void setLogSumPt2( float val ) { logsumpt2_ = val; }
         void setPtBal( float val ) { ptbal_ = val; }
         void setPtAsym( float val ) { ptasym_ = val; }
@@ -61,7 +69,8 @@ namespace flashgg {
         float vtxProbMVA() const { return vtxprobmva_; }
         float sumPt() const
         {
-            return ( this->daughter( 0 )->pt() + this->daughter( 1 )->pt() );
+//            return ( this->daughter( 0 )->pt() + this->daughter( 1 )->pt() );
+            return ( Pho1_->pt() + Pho2_->pt() );
         }
         int vertexIndex() const { return vertex_index_; }
 
@@ -77,7 +86,10 @@ namespace flashgg {
 
         float leadPhotonId() const { return leadingPhoton()->phoIdMvaDWrtVtx( vertex_ ); }
         float subLeadPhotonId() const { return subLeadingPhoton()->phoIdMvaDWrtVtx( vertex_ ); }
-
+		
+		math::XYZTLorentzVector Pho1P4Corr () const;
+		math::XYZTLorentzVector Pho2P4Corr () const;
+		
     private:
 
         edm::Ptr<reco::Vertex> vertex_;
@@ -105,9 +117,11 @@ namespace flashgg {
         std::vector<unsigned int> vmva_sortedindex_;
         std::vector<edm::Ptr<reco::Vertex> > vVtxPtr_;
 		
-		flashgg::SinglePhotonView phoView1_;
-		flashgg::SinglePhotonView phoView2_;
-
+		math::XYZTLorentzVector corrPho1_;
+		math::XYZTLorentzVector corrPho2_;
+		
+		edm::Ptr<flashgg::Photon> Pho1_;
+		edm::Ptr<flashgg::Photon> Pho2_;
     };
 
 

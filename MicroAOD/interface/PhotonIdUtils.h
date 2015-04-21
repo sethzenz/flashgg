@@ -62,6 +62,7 @@ namespace flashgg {
         float              computeMVAWrtVtx( flashgg::Photon &, const edm::Ptr<reco::Vertex> &, const double );
 
         static flashgg::Photon     pho4MomCorrection( edm::Ptr<flashgg::Photon> &, edm::Ptr<reco::Vertex> );
+		math::XYZTLorentzVector     pho4MomCorrectionTLVector( edm::Ptr<flashgg::Photon> &, edm::Ptr<reco::Vertex> );
 
         static bool vetoPackedCand( const pat::Photon &photon, const edm::Ptr<pat::PackedCandidate> &pfcand );
 
