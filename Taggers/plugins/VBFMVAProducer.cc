@@ -178,8 +178,17 @@ namespace flashgg {
                     dijet_pts.second = jet->pt();
                 }
                 // if the jet's pt is neither higher than the lead jet or sublead jet, then forget it!
-                if( dijet_indices.first != -1 && dijet_indices.second != -1 ) {hasValidVBFDijet = 1;}
+                if( dijet_indices.first != -1 && dijet_indices.second != -1 ) {
+                    std::pair < Ptr<flashgg::Jet>, Ptr<flashgg::Jet> > dijet;
+                    // fill dijet pair with lead jet as first, sublead as second.                                                                                                                                                                      
+                    dijet.first =  jetsDz->ptrAt( dijet_indices.first );
+                    dijet.second =  jetsDz->ptrAt( dijet_indices.second );
+                    auto leadJet_p4 =  dijet.first->p4();
+                    auto sublJet_p4 =  dijet.second->p4();
+                    auto dijet_p4 = leadJet_p4 + sublJet_p4;
 
+                    if (dijet_p4.M() > _minDijetMinv && dijet.first->pt() >30. && dijet.second->pt()>20.) { hasValidVBFDijet =1;}
+                }
             }
             //std::cout << "[VBF] has valid VBF Dijet ? "<< hasValidVBFDijet<< std::endl;
             if( hasValidVBFDijet ) {

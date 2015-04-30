@@ -5,7 +5,7 @@ flashggVBFMVA = cms.EDProducer('FlashggVBFMVAProducer',
 		DiPhotonTag=cms.untracked.InputTag('flashggDiPhotons'),
 		JetTag=cms.untracked.InputTag('flashggJets'),
 		UseLegacyMVA = cms.untracked.bool(True),
-		MinDijetMinv = cms.double(0.0),
+		MinDijetMinv = cms.double(250.0),
 		vbfMVAweightfile = cms.FileInPath("flashgg/Taggers/data/TMVA_dijet_sherpa_scalewt50_2evenb_powheg200_maxdPhi_oct9_Gradient.weights.xml"),
 		)
 
@@ -24,7 +24,7 @@ flashggVBFMVANew = cms.EDProducer('FlashggVBFMVAProducer',
 		DiPhotonTag = cms.untracked.InputTag('flashggDiPhotons'),
 		JetTag = cms.untracked.InputTag('flashggJets'),
 		UseLegacyMVA = cms.untracked.bool(False),
-		MinDijetMinv = cms.double(0.0),
+		MinDijetMinv = cms.double(250.0),
 		vbfMVAweightfile = cms.FileInPath("flashgg/Taggers/test/MVATraining/weights/Flashgg_VBF_BDT.weights.xml"),
 		)
 
