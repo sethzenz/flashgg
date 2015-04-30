@@ -18,11 +18,13 @@
 #include "flashgg/DataFormats/interface/VBFDiPhoDiJetMVAResult.h"
 #include "flashgg/DataFormats/interface/VBFMVAResult.h"
 #include "flashgg/DataFormats/interface/VBFTag.h"
+#include "flashgg/DataFormats/interface/VBFTruth.h"
 #include "flashgg/DataFormats/interface/VHHadronicTag.h"
 #include "flashgg/DataFormats/interface/VHLooseTag.h"
 #include "flashgg/DataFormats/interface/VHTightTag.h"
 #include "flashgg/DataFormats/interface/DiMuonCandidate.h"   //JTao
 #include "flashgg/DataFormats/interface/MuMuGammaCandidate.h"   //JTao
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include <vector>
 #include <map>
 
@@ -136,6 +138,10 @@ namespace  {
         std::vector<flashgg::VBFTag> vec_vbf_cat;
         edm::Wrapper<std::vector<flashgg::VBFTag> > wrp_vec_vbf_cat;
 
+        flashgg::VBFTruth vbf_tru;
+        std::vector<flashgg::VBFTruth> vec_vbf_tru;
+        edm::Wrapper<std::vector<flashgg::VBFTruth> > wrp_vec_vbf_tru;
+
         flashgg::TTHLeptonicTag tthl;
         std::vector<flashgg::TTHLeptonicTag> vec_tthl;
         edm::Wrapper<std::vector<flashgg::TTHLeptonicTag> > wrp_vec_tthl;
@@ -183,6 +189,8 @@ namespace  {
 
         std::vector<edm::Ptr<pat::MET> >        vec_ptr_pat_met;
         edm::Wrapper<std::vector<edm::Ptr<pat::MET> > >   wrp_vec_ptr_pat_met;
+
+        edm::Ptr<reco::GenParticle> ptr_gen;
     };
 }
 // Local Variables:

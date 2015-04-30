@@ -102,8 +102,10 @@ namespace flashgg {
 
             const	VBFTag *vbftag = dynamic_cast<const VBFTag *>( chosenTag );
             if( vbftag != NULL ) {
-                std::cout << "[VBF] Category " << vbftag->categoryNumber() << " with lead jet eta "
-                          << vbftag->leadingJet().pt() << " and sublead jet eta " << vbftag->subLeadingJet().pt() << std::endl;
+                std::cout << "[VBF] Category " << vbftag->categoryNumber() << " with lead jet (pt, eta)=("
+                          << vbftag->leadingJet().pt() << ", " << vbftag->leadingJet().eta()
+                          << ") and sublead jet (pt, eta)=(" << vbftag->subLeadingJet().pt() 
+                          << ", " << vbftag->subLeadingJet().eta() << ")" << std::endl;
             }
 
             const   TTHHadronicTag *tthhadronictag = dynamic_cast<const TTHHadronicTag *>( chosenTag );

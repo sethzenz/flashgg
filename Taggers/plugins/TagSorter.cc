@@ -75,7 +75,7 @@ namespace flashgg {
             int c2 = pset.getUntrackedParameter<int>( "MaxCategory", 999 );
             unsigned int i = 0;
             for( ; i < labels.size() ; i++ ) {
-                std::cout << labels[i] << " " << tag.label() << std::endl;
+                //                std::cout << labels[i] << " " << tag.label() << std::endl;
                 if( labels[i] == tag.label() ) { break; }
             }
             if( i == TagList_.size() ) {
