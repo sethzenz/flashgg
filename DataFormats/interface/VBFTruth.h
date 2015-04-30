@@ -10,10 +10,12 @@ namespace flashgg {
     struct VBFTruth {
         edm::Ptr<reco::GenJet> closestGenJetToLeadingJet;
         edm::Ptr<reco::GenJet> closestGenJetToSubLeadingJet;
-        edm::Ptr<reco::GenParticle> closestParticleToLeadingJet; // status 3
-        edm::Ptr<reco::GenParticle> closestParticleToSubLeadingJet; // status 3
-        edm::Ptr<reco::GenParticle> closestParticleToLeadingPhoton; // status 3
-        edm::Ptr<reco::GenParticle> closestParticleToSubLeadingPhoton; // status 3
+        edm::Ptr<reco::GenParticle> closestParticleToLeadingJet;
+        edm::Ptr<reco::GenParticle> closestParticleToSubLeadingJet;
+        edm::Ptr<reco::GenParticle> closestParticleToLeadingPhoton;
+        edm::Ptr<reco::GenParticle> closestParticleToSubLeadingPhoton;
+        edm::Ptr<reco::GenParticle> leadingQuark;
+        edm::Ptr<reco::GenParticle> subLeadingQuark;
     };
 }
 

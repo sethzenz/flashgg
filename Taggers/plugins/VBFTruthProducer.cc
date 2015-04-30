@@ -113,11 +113,24 @@ namespace flashgg {
             truths->push_back(truth);
         }
 
+        unsigned int index_leadq = 999, index_subleadq = 999;
+        float pt_leadq = 0., pt_subleadq = 0.;
 
-        if (debug_) {
-            for( unsigned int genLoop =0 ; genLoop < genParticles->size(); genLoop++){
-                edm::Ptr<reco::GenParticle> part = genParticles->ptrAt(genLoop);
-                if (part->status() == 3) {
+        for( unsigned int genLoop =0 ; genLoop < genParticles->size(); genLoop++){
+            edm::Ptr<reco::GenParticle> part = genParticles->ptrAt(genLoop);
+            if (part->status() == 3) {
+                if (abs(part->pdgId()) <= 5) {
+                    if (part->pt() > pt_leadq) {
+                        index_subleadq = index_leadq;
+                        pt_subleadq = pt_leadq;
+                        index_leadq = genLoop;
+                        pt_leadq = part->pt();
+                    } else if (part->pt() > pt_subleadq) {
+                        index_subleadq = genLoop;
+                        pt_subleadq = part->pt();
+                    }
+                }
+                if (debug_) {
                     std::cout << setw(12) << part->pt();
                     std::cout << setw(12) << part->eta();
                     std::cout << setw(12) << part->phi();
@@ -129,6 +142,11 @@ namespace flashgg {
                     std::cout << std::endl;
                 }
             }
+        }
+
+        for (unsigned int i = 0 ; i < truths->size(); i++) {
+            truths->at(i).leadingQuark = genParticles->ptrAt(index_leadq);
+            truths->at(i).subLeadingQuark = genParticles->ptrAt(index_subleadq);
         }
 
         evt.put(truths);
