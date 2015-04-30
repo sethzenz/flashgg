@@ -8,6 +8,8 @@
 #include "flashgg/DataFormats/interface/VBFTag.h"
 #include "flashgg/DataFormats/interface/VBFTruth.h"
 
+#include "DataFormats/Math/interface/deltaR.h"
+
 #include <vector>
 
 using namespace std;
@@ -22,7 +24,6 @@ namespace flashgg {
         VBFTruthProducer( const ParameterSet & );
     private:
         void produce( Event &, const EventSetup & ) override;
-
 
         EDGetTokenT<View<reco::GenParticle> > genPartToken_;
         EDGetTokenT<View<reco::GenJet> > genJetToken_;
@@ -59,18 +60,72 @@ namespace flashgg {
             std::cout << setw(12) << "Status" << setw(12) << "PDG id" << setw(12) << "Rapidity";
             std::cout << setw(12) << "nMothers" << setw(12) << "nDaughters" << std::endl;
         }
-        
-        for( unsigned int genLoop =0 ; genLoop < genParticles->size(); genLoop++){
-            if (genParticles->ptrAt(genLoop)->status() == 3) {
-                if (debug_) {
-                    std::cout << setw(12) << genParticles->ptrAt(genLoop)->pt();
-                    std::cout << setw(12) << genParticles->ptrAt(genLoop)->eta();
-                    std::cout << setw(12) << genParticles->ptrAt(genLoop)->phi();
-                    std::cout << setw(12) << genParticles->ptrAt(genLoop)->status();
-                    std::cout << setw(12) << genParticles->ptrAt(genLoop)->pdgId();
-                    std::cout << setw(12) << genParticles->ptrAt(genLoop)->rapidity();
-                    std::cout << setw(12) << genParticles->ptrAt(genLoop)->numberOfMothers();
-                    std::cout << setw(12) << genParticles->ptrAt(genLoop)->numberOfDaughters();
+
+        for ( unsigned int vbfLoop=0 ; vbfLoop < vbfTags->size() ; vbfLoop++ ) {
+            unsigned int index_gp_leadjet=999, index_gp_subleadjet=999, index_gp_leadphoton=999, index_gp_subleadphoton=999, index_gj_leadjet=999, index_gj_subleadjet=999;
+            float dr_gp_leadjet=999., dr_gp_subleadjet=999., dr_gp_leadphoton=999., dr_gp_subleadphoton=999., dr_gj_leadjet=999., dr_gj_subleadjet=999.;
+            edm::Ptr<VBFTag> tag = vbfTags->ptrAt(vbfLoop);
+            VBFTruth truth;
+            for( unsigned int genLoop =0 ; genLoop < genParticles->size(); genLoop++){
+                edm::Ptr<reco::GenParticle> part = genParticles->ptrAt(genLoop);
+                if (part->status() == 3) {
+                    float dr = deltaR(tag->leadingJet().eta(),tag->leadingJet().phi(),part->eta(),part->phi());
+                    if (dr < dr_gp_leadjet) {
+                        dr_gp_leadjet = dr;
+                        index_gp_leadjet = genLoop;
+                    }
+                    dr = deltaR(tag->subLeadingJet().eta(),tag->subLeadingJet().phi(),part->eta(),part->phi());
+                    if (dr < dr_gp_subleadjet) {
+                        dr_gp_subleadjet =dr;
+                        index_gp_subleadjet = genLoop;
+                    }
+                    dr = deltaR(tag->diPhoton()->leadingPhoton()->eta(),tag->diPhoton()->leadingPhoton()->phi(),part->eta(),part->phi());
+                    if (dr < dr_gp_leadphoton) {
+                        dr_gp_leadphoton = dr;
+                        index_gp_leadphoton = genLoop;
+                    }
+                    dr = deltaR(tag->diPhoton()->subLeadingPhoton()->eta(),tag->diPhoton()->subLeadingPhoton()->phi(),part->eta(),part->phi());
+                    if (dr < dr_gp_subleadphoton) {
+                        dr_gp_subleadphoton =dr;
+                        index_gp_subleadphoton = genLoop;
+                    }
+                }
+            }
+            truth.closestParticleToLeadingJet = genParticles->ptrAt(index_gp_leadjet);
+            truth.closestParticleToSubLeadingJet =genParticles->ptrAt(index_gp_subleadjet);
+            truth.closestParticleToLeadingPhoton =genParticles->ptrAt(index_gp_leadphoton);
+            truth.closestParticleToSubLeadingPhoton =genParticles->ptrAt(index_gp_subleadphoton);
+            for ( unsigned int gjLoop = 0 ; gjLoop < genJets->size() ; gjLoop++ ) {
+                edm::Ptr<reco::GenJet> gj = genJets->ptrAt(gjLoop);
+                float dr = deltaR(tag->leadingJet().eta(),tag->leadingJet().phi(),gj->eta(),gj->phi());
+                if (dr < dr_gj_leadjet) {
+                    dr_gj_leadjet = dr;
+                    index_gj_leadjet = gjLoop;
+                }
+                dr = deltaR(tag->subLeadingJet().eta(),tag->subLeadingJet().phi(),gj->eta(),gj->phi());
+                if (dr < dr_gj_subleadjet) {
+                    dr_gj_subleadjet = dr;
+                    index_gj_subleadjet = gjLoop;
+                }
+            }
+            truth.closestGenJetToLeadingJet = genJets->ptrAt(index_gj_leadjet);
+            truth.closestGenJetToSubLeadingJet =genJets->ptrAt(index_gj_subleadjet);
+            truths->push_back(truth);
+        }
+
+
+        if (debug_) {
+            for( unsigned int genLoop =0 ; genLoop < genParticles->size(); genLoop++){
+                edm::Ptr<reco::GenParticle> part = genParticles->ptrAt(genLoop);
+                if (part->status() == 3) {
+                    std::cout << setw(12) << part->pt();
+                    std::cout << setw(12) << part->eta();
+                    std::cout << setw(12) << part->phi();
+                    std::cout << setw(12) << part->status();
+                    std::cout << setw(12) << part->pdgId();
+                    std::cout << setw(12) << part->rapidity();
+                    std::cout << setw(12) << part->numberOfMothers();
+                    std::cout << setw(12) << part->numberOfDaughters();
                     std::cout << std::endl;
                 }
             }

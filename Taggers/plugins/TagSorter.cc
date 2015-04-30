@@ -13,6 +13,8 @@
 #include "flashgg/DataFormats/interface/DiPhotonTagBase.h"
 #include "flashgg/DataFormats/interface/DiPhotonUntaggedCategory.h"
 #include "flashgg/DataFormats/interface/VBFTag.h"
+#include "flashgg/DataFormats/interface/VBFTruth.h"
+
 
 #include "TMVA/Reader.h"
 #include "TMath.h"
@@ -56,14 +58,19 @@ namespace flashgg {
 
         double massCutUpper;
         double massCutLower;
+
+        float doVBFTruth_;
+        EDGetTokenT<View<flashgg::VBFTruth> > VBFTruthToken_;
     };
 
     TagSorter::TagSorter( const ParameterSet &iConfig ) :
-        diPhotonToken_( consumes<View<flashgg::DiPhotonCandidate> >( iConfig.getUntrackedParameter<InputTag> ( "DiPhotonTag", InputTag( "flashggDiPhotons" ) ) ) )
+        diPhotonToken_( consumes<View<flashgg::DiPhotonCandidate> >( iConfig.getUntrackedParameter<InputTag> ( "DiPhotonTag", InputTag( "flashggDiPhotons" ) ) ) ),
+        VBFTruthToken_( consumes<View<flashgg::VBFTruth> >( iConfig.getUntrackedParameter<InputTag>( "VBFTruthName", InputTag("flashggVBFTruth") ) ) )
     {
 
         massCutUpper = iConfig.getUntrackedParameter<double>( "massCutUpper", 180. );
         massCutLower = iConfig.getUntrackedParameter<double>( "massCutLower", 100. );
+        doVBFTruth_ = iConfig.getUntrackedParameter<bool>( "DoVBFTruth", true );
 
         const auto &vpset = iConfig.getParameterSetVector( "TagPriorityRanges" );
 
@@ -86,12 +93,14 @@ namespace flashgg {
         }
 
         produces<edm::OwnVector<flashgg::DiPhotonTagBase> >();
+        produces<std::vector<flashgg::VBFTruth> >();
     }
 
     void TagSorter::produce( Event &evt, const EventSetup & )
     {
 
         auto_ptr<edm::OwnVector<flashgg::DiPhotonTagBase> > SelectedTag( new edm::OwnVector<flashgg::DiPhotonTagBase> );
+        auto_ptr<std::vector<flashgg::VBFTruth> > truth ( new std::vector<flashgg::VBFTruth> );
 
         //		int priority = -1; // for debug
         for( auto tpr = TagPriorityRanges.begin() ; tpr != TagPriorityRanges.end() ; tpr++ ) {
@@ -126,6 +135,13 @@ namespace flashgg {
 
             if( chosenIndex != -1 ) {
                 SelectedTag->push_back( *TagVectorEntry->ptrAt( chosenIndex ) );
+
+                // VBF Truth - names hard-coded for now, we'll fix this if we ever need to generalize
+                if (doVBFTruth_ && tpr->name == "flashggVBFTag") {
+                    Handle<View<flashgg::VBFTruth> > truthVector;
+                    evt.getByToken( VBFTruthToken_, truthVector);
+                    truth->push_back(*truthVector->ptrAt(chosenIndex));
+                }
                 //debug message:
                 // std::cout << "[DEBUG] Priority " << priority << " Tag Found! Tag entry "<< chosenIndex  << " with sumPt "
                 //    	     << TagVectorEntry->ptrAt(chosenIndex)->sumPt() << std::endl;
@@ -138,6 +154,7 @@ namespace flashgg {
 
         assert( SelectedTag->size() == 1 || SelectedTag->size() == 0 );
         evt.put( SelectedTag );
+        evt.put(truth);
     }
 }
 
