@@ -24,6 +24,9 @@
 <class name="flashgg::VBFTag"/>
 <class name="std::vector<flashgg::VBFTag>"/>
 <class name="edm::Wrapper<std::vector<flashgg::VBFTag> >"/>
+<class name="flashgg::VBFTruth"/>
+<class name="std::vector<flashgg::VBFTruth>"/>
+<class name="edm::Wrapper<std::vector<flashgg::VBFTruth> >"/>
 <class name="flashgg::TTHLeptonicTag"/>
 <class name="std::vector<flashgg::TTHLeptonicTag>"/>
 <class name="edm::Wrapper<std::vector<flashgg::TTHLeptonicTag> >"/>
@@ -116,4 +119,5 @@
 <class name="std::vector<edm::Ptr<flashgg::MuMuGammaCandidate> >"/>
 <class name="edm::Wrapper<std::vector<edm::Ptr<flashgg::MuMuGammaCandidate> > >"/>
 
+<class name="edm::Ptr<reco::GenParticle>"/>
 </lcgdict>

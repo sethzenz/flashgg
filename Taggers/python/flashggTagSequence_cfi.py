@@ -4,6 +4,8 @@ from flashgg.Taggers.flashggVBFMVA_cff import flashggVBFMVA,flashggVBFMVANew,fla
 from flashgg.Taggers.flashggTags_cff import *
 from flashgg.Taggers.flashggTagSorter_cfi import flashggTagSorter
 
+from flashgg.Taggers.flashggTagGenSequence_cff import *
+
 flashggTagSequence = cms.Sequence(flashggDiPhotonMVA
                                   * flashggVBFMVA
                                   * flashggVBFMVANew
@@ -17,5 +19,6 @@ flashggTagSequence = cms.Sequence(flashggDiPhotonMVA
                                      + flashggVHTightTag
                                      + flashggVHHadronicTag)
                                   * flashggTagSorter
+                                  * flashggTagGenSequence
                                   )
 
