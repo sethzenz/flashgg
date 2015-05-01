@@ -34,6 +34,7 @@ namespace flashgg {
         FileInPath vbfMVAweightfile_;
         bool _isLegacyMVA;
         double _minDijetMinv;
+        bool _requireOppositeEta;
 
         float dijet_leadEta_;
         float dijet_subleadEta_;
@@ -54,7 +55,8 @@ namespace flashgg {
         diPhotonToken_( consumes<View<flashgg::DiPhotonCandidate> >( iConfig.getUntrackedParameter<InputTag> ( "DiPhotonTag", InputTag( "flashggDiPhotons" ) ) ) ),
         jetTokenDz_( consumes<View<flashgg::Jet> >( iConfig.getUntrackedParameter<InputTag>( "JetTag", InputTag( "flashggJets" ) ) ) ),
         _isLegacyMVA( iConfig.getUntrackedParameter<bool>( "UseLegacyMVA" , false ) ),
-        _minDijetMinv( iConfig.getParameter<double>( "MinDijetMinv" ) )
+        _minDijetMinv( iConfig.getParameter<double>( "MinDijetMinv" ) ),
+        _requireOppositeEta( iConfig.getUntrackedParameter<bool>( "RequireOppositeEta" , false ) )
     {
 
         vbfMVAweightfile_ = iConfig.getParameter<edm::FileInPath>( "vbfMVAweightfile" );
@@ -188,6 +190,7 @@ namespace flashgg {
                     auto dijet_p4 = leadJet_p4 + sublJet_p4;
 
                     if (dijet_p4.M() > _minDijetMinv && dijet.first->pt() >30. && dijet.second->pt()>20.) { hasValidVBFDijet =1;}
+                    if ( _requireOppositeEta && (dijet.first->eta()*dijet.second->eta()) > 0. ) { hasValidVBFDijet = 0; }
                 }
             }
             //std::cout << "[VBF] has valid VBF Dijet ? "<< hasValidVBFDijet<< std::endl;
