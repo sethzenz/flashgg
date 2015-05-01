@@ -74,7 +74,8 @@ namespace flashgg {
 // constructors and destructor
 //
     TagTestAnalyzer::TagTestAnalyzer( const edm::ParameterSet &iConfig ):
-        TagSorterToken_( consumes<edm::OwnVector<flashgg::DiPhotonTagBase> >( iConfig.getUntrackedParameter<InputTag> ( "TagSorter", InputTag( "flashggTagSorter" ) ) ) ),
+        TagSorterToken_( consumes<edm::OwnVector<flashgg::DiPhotonTagBase> >( iConfig.getUntrackedParameter<InputTag> ( "TagSorter",
+                         InputTag( "flashggTagSorter" ) ) ) ),
         TruthToken_( consumes<std::vector<flashgg::VBFTruth> >( iConfig.getUntrackedParameter<InputTag> ( "TagSorter", InputTag( "flashggTagSorter" ) ) ) )
     {
     }
@@ -103,36 +104,42 @@ namespace flashgg {
             }
 
             const	VBFTag *vbftag = dynamic_cast<const VBFTag *>( chosenTag );
-            if( vbftag != NULL) {
+            if( vbftag != NULL ) {
                 std::cout << "[VBF] Category " << vbftag->categoryNumber() << " with lead jet (pt, eta)=("
                           << vbftag->leadingJet().pt() << ", " << vbftag->leadingJet().eta()
-                          << ") and sublead jet (pt, eta)=(" << vbftag->subLeadingJet().pt() 
+                          << ") and sublead jet (pt, eta)=(" << vbftag->subLeadingJet().pt()
                           << ", " << vbftag->subLeadingJet().eta() << ")" << std::endl;
                 std::cout << "    Dijet mass: " << vbftag->VBFMVA().dijet_Mjj << std::endl;
                 Handle<std::vector<flashgg::VBFTruth> > truth;
                 iEvent.getByToken( TruthToken_, truth );
-                if (truth->size() > 0) {
+                if( truth->size() > 0 ) {
                     std::cout << "[VBF Truth] (" << truth->size() << " entry): " << std::endl;
                     std::cout << "   ------------------------------------------" << std::endl;
-                    std::cout << "   closestGenJetToLeadingJet pt eta " << truth->at(0).closestGenJetToLeadingJet->pt() << " " << truth->at(0).closestGenJetToLeadingJet->eta() << std::endl;
-                    std::cout << "   closestParticleToLeadingJet pt eta id "   << truth->at(0).closestParticleToLeadingJet->pt() << " " << truth->at(0).closestParticleToLeadingJet->eta() 
-                              << " " << truth->at(0).closestParticleToLeadingJet->pdgId() << std::endl;
+                    std::cout << "   closestGenJetToLeadingJet pt eta " << truth->at( 0 ).closestGenJetToLeadingJet->pt() << " " << truth->at(
+                                  0 ).closestGenJetToLeadingJet->eta() << std::endl;
+                    std::cout << "   closestParticleToLeadingJet pt eta id "   << truth->at( 0 ).closestParticleToLeadingJet->pt() << " " << truth->at(
+                                  0 ).closestParticleToLeadingJet->eta()
+                              << " " << truth->at( 0 ).closestParticleToLeadingJet->pdgId() << std::endl;
                     std::cout << "   ------------------------------------------" << std::endl;
-                    std::cout << "   closestGenJetToSubLeadingJet pt eta id "	<< truth->at(0).closestGenJetToSubLeadingJet->pt() << " " << truth->at(0).closestGenJetToSubLeadingJet->eta()
-                              << " " << truth->at(0).closestParticleToSubLeadingJet->pdgId() << std::endl;
-                    std::cout << "   closestParticleToSubLeadingJet pt eta "	<< truth->at(0).closestParticleToSubLeadingJet->pt() << " " << truth->at(0).closestParticleToSubLeadingJet->eta() << std::endl;
+                    std::cout << "   closestGenJetToSubLeadingJet pt eta id "	<< truth->at( 0 ).closestGenJetToSubLeadingJet->pt() << " " << truth->at(
+                                  0 ).closestGenJetToSubLeadingJet->eta()
+                              << " " << truth->at( 0 ).closestParticleToSubLeadingJet->pdgId() << std::endl;
+                    std::cout << "   closestParticleToSubLeadingJet pt eta "	<< truth->at( 0 ).closestParticleToSubLeadingJet->pt() << " " << truth->at(
+                                  0 ).closestParticleToSubLeadingJet->eta() << std::endl;
                     std::cout << "   ------------------------------------------" << std::endl;
-                    std::cout << "   closestParticleToLeadingPhoton pt eta id "	<< truth->at(0).closestParticleToLeadingPhoton->pt() << " " << truth->at(0).closestParticleToLeadingPhoton->eta()
-                              << " " << truth->at(0).closestParticleToLeadingPhoton->pdgId() << std::endl;
+                    std::cout << "   closestParticleToLeadingPhoton pt eta id "	<< truth->at( 0 ).closestParticleToLeadingPhoton->pt() << " " << truth->at(
+                                  0 ).closestParticleToLeadingPhoton->eta()
+                              << " " << truth->at( 0 ).closestParticleToLeadingPhoton->pdgId() << std::endl;
                     std::cout << "   ------------------------------------------" << std::endl;
-                    std::cout << "   closestParticleToSubLeadingPhoton pt eta id "	<< truth->at(0).closestParticleToSubLeadingPhoton->pt() << " " << truth->at(0).closestParticleToSubLeadingPhoton->eta()
-                              << " " << truth->at(0).closestParticleToSubLeadingPhoton->pdgId() << std::endl;
+                    std::cout << "   closestParticleToSubLeadingPhoton pt eta id "	<< truth->at( 0 ).closestParticleToSubLeadingPhoton->pt() << " " << truth->at(
+                                  0 ).closestParticleToSubLeadingPhoton->eta()
+                              << " " << truth->at( 0 ).closestParticleToSubLeadingPhoton->pdgId() << std::endl;
                     std::cout << "   ------------------------------------------" << std::endl;
-                    std::cout << "   leadingQuark pt eta id " << truth->at(0).leadingQuark->pt() << " " << truth->at(0).leadingQuark->eta()
-                              << " " << truth->at(0).leadingQuark->pdgId() << std::endl;
-                    std::cout << "   subLeadingQuark pt eta id "  << truth->at(0).subLeadingQuark->pt() << " " << truth->at(0).subLeadingQuark->eta()
-                              << " " << truth->at(0).subLeadingQuark->pdgId() << std::endl;
-                    std::cout << "   Diquark mass: " << (truth->at(0).leadingQuark->p4() + truth->at(0).subLeadingQuark->p4()).mass() << std::endl;
+                    std::cout << "   leadingQuark pt eta id " << truth->at( 0 ).leadingQuark->pt() << " " << truth->at( 0 ).leadingQuark->eta()
+                              << " " << truth->at( 0 ).leadingQuark->pdgId() << std::endl;
+                    std::cout << "   subLeadingQuark pt eta id "  << truth->at( 0 ).subLeadingQuark->pt() << " " << truth->at( 0 ).subLeadingQuark->eta()
+                              << " " << truth->at( 0 ).subLeadingQuark->pdgId() << std::endl;
+                    std::cout << "   Diquark mass: " << ( truth->at( 0 ).leadingQuark->p4() + truth->at( 0 ).subLeadingQuark->p4() ).mass() << std::endl;
                 }
             }
 
