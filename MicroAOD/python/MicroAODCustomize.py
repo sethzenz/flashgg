@@ -41,6 +41,7 @@ class MicroAODCustomize(object):
         self.options.parseArguments()
         
         if self.processType == "data":
+            print "customizeData"
             self.customizeData(process)
         elif self.processType == "signal":
             self.customizeSignal(process)
@@ -68,3 +69,4 @@ class MicroAODCustomize(object):
             
 # customization object
 customize = MicroAODCustomize()
+
