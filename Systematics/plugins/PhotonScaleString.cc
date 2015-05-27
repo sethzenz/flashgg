@@ -69,7 +69,7 @@ namespace flashgg {
                     float scale = 1 + bin->shift + syst_shift * bin->shift_err;
                     if( debug_ ) {
                         std::cout << "  " << shiftLabel( syst_shift ) << ": Photon has pt= " << y.pt() << " eta=" << y.eta()
-                                  << " and we a apply a multiplicative correction of " << scale << std::endl;
+                                  << " and we apply a multiplicative correction of " << scale << std::endl;
                     }
                     y.updateEnergy( shiftLabel( syst_shift ), scale * y.energy() );
                     break;

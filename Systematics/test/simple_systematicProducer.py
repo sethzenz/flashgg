@@ -23,6 +23,27 @@ process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring("fil
 
 process.load("flashgg.Systematics.flashggPhotonSmear_cfi")
 
+# Code to artificially scale photon energies to make different mass points for signal fit tests
+srcMass = 125.
+targetMass = 130.
+process.flashggSmearPhoton.SystMethods.append(cms.PSet( PhotonMethodName = cms.string("FlashggPhotonScaleString"),
+                                                        MethodName = cms.string("FlashggDiPhotonFromPhoton"),
+                                                        Label = cms.string("FakeMassScale"),
+                                                        NSigmas = cms.vint32(0),
+                                                        OverallRange = cms.string("1"),
+                                                        Bins = cms.VPSet(cms.PSet( Range = cms.string("pt>20."), Shift = cms.double(targetMass/srcMass - 1.), Uncertainty = cms.double(0.0004))),
+                                                        Debug = cms.untracked.bool(True)
+                                                        )
+                                              )
+
+
+# add new code in here
+
+# DEPRECATED
+for pset in process.flashggSmearPhoton.SystMethods:
+    if pset.MethodName == "FlashggDiPhotonFromPhoton" and pset.PhotonMethodName == "FlashggPhotonScaleString":
+        print pset
+
 from flashgg.Taggers.flashggTagOutputCommands_cff import tagDefaultOutputCommand
 
 process.out = cms.OutputModule("PoolOutputModule", fileName = cms.untracked.string('mySystOutputFile.root'),
