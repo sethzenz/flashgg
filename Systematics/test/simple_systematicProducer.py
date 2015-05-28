@@ -9,7 +9,7 @@ process.load("Configuration.StandardSequences.GeometryDB_cff")
 process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.GlobalTag.globaltag = 'POSTLS170_V5::All'
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 #process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 100 )
 
 # Uncomment the following if you notice you have a memory leak
@@ -25,8 +25,8 @@ process.load("flashgg.Systematics.flashggPhotonSmear_cfi")
 
 # Code to artificially scale photon energies to make different mass points for signal fit tests
 srcMass = 125.
-targetMass = 130.
-process.flashggSmearPhoton.SystMethods.append(cms.PSet( PhotonMethodName = cms.string("FlashggPhotonScaleString"),
+targetMass = 120.
+process.flashggSmearDiPhoton.SystMethods.append(cms.PSet( PhotonMethodName = cms.string("FlashggPhotonScaleString"),
                                                         MethodName = cms.string("FlashggDiPhotonFromPhoton"),
                                                         Label = cms.string("FakeMassScale"),
                                                         NSigmas = cms.vint32(0),
@@ -36,20 +36,69 @@ process.flashggSmearPhoton.SystMethods.append(cms.PSet( PhotonMethodName = cms.s
                                                         )
                                               )
 
-
-# add new code in here
-
-# DEPRECATED
-for pset in process.flashggSmearPhoton.SystMethods:
+for pset in process.flashggSmearDiPhoton.SystMethods:
     if pset.MethodName == "FlashggDiPhotonFromPhoton" and pset.PhotonMethodName == "FlashggPhotonScaleString":
         print pset
 
+process.load("flashgg/Taggers/flashggTagSequence_cfi")
+process.load("flashgg/Taggers/flashggTagTester_cfi")
+
+from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet,massSearchReplaceAnyInputTag
+
+# Ad hoc "customization"
+#print "before massSearchReplaceAnyInputTag"
+#massSearchReplaceAnyInputTag(process.flashggTagSequence,cms.InputTag("flashggDiPhoton"),cms.InputTag("flashggSmearDiPhoton"),verbose=True)
+#print "after massSearchReplaceAnyInputTag"
+
+
+process.flashggUntaggedCategory.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+process.flashggTTHHadronicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+process.flashggVBFTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+process.flashggVHEtTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+process.flashggTTHLeptonicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+process.flashggVHLooseTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+process.flashggVHTightTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+process.flashggVHHadronicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+
+from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
+
+
+#vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      ""                "FLASHggSyst"     
+#vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      "MCScaleBadEBDown01sigma"   "FLASHggSyst"     
+#vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      "MCScaleBadEBUp01sigma"   "FLASHggSyst"     
+#vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      "MCScaleBadEEDown01sigma"   "FLASHggSyst"     
+#vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      "MCScaleBadEEUp01sigma"   "FLASHggSyst"     
+#vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      "MCScaleGoldEBDown01sigma"   "FLASHggSyst"     
+#vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      "MCScaleGoldEBUp01sigma"   "FLASHggSyst"     
+#vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      "MCScaleGoldEEDown01sigma"   "FLASHggSyst"     
+#vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      "MCScaleGoldEEUp01sigma"   "FLASHggSyst"     
+
+
+process.systematicsTagSequences = cms.Sequence()
+for r9 in ["Gold","Bad"]:
+#for r9 in []:
+    for region in ["EB","EE"]:
+        for direction in ["Up","Down"]:
+            systlabel = "MCScale%s%s%s01sigma" % (r9,region,direction)
+            newseq = cloneProcessingSnippet(process,process.flashggTagSequence,systlabel)
+            process.flashggUntaggedCategory.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
+            process.flashggTTHHadronicTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
+            process.flashggVBFTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
+            process.flashggVHEtTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
+            process.flashggTTHLeptonicTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
+            process.flashggVHLooseTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
+            process.flashggVHTightTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
+            process.flashggVHHadronicTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
+            print newseq
+            process.systematicsTagSequences += newseq
+
 from flashgg.Taggers.flashggTagOutputCommands_cff import tagDefaultOutputCommand
 
-process.out = cms.OutputModule("PoolOutputModule", fileName = cms.untracked.string('mySystOutputFile.root'),
-                               outputCommands = tagDefaultOutputCommand			       
+process.out = cms.OutputModule("PoolOutputModule", fileName = cms.untracked.string('myTagOutputFile_%i.root' % targetMass),
+                               outputCommands = tagDefaultOutputCommand
                                )
 
-process.p = cms.Path(process.flashggSmearPhoton)
+process.p = cms.Path(process.flashggSmearDiPhoton*(process.flashggTagSequence+process.systematicsTagSequences))
+#                                                   *process.flashggTagTester)
 
 process.e = cms.EndPath(process.out)

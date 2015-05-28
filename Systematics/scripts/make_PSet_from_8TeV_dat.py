@@ -26,7 +26,7 @@ for line in open("energy_scale_errors.dat").readlines():
         print label,minEta,maxEta,minR9,maxR9,shift,unc
         outString += 10*" "
         outString += 'cms.PSet( Range = cms.string("abs(eta)>%.3f&&abs(eta)<%.3f&&r9>%.2f&&r9<%.2f"),' % (minEta,maxEta,minR9,maxR9)
-        outString += ' Shift = cms.double(%.5f), Uncertainty = cms.double(%.5f) )\n' % (shift,unc)
+        outString += ' Shift = cms.double(%.5f), Uncertainty = cms.double(%.5f) ),\n' % (shift,unc)
 
 print
 outString += "                      )\n"

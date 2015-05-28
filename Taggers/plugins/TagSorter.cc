@@ -59,7 +59,7 @@ namespace flashgg {
     };
 
     TagSorter::TagSorter( const ParameterSet &iConfig ) :
-        diPhotonToken_( consumes<View<flashgg::DiPhotonCandidate> >( iConfig.getUntrackedParameter<InputTag> ( "DiPhotonTag", InputTag( "flashggDiPhotons" ) ) ) )
+        diPhotonToken_( consumes<View<flashgg::DiPhotonCandidate> >( iConfig.getParameter<InputTag> ( "DiPhotonTag" ) ) )
     {
 
         massCutUpper = iConfig.getUntrackedParameter<double>( "massCutUpper", 180. );

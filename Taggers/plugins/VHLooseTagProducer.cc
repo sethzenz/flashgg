@@ -90,7 +90,7 @@ namespace flashgg {
     };
 
     VHLooseTagProducer::VHLooseTagProducer( const ParameterSet &iConfig ) :
-        diPhotonToken_( consumes<View<flashgg::DiPhotonCandidate> >( iConfig.getUntrackedParameter<InputTag> ( "DiPhotonTag", InputTag( "flashggDiPhotons" ) ) ) ),
+        diPhotonToken_( consumes<View<flashgg::DiPhotonCandidate> >( iConfig.getParameter<InputTag> ( "DiPhotonTag" ) ) ),
         thejetToken_( consumes<View<flashgg::Jet> >( iConfig.getUntrackedParameter<InputTag>( "VHlooseJetTag", InputTag( "flashggJets" ) ) ) ),
         electronToken_( consumes<View<flashgg::Electron> >( iConfig.getUntrackedParameter<InputTag> ( "ElectronTag", InputTag( "flashggElectrons" ) ) ) ),
         muonToken_( consumes<View<pat::Muon> >( iConfig.getUntrackedParameter<InputTag>( "MuonTag", InputTag( "slimmedMuons" ) ) ) ),
