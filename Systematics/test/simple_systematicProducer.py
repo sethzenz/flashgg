@@ -45,22 +45,16 @@ process.load("flashgg/Taggers/flashggTagTester_cfi")
 
 from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet,massSearchReplaceAnyInputTag
 
-# Ad hoc "customization"
-#print "before massSearchReplaceAnyInputTag"
-#massSearchReplaceAnyInputTag(process.flashggTagSequence,cms.InputTag("flashggDiPhoton"),cms.InputTag("flashggSmearDiPhoton"),verbose=True)
-#print "after massSearchReplaceAnyInputTag"
+massSearchReplaceAnyInputTag(process.flashggTagSequence,cms.InputTag("flashggDiPhoton"),cms.InputTag("flashggSmearDiPhoton"))
 
-
-process.flashggUntaggedCategory.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
-process.flashggTTHHadronicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
-process.flashggVBFTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
-process.flashggVHEtTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
-process.flashggTTHLeptonicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
-process.flashggVHLooseTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
-process.flashggVHTightTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
-process.flashggVHHadronicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
-
-from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet
+#process.flashggUntaggedCategory.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+#process.flashggTTHHadronicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+#process.flashggVBFTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+#process.flashggVHEtTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+#process.flashggTTHLeptonicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+#process.flashggVHLooseTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+#process.flashggVHTightTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
+#process.flashggVHHadronicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
 
 
 #vector<flashgg::DiPhotonCandidate>    "flashggSmearDiPhoton"      ""                "FLASHggSyst"     
@@ -81,14 +75,7 @@ for r9 in ["Gold","Bad"]:
         for direction in ["Up","Down"]:
             systlabel = "MCScale%s%s%s01sigma" % (r9,region,direction)
             newseq = cloneProcessingSnippet(process,process.flashggTagSequence,systlabel)
-            process.flashggUntaggedCategory.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
-            process.flashggTTHHadronicTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
-            process.flashggVBFTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
-            process.flashggVHEtTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
-            process.flashggTTHLeptonicTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
-            process.flashggVHLooseTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
-            process.flashggVHTightTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
-            process.flashggVHHadronicTag.DiPhotonTag = cms.untracked.InputTag("flashggSmearDiPhoton",systlabel)
+            massSearchReplaceAnyInputTag(newseq,cms.InputTag("flashggSmearDiPhoton"),cms.InputTag("flashggSmearDiPhoton",systlabel))
             print newseq
             process.systematicsTagSequences += newseq
 

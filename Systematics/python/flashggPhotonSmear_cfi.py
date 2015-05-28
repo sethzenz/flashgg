@@ -12,7 +12,7 @@ scaleBins = cms.VPSet(
                       )
 
 flashggSmearDiPhoton = cms.EDProducer('FlashggDiPhotonSystematicProducer',
-		src = cms.untracked.InputTag('flashggDiPhotons'),
+		src = cms.InputTag('flashggDiPhotons'),
 		SystMethods = cms.VPSet(
                                         cms.PSet( PhotonMethodName = cms.string("FlashggPhotonScaleString"),
                                                   MethodName = cms.string("FlashggDiPhotonFromPhoton"),
