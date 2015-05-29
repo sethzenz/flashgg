@@ -91,23 +91,39 @@ void WorkspaceCombiner::MergeWorkspaces(){
 	 
 		file->cd();
 
+		cout << endl << "before workspaceNames loop" << endl << endl;
 		for(unsigned int w=0;w<workspaceNames.size();w++){
+		  std::cout << "   " << workspaceNames[w] << " " << workspacePaths[w]  << std::endl;
 	  		RooWorkspace *work;
 			if(workspacePaths[w]=="") work = (RooWorkspace*) file->Get(workspaceNames[w].c_str()); //look into root folder
 			else{										   //look into directory
 				TDirectory *dir=(TDirectory*) file->Get(workspacePaths[w].c_str());
 				work=(RooWorkspace*) dir->Get(workspaceNames[w].c_str());
 			}
-			//work->Print();
+			//			work->Print();
 			std::list<RooAbsData*> allData = work->allData();
-			int d=0;
   			for(std::list<RooAbsData *>::iterator it=allData.begin(); it!=allData.end(); ++it) {
+			  unsigned int d = 0;
 		        	RooDataSet *dataset = dynamic_cast<RooDataSet *>(*it);
-  				data[w][d]->append(*dataset);
-  				//data[w][d]->Print();			
-				d++;
+				std::cout << "   Dataset name: " << dataset->GetName() << std::endl;
+				for (d = 0 ; d < data[w].size() ; d++) {
+				  if (data[w][d]->GetName() == dataset->GetName()) {
+				    data[w][d]->append(*dataset);
+				    break;
+				  }
+				}
+				if (d == data[w].size()) { // no match
+				  data[w].push_back((RooDataSet*)dataset->Clone());
+				}
+
+
+				//  				data[w][d]->append(*dataset);
+				//  				data[w][d]->Print();			
+				//				d++;
   			}
 		}
+		cout << endl << "after workspaceNames loop" << endl << endl;
+
 
 	file->Close();
  
