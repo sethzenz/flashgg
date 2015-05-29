@@ -9,7 +9,7 @@ process.load("Configuration.StandardSequences.GeometryDB_cff")
 process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.GlobalTag.globaltag = 'POSTLS170_V5::All'
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(5000) )
 #process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 100 )
 
 # Uncomment the following if you notice you have a memory leak
@@ -19,7 +19,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 #                                        monitorPssAndPrivate = cms.untracked.bool(True)
 #                                       )
 
-process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring("file:myMicroAODOutputFile.root"))
+processId = "ggH"
+process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring("file:myMicroAODOutputFile_%s.root" % processId))
 
 process.load("flashgg.Systematics.flashggPhotonSmear_cfi")
 
@@ -31,7 +32,7 @@ process.flashggSmearDiPhoton.SystMethods.append(cms.PSet( PhotonMethodName = cms
                                                         Label = cms.string("FakeMassScale"),
                                                         NSigmas = cms.vint32(0),
                                                         OverallRange = cms.string("1"),
-                                                        Bins = cms.VPSet(cms.PSet( Range = cms.string("pt>20."), Shift = cms.double(targetMass/srcMass - 1.), Uncertainty = cms.double(0.0004))),
+                                                        Bins = cms.VPSet(cms.PSet( Range = cms.string("1"), Shift = cms.double(targetMass/srcMass - 1.), Uncertainty = cms.double(0.))),
                                                         Debug = cms.untracked.bool(True)
                                                         )
                                               )
@@ -45,7 +46,8 @@ process.load("flashgg/Taggers/flashggTagTester_cfi")
 
 from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet,massSearchReplaceAnyInputTag
 
-massSearchReplaceAnyInputTag(process.flashggTagSequence,cms.InputTag("flashggDiPhoton"),cms.InputTag("flashggSmearDiPhoton"))
+process.flashggTagSequence += process.flashggTagTester
+massSearchReplaceAnyInputTag(process.flashggTagSequence,cms.InputTag("flashggDiPhotons"),cms.InputTag("flashggSmearDiPhoton"))
 
 #process.flashggUntaggedCategory.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
 #process.flashggTTHHadronicTag.DiPhotonTag = cms.InputTag("flashggSmearDiPhoton")
@@ -70,7 +72,6 @@ massSearchReplaceAnyInputTag(process.flashggTagSequence,cms.InputTag("flashggDiP
 
 process.systematicsTagSequences = cms.Sequence()
 for r9 in ["Gold","Bad"]:
-#for r9 in []:
     for region in ["EB","EE"]:
         for direction in ["Up","Down"]:
             systlabel = "MCScale%s%s%s01sigma" % (r9,region,direction)
@@ -81,7 +82,7 @@ for r9 in ["Gold","Bad"]:
 
 from flashgg.Taggers.flashggTagOutputCommands_cff import tagDefaultOutputCommand
 
-process.out = cms.OutputModule("PoolOutputModule", fileName = cms.untracked.string('myTagOutputFile_%i.root' % targetMass),
+process.out = cms.OutputModule("PoolOutputModule", fileName = cms.untracked.string('myTagOutputFile_%s_%i.root' % (processId,targetMass)),
                                outputCommands = tagDefaultOutputCommand
                                )
 

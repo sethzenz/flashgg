@@ -98,7 +98,7 @@ namespace flashgg {
 
             const	DiPhotonUntaggedCategory *untagged = dynamic_cast<const DiPhotonUntaggedCategory *>( chosenTag );
             if( untagged != NULL ) {
-                std::cout << "[UNTAGGED] category " << untagged->categoryNumber() << std::endl;
+                std::cout << "[UNTAGGED] category " << untagged->categoryNumber() << " mass=" << untagged->diPhoton()->mass() << std::endl;
             }
 
             const	VBFTag *vbftag = dynamic_cast<const VBFTag *>( chosenTag );

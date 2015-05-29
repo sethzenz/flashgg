@@ -10,15 +10,15 @@ from flashgg.MetaData.samples_utils import SamplesManager
 options = VarParsing('analysis')
 print options
 
-targetMass = 120.
+processId = "ggH"
+targetMass = 125.
+processId = "%s_%i" % (processId,int(targetMass))
 
 # maxEvents is the max number of events processed of each file, not globally
-options.maxEvents = 1000
-options.inputFiles = "file:myTagOutputFile_%i.root" % int(targetMass)
-options.outputFile = "ValidationTagsDump_%i.root" % int(targetMass)
-print "before parseArguments()"
+options.maxEvents = -1
+options.inputFiles = "file:myTagOutputFile_%s.root" % processId
+options.outputFile = "ValidationTagsDump_%s.root" % processId
 options.parseArguments()
-print "after parseArguments()"
 
 ## I/O SETUP ##
 process = cms.Process("ValidationTagsDumper")
@@ -27,8 +27,10 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1 )
 process.source = cms.Source ("PoolSource",
-                             fileNames = cms.untracked.vstring(options.inputFiles),
-                             eventsToProcess = cms.untracked.VEventRange('1:1-1:'+str(options.maxEvents)))
+                             fileNames = cms.untracked.vstring(options.inputFiles))
+
+if options.maxEvents > 0:
+    process.source.eventsToProcess = cms.untracked.VEventRange('1:1-1:'+str(options.maxEvents))
 
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string(options.outputFile))
@@ -38,12 +40,12 @@ import flashgg.Taggers.dumperConfigTools as cfgTools
 
 process.diphotonDumper.className = "DiPhotonTagDumper"
 process.diphotonDumper.src = "flashggTagSorter"
+process.diphotonDumper.processId = processId
 process.diphotonDumper.dumpTrees = True
 process.diphotonDumper.dumpWorkspace = True
 process.diphotonDumper.dumpHistos = True
 
 process.diphotonDumper.quietRooFit = True
-
 
 ## define categories and associated objects to dump
 cfgTools.addCategory(process.diphotonDumper,
@@ -171,6 +173,17 @@ cfgTools.addCategory(process.diphotonDumper,
                                    ]
                     )
 
+process.extraDumpers = cms.Sequence()
+for r9 in ["Gold","Bad"]:
+    for region in ["EB","EE"]:
+        for direction in ["Up","Down"]:
+            systlabel = "MCScale%s%s%s01sigma" % (r9,region,direction)
+            exec "process.diphotonDumper_%s = process.diphotonDumper.clone(src='flashggTagSorter%s')" % (systlabel,systlabel)
+            exec "process.extraDumpers += process.diphotonDumper_%s" % systlabel
+
 process.p1 = cms.Path(
     process.diphotonDumper
+    + process.extraDumpers
     )
+
+print process.p1
