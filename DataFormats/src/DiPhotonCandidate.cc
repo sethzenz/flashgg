@@ -1,6 +1,5 @@
 #include "flashgg/DataFormats/interface/DiPhotonCandidate.h"
 #include "flashgg/DataFormats/interface/Photon.h"
-#include "flashgg/DataFormats/interface/SinglePhotonView.h"
 #include "CommonTools/CandUtils/interface/AddFourMomenta.h"
 #include "flashgg/MicroAOD/interface/PhotonIdUtils.h"
 
@@ -15,21 +14,18 @@ DiPhotonCandidate::DiPhotonCandidate( edm::Ptr<flashgg::Photon> photon1, edm::Pt
 {
     vertex_ = vertex;
 	if(photon1->pt() > photon2->pt()){
-		Pho1_ = photon1;
-		Pho2_ = photon2;
+		viewPho1_ = new flashgg::SinglePhotonView(photon1, vertex);
+		viewPho2_ = new flashgg::SinglePhotonView(photon2, vertex);
 	} else {
-		Pho1_ = photon2;
-		Pho2_ = photon1;
+		viewPho1_ = new flashgg::SinglePhotonView(photon2, vertex);
+		viewPho2_ = new flashgg::SinglePhotonView(photon1, vertex);
 	}
-	math::XYZTLorentzVector pho1corr = DiPhotonCandidate::Pho1P4Corr();
-	math::XYZTLorentzVector pho2corr = DiPhotonCandidate::Pho2P4Corr();
+	math::XYZTLorentzVector pho1corr = DiPhotonCandidate::PhoP4Corr(photon1);
+	math::XYZTLorentzVector pho2corr = DiPhotonCandidate::PhoP4Corr(photon2);
 	double thisX = pho1corr.px() + pho2corr.Px();
 	double thisY = pho1corr.py() + pho2corr.Py();
 	double thisZ = pho1corr.pz() + pho2corr.Pz();
 	double thisE = pho1corr.energy() + pho2corr.energy();
-//	math::XYZTLorentzVector diphocorr;
-//	diphocorr.SetPxPyPzE(thisX, thisY, thisZ, thisE);
-//  this->setP4(diphocorr);
 	this->SetPxPyPzE(thisX, thisY, thisZ, thisE);
 
     // Adding momenta
@@ -37,44 +33,6 @@ DiPhotonCandidate::DiPhotonCandidate( edm::Ptr<flashgg::Photon> photon1, edm::Pt
     // Copied from example
 //    AddFourMomenta addP4;
 //    addP4.set( *this );
-	
-//	flashgg::PhotonIdUtils phoIDutils;
-//	corrPho1_ = flashgg::PhotonIdUtils::pho4MomCorrectionTLVector(photon1, vertex);
-//	corrPho1_ = phoIDutils.pho4MomCorrectionTLVector(photon1, vertex);
-//	corrPho2_ = phoIDutils.pho4MomCorrectionTLVector(photon2, vertex);
-}
-
-// DiPhotonCandidate::DiPhotonCandidate( const flashgg::Photon &photon1, const flashgg::Photon &photon2, edm::Ptr<reco::Vertex> vertex )
-// {
-// //    addDaughter( photon1 );
-// //    addDaughter( photon2 );
-// //    vertex_ = vertex;
-//
-//     // Adding momenta
-//     // Needs its own object - but why?
-//     // Copied from example
-// //    AddFourMomenta addP4;
-// //    addP4.set( *this );
-// }
-
-const edm::Ptr<flashgg::Photon> DiPhotonCandidate::leadingPhotonPtr() const
-{
-    // if( daughter( 0 )->pt() > daughter( 1 )->pt() ) {
-    //     return dynamic_cast<flashgg::Photon &>( *daughter( 0 ) );
-    // } else {
-    //     return dynamic_cast<flashgg::Photon &>( *daughter( 1 ) );
-    // }
-	return Pho1_;
-}
-
-const edm::Ptr<flashgg::Photon> DiPhotonCandidate::subLeadingPhotonPtr() const
-{
-    // if( daughter( 0 )->pt() > daughter( 1 )->pt() ) {
-    //     return dynamic_cast<flashgg::Photon &>( *daughter( 1 ) );
-    // } else {
-    //     return dynamic_cast<flashgg::Photon &>( *daughter( 0 ) );
-    // }
-	return Pho2_;
 }
 
 const flashgg::Photon *DiPhotonCandidate::leadingPhoton() const
@@ -84,7 +42,10 @@ const flashgg::Photon *DiPhotonCandidate::leadingPhoton() const
     // } else {
     //     return dynamic_cast<const flashgg::Photon *>( daughter( 1 ) );
     // }
-	return dynamic_cast<const flashgg::Photon *>( Pho1_.get() );
+//	return dynamic_cast<const flashgg::Photon *>( Pho1_.get() );
+//	return dynamic_cast<const flashgg::Photon *>( viewPho1_->() );
+	return viewPho1_->photonPtr();
+
 }
 
 const flashgg::Photon *DiPhotonCandidate::subLeadingPhoton() const
@@ -94,9 +55,12 @@ const flashgg::Photon *DiPhotonCandidate::subLeadingPhoton() const
     // } else {
     //     return dynamic_cast<const flashgg::Photon *>( daughter( 0 ) );
     // }
-	return dynamic_cast<const flashgg::Photon *>( Pho2_.get() );
+//	return dynamic_cast<const flashgg::Photon *>( Pho2_.get() );
+//	return dynamic_cast<const flashgg::Photon *>( viewPho2_->() );
+	return viewPho2_->photonPtr();
 }
 
+/*
  flashgg::Photon &DiPhotonCandidate::getLeadingPhoton()
 {
     // if( daughter( 0 )->pt() > daughter( 1 )->pt() ) {
@@ -119,6 +83,7 @@ const flashgg::Photon *DiPhotonCandidate::subLeadingPhoton() const
 	const flashgg::Photon &tempPho = dynamic_cast<const flashgg::Photon &>( *Pho2_.get() );
 	return const_cast<flashgg::Photon &>( tempPho );
 }
+*/
 
 // SinglePhotonView DiPhotonCandidate::leadingView() const
 // {
@@ -140,45 +105,26 @@ const flashgg::Photon *DiPhotonCandidate::subLeadingPhoton() const
 // 	return 0;
 // }
 
-math::XYZTLorentzVector DiPhotonCandidate::Pho1P4Corr() const
+math::XYZTLorentzVector DiPhotonCandidate::PhoP4Corr(edm::Ptr<flashgg::Photon> photon1) const
 {
     /// vtx should be the chosen vtx, not primary vtx ///
     float vtx_X = vertex_->x();
     float vtx_Y = vertex_->y();
     float vtx_Z = vertex_->z();
 
-    float sc_X = Pho1_->superCluster()->x();
-    float sc_Y = Pho1_->superCluster()->y();
-    float sc_Z = Pho1_->superCluster()->z();
+    float sc_X = photon1->superCluster()->x();
+    float sc_Y = photon1->superCluster()->y();
+    float sc_Z = photon1->superCluster()->z();
 
     math::XYZVector vtx_Pos( vtx_X, vtx_Y, vtx_Z );
     math::XYZVector sc_Pos( sc_X, sc_Y, sc_Z );
 
     math::XYZVector direction = sc_Pos - vtx_Pos;
-    math::XYZVector p = ( direction.Unit() ) * ( Pho1_->energy() );
-    math::XYZTLorentzVector corrected_p4( p.x(), p.y(), p.z(), Pho1_->energy() );
+    math::XYZVector p = ( direction.Unit() ) * ( photon1->energy() );
+    math::XYZTLorentzVector corrected_p4( p.x(), p.y(), p.z(), photon1->energy() );
 	return corrected_p4;
 }
 
-math::XYZTLorentzVector DiPhotonCandidate::Pho2P4Corr() const
-{
-    /// vtx should be the chosen vtx, not primary vtx ///
-    float vtx_X = vertex_->x();
-    float vtx_Y = vertex_->y();
-    float vtx_Z = vertex_->z();
-
-    float sc_X = Pho2_->superCluster()->x();
-    float sc_Y = Pho2_->superCluster()->y();
-    float sc_Z = Pho2_->superCluster()->z();
-
-    math::XYZVector vtx_Pos( vtx_X, vtx_Y, vtx_Z );
-    math::XYZVector sc_Pos( sc_X, sc_Y, sc_Z );
-
-    math::XYZVector direction = sc_Pos - vtx_Pos;
-    math::XYZVector p = ( direction.Unit() ) * ( Pho2_->energy() );
-    math::XYZTLorentzVector corrected_p4( p.x(), p.y(), p.z(), Pho2_->energy() );
-	return corrected_p4;
-}
 // Local Variables:
 // mode:c++
 // indent-tabs-mode:nil

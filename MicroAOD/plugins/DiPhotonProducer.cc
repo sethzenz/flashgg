@@ -115,8 +115,8 @@ namespace flashgg {
 
                 // store the diphoton into the collection
                 diPhotonColl->push_back( dipho );
-				diPhotonColl->push_back( dipho );
-				std::cout << "TEST111111111!!" << endl;
+//				diPhotonColl->push_back( dipho );
+				std::cout << "TEST222222222!!" << endl;
             }
         }
         evt.put( diPhotonColl );
