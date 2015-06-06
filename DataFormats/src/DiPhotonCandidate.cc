@@ -47,12 +47,14 @@ const flashgg::Photon *DiPhotonCandidate::subLeadingPhoton() const
 
 flashgg::Photon &DiPhotonCandidate::getLeadingPhoton()
 {
-	return viewPho1_->photon();
+	return const_cast<flashgg::Photon &>(*viewPho1_->photonPtr());
+//	return remove_const<flashgg::Photon>(viewPho1_->photon());
 }
 
 flashgg::Photon &DiPhotonCandidate::getSubLeadingPhoton()
 {
-	return viewPho2_->photon();
+	return const_cast<flashgg::Photon &>(*viewPho2_->photonPtr());
+//	return const_cast<flashgg::Photon>(viewPho2_->photon());
 }
 
 

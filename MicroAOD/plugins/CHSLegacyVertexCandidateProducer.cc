@@ -102,7 +102,12 @@ namespace flashgg {
             }
         }
 
+        std::cout << "[CHSLegacyVertexCandidateProducer] TEST1" << std::endl;
+
         std::auto_ptr<vector<pat::PackedCandidate> > result( new vector<pat::PackedCandidate>() );
+
+        std::cout << "[CHSLegacyVertexCandidateProducer] TEST2" << std::endl;
+
 
         for( unsigned int pfCandLoop = 0 ; pfCandLoop < pfCandidates->size() ; pfCandLoop++ ) {
 
@@ -121,6 +126,9 @@ namespace flashgg {
                 if( flashVertex == currentVertex ) { result->push_back( *cand ); }
             }
         }
+		
+        std::cout << "[CHSLegacyVertexCandidateProducer] TEST3" << std::endl;
+		
 
         evt.put( result );
     }

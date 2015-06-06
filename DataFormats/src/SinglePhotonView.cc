@@ -4,6 +4,8 @@ namespace flashgg {
 	
 	SinglePhotonView::SinglePhotonView( const DiPhotonCandidate *dipho, int daughter )
 	{
+		hasPhoton_ = 1;
+		hasVtx_ = 1;
 		vtxRef_ = dipho->vtx(); //const_cast< edm::Ptr<reco::Vertex> >(dipho->vtx());
 		if(daughter == 0){
 			phoRef_ = dipho->leadingView()->photonRef();
@@ -14,6 +16,8 @@ namespace flashgg {
 	
 	SinglePhotonView::SinglePhotonView( dipho_ptr_type dipho, int daughter )
 	{
+		hasPhoton_ = 1;
+		hasVtx_ = 1;
 		vtxRef_ = dipho->vtx();
 		if(daughter == 0){
 			phoRef_ = dipho->leadingView()->photonRef();
@@ -24,7 +28,7 @@ namespace flashgg {
 
     bool SinglePhotonView::MakePhoton() const
     {
-		if ( pho_ ) return false;
+		if ( hasPhoton_ ) return false;
 		else if ( hasVtx_ ){
 		    float vtx_X = vtxRef_->x();
 		    float vtx_Y = vtxRef_->y();

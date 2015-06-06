@@ -54,6 +54,7 @@ namespace flashgg {
 
     void DiPhotonProducer::produce( Event &evt, const EventSetup & )
     {
+		std::cout << "[DiPhotonProducer] TEST1!!" << endl;
 
         Handle<View<reco::Vertex> > primaryVertices;
         evt.getByToken( vertexToken_, primaryVertices );
@@ -79,6 +80,7 @@ namespace flashgg {
             //      beamsig = recoBeamSpotHandle->sigmaZ();
         }
 
+		std::cout << "[DiPhotonProducer] TEST2!!" << endl;
 
         auto_ptr<vector<DiPhotonCandidate> > diPhotonColl( new vector<DiPhotonCandidate> );
 //    cout << "evt.id().event()= " << evt.id().event() << "\tevt.isRealData()= " << evt.isRealData() << "\tphotons->size()= " << photons->size() << "\tprimaryVertices->size()= " << primaryVertices->size() << endl;
@@ -116,9 +118,10 @@ namespace flashgg {
                 // store the diphoton into the collection
                 diPhotonColl->push_back( dipho );
 //				diPhotonColl->push_back( dipho );
-				std::cout << "TEST222222222!!" << endl;
             }
         }
+		std::cout << "[DiPhotonProducer] TEST3!!" << endl;
+
         evt.put( diPhotonColl );
     }
 }
