@@ -21,14 +21,14 @@ namespace flashgg {
 
         const edm::Ptr<reco::Vertex> vtx() const { return vertex_; }
 		
-        const flashgg::Photon *leadingPhoton() const;
-        const flashgg::Photon *subLeadingPhoton() const;
+        const flashgg::Photon *leadingPhoton() const; // { return viewPho1_->photonPtr(); }
+        const flashgg::Photon *subLeadingPhoton() const; // { return viewPho1_->photonPtr(); }
 		
-        flashgg::Photon &getLeadingPhoton();
-        flashgg::Photon &getSubLeadingPhoton();
+        flashgg::Photon &getLeadingPhoton(); // { return viewPho1_->photon(); }
+		flashgg::Photon &getSubLeadingPhoton(); // { return viewPho2_->photon(); }
 
-        flashgg::SinglePhotonView leadingView() const;
-        flashgg::SinglePhotonView subLeadingView() const;
+        flashgg::SinglePhotonView * leadingView() const {return viewPho1_; }
+        flashgg::SinglePhotonView * subLeadingView() const {return viewPho2_; }
 		
         void setLogSumPt2( float val ) { logsumpt2_ = val; }
         void setPtBal( float val ) { ptbal_ = val; }

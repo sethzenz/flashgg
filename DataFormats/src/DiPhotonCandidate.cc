@@ -1,7 +1,6 @@
 #include "flashgg/DataFormats/interface/DiPhotonCandidate.h"
 #include "flashgg/DataFormats/interface/Photon.h"
 #include "CommonTools/CandUtils/interface/AddFourMomenta.h"
-#include "flashgg/MicroAOD/interface/PhotonIdUtils.h"
 
 
 using namespace flashgg;
@@ -35,75 +34,27 @@ DiPhotonCandidate::DiPhotonCandidate( edm::Ptr<flashgg::Photon> photon1, edm::Pt
 //    addP4.set( *this );
 }
 
+
 const flashgg::Photon *DiPhotonCandidate::leadingPhoton() const
 {
-    // if( daughter( 0 )->pt() > daughter( 1 )->pt() ) {
-    //     return dynamic_cast<const flashgg::Photon *>( daughter( 0 ) );
-    // } else {
-    //     return dynamic_cast<const flashgg::Photon *>( daughter( 1 ) );
-    // }
-//	return dynamic_cast<const flashgg::Photon *>( Pho1_.get() );
-//	return dynamic_cast<const flashgg::Photon *>( viewPho1_->() );
 	return viewPho1_->photonPtr();
-
 }
 
 const flashgg::Photon *DiPhotonCandidate::subLeadingPhoton() const
 {
-    // if( daughter( 0 )->pt() > daughter( 1 )->pt() ) {
-    //     return dynamic_cast<const flashgg::Photon *>( daughter( 1 ) );
-    // } else {
-    //     return dynamic_cast<const flashgg::Photon *>( daughter( 0 ) );
-    // }
-//	return dynamic_cast<const flashgg::Photon *>( Pho2_.get() );
-//	return dynamic_cast<const flashgg::Photon *>( viewPho2_->() );
 	return viewPho2_->photonPtr();
 }
 
-/*
- flashgg::Photon &DiPhotonCandidate::getLeadingPhoton()
+flashgg::Photon &DiPhotonCandidate::getLeadingPhoton()
 {
-    // if( daughter( 0 )->pt() > daughter( 1 )->pt() ) {
-    //     return dynamic_cast<flashgg::Photon &>( *daughter( 0 ) );
-    // } else {
-    //     return dynamic_cast<flashgg::Photon &>( *daughter( 1 ) );
-    // }
-	const flashgg::Photon &tempPho = dynamic_cast<const flashgg::Photon &>( *Pho1_.get() );
-	return const_cast<flashgg::Photon &>( tempPho );
+	return viewPho1_->photon();
 }
 
- flashgg::Photon &DiPhotonCandidate::getSubLeadingPhoton()
+flashgg::Photon &DiPhotonCandidate::getSubLeadingPhoton()
 {
-    // if( daughter( 0 )->pt() > daughter( 1 )->pt() ) {
-    //     return dynamic_cast<flashgg::Photon &>( *daughter( 1 ) );
-    // } else {
-    //     return dynamic_cast<flashgg::Photon &>( *daughter( 0 ) );
-    // }
-	
-	const flashgg::Photon &tempPho = dynamic_cast<const flashgg::Photon &>( *Pho2_.get() );
-	return const_cast<flashgg::Photon &>( tempPho );
+	return viewPho2_->photon();
 }
-*/
 
-// SinglePhotonView DiPhotonCandidate::leadingView() const
-// {
-//     // if( daughter( 0 )->pt() > daughter( 1 )->pt() ) {
-//     //     return SinglePhotonView( this, 0 );
-//     // } else {
-//     //     return SinglePhotonView( this, 1 );
-//     // }
-// 	return 0;
-// }
-//
-// SinglePhotonView DiPhotonCandidate::subLeadingView() const
-// {
-//     // if( daughter( 0 )->pt() > daughter( 1 )->pt() ) {
-//     //     return SinglePhotonView( this, 1 );
-//     // } else {
-//     //     return SinglePhotonView( this, 0 );
-//     // }
-// 	return 0;
-// }
 
 math::XYZTLorentzVector DiPhotonCandidate::PhoP4Corr(edm::Ptr<flashgg::Photon> photon1) const
 {

@@ -1,11 +1,31 @@
 #include "flashgg/DataFormats/interface/SinglePhotonView.h"
 
 namespace flashgg {
+	
+	SinglePhotonView::SinglePhotonView( const DiPhotonCandidate *dipho, int daughter )
+	{
+		vtxRef_ = dipho->vtx(); //const_cast< edm::Ptr<reco::Vertex> >(dipho->vtx());
+		if(daughter == 0){
+			phoRef_ = dipho->leadingView()->photonRef();
+		} else  if (daughter == 1){
+			phoRef_ = dipho->subLeadingView()->photonRef();
+		}
+	}
+	
+	SinglePhotonView::SinglePhotonView( dipho_ptr_type dipho, int daughter )
+	{
+		vtxRef_ = dipho->vtx();
+		if(daughter == 0){
+			phoRef_ = dipho->leadingView()->photonRef();
+		} else  if (daughter == 1){
+			phoRef_ = dipho->subLeadingView()->photonRef();
+		}
+	}
 
     bool SinglePhotonView::MakePhoton() const
     {
 		if ( pho_ ) return false;
-		else{
+		else if ( hasVtx_ ){
 		    float vtx_X = vtxRef_->x();
 		    float vtx_Y = vtxRef_->y();
 		    float vtx_Z = vtxRef_->z();
@@ -23,7 +43,9 @@ namespace flashgg {
 			
 			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
 			pho_->setP4(corrected_p4);
-			}
+		} else {
+			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
+		}
 		return true;
     }
 }

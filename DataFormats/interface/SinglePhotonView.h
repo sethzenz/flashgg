@@ -4,24 +4,30 @@
 #include "flashgg/DataFormats/interface/Photon.h"
 #include "flashgg/DataFormats/interface/DiPhotonCandidate.h"
 #include "DataFormats/Common/interface/Ptr.h"
-#include "flashgg/MicroAOD/interface/PhotonIdUtils.h"
 
 #include <string>
 
 namespace flashgg {
+	
+    class DiPhotonCandidate;
 
     class SinglePhotonView
     {
 
     public:
+        typedef edm::Ptr<flashgg::DiPhotonCandidate> dipho_ptr_type;
         typedef edm::Ptr<flashgg::Photon> pho_ptr_type;
         typedef edm::Ptr<reco::Vertex> vtx_ptr_type;
         typedef Photon cand_type;
-
+		
+		SinglePhotonView( const DiPhotonCandidate *dipho, int daughter );
+		SinglePhotonView( dipho_ptr_type dipho, int daughter );
         SinglePhotonView() : pho_( 0 ), hasPhoton_( 0 ) {}
-        SinglePhotonView( edm::Ptr<flashgg::Photon> pho, edm::Ptr<reco::Vertex> vtx ) : phoRef_( pho ), vtxRef_( vtx ), hasPhoton_( 0 ) {}
+        SinglePhotonView( edm::Ptr<flashgg::Photon> pho, edm::Ptr<reco::Vertex> vtx ) : phoRef_( pho ), vtxRef_( vtx ), hasPhoton_( 0 ), hasVtx_( 1 ) {}
+        SinglePhotonView( edm::Ptr<flashgg::Photon> pho ) : phoRef_( pho ), hasPhoton_( 0 ), hasVtx_( 0 ) {}
 
-        const cand_type &photon() const { MakePhoton(); return *pho_; }
+
+        cand_type &photon() { MakePhoton(); return *pho_; }
 		
 		const cand_type * photonPtr() const  { MakePhoton(); return pho_; }
 		
@@ -48,6 +54,7 @@ namespace flashgg {
         edm::Ptr<flashgg::Photon> phoRef_;
         edm::Ptr<reco::Vertex> vtxRef_;
 		bool hasPhoton_;
+		bool hasVtx_;
 		bool MakePhoton() const;
     };
 }
