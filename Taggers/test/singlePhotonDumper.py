@@ -7,10 +7,14 @@ from flashgg.MetaData.samples_utils import SamplesManager
         
 process = cms.Process("FWLitePlots")
 
+process.source = cms.Source("PoolSource",
+                            fileNames=cms.untracked.vstring("file:myMicroAODOutputFile.root")
+)
+
 process.fwliteInput = cms.PSet(
-    fileNames = cms.vstring(),
+    fileNames = cms.vstring("file:myMicroAODOutputFile.root"),
     maxEvents   = cms.int32(100),
-    outputEvery = cms.uint32(200),
+    outputEvery = cms.uint32(10),
 )
 
 
