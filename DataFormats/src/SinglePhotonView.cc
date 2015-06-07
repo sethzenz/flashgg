@@ -28,7 +28,7 @@ namespace flashgg {
 
     bool SinglePhotonView::MakePhoton() const
     {
-		if ( hasPhoton_ ) return false;
+		if ( 0 ) return false;
 		else if ( hasVtx_ ){
 		    float vtx_X = vtxRef_->x();
 		    float vtx_Y = vtxRef_->y();

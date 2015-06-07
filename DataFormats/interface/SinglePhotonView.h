@@ -24,7 +24,7 @@ namespace flashgg {
 		SinglePhotonView( dipho_ptr_type dipho, int daughter );
         SinglePhotonView() : pho_( 0 ), hasPhoton_( 0 ) {}
         SinglePhotonView( edm::Ptr<flashgg::Photon> pho, edm::Ptr<reco::Vertex> vtx ) : phoRef_( pho ), vtxRef_( vtx ), hasPhoton_( 0 ), hasVtx_( 1 ) {}
-//        SinglePhotonView( edm::Ptr<flashgg::Photon> pho ) : phoRef_( pho ), hasPhoton_( 0 ), hasVtx_( 0 ) {}
+        SinglePhotonView( edm::Ptr<flashgg::Photon> pho ) : phoRef_( pho ), hasPhoton_( 0 ), hasVtx_( 0 ) {}
 
 
         const cand_type &photon() const { MakePhoton(); return *pho_; }
