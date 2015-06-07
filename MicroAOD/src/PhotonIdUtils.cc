@@ -331,28 +331,6 @@ flashgg::Photon PhotonIdUtils::pho4MomCorrection( edm::Ptr<flashgg::Photon> &pho
     return p4CorrPho;
 }
 
-math::XYZTLorentzVector PhotonIdUtils::pho4MomCorrectionTLVector( edm::Ptr<flashgg::Photon> &photon,
-        edm::Ptr<reco::Vertex> vtx )
-{
-
-    /// vtx should be the chosen vtx, not primary vtx ///
-    float vtx_X = vtx->x();
-    float vtx_Y = vtx->y();
-    float vtx_Z = vtx->z();
-
-    float sc_X = photon->superCluster()->x();
-    float sc_Y = photon->superCluster()->y();
-    float sc_Z = photon->superCluster()->z();
-
-    math::XYZVector vtx_Pos( vtx_X, vtx_Y, vtx_Z );
-    math::XYZVector sc_Pos( sc_X, sc_Y, sc_Z );
-
-    math::XYZVector direction = sc_Pos - vtx_Pos;
-    math::XYZVector p = ( direction.Unit() ) * ( photon->energy() );
-    math::XYZTLorentzVector corrected_p4( p.x(), p.y(), p.z(), photon->energy() );
-	return corrected_p4;
-}
-
 void PhotonIdUtils::recomputeNonZsClusterShapes( reco::Photon &pho, noZS::EcalClusterLazyTools &tools )
 {
     reco::SuperClusterRef scRef = pho.superCluster();
