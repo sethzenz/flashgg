@@ -3,6 +3,7 @@
 
 #include "DataFormats/Candidate/interface/CompositeCandidate.h"
 #include "DataFormats/Candidate/interface/ShallowCloneCandidate.h"
+#include "DataFormats/Candidate/interface/LeafCandidate.h"
 #include "flashgg/DataFormats/interface/Photon.h"
 #include "flashgg/DataFormats/interface/SinglePhotonView.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
@@ -12,7 +13,7 @@
 namespace flashgg {
     class SinglePhotonView;
 
-    class DiPhotonCandidate : public math::XYZTLorentzVector
+    class DiPhotonCandidate : public reco::LeafCandidate
     {
     public:
         DiPhotonCandidate();
