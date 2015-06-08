@@ -20,7 +20,7 @@ DiPhotonCandidate::DiPhotonCandidate( edm::Ptr<flashgg::Photon> photon1, edm::Pt
 		viewPho2_ = new flashgg::SinglePhotonView(photon1, vertex);
 	}
 
-    std::cout << "SETTING VIEWS: \t VIEW1 pt " << viewPho1_->photonPtr()->pt() << " \t VIEW 2 pt " << viewPho2_->photonPtr()->pt() << std::endl; 
+//    std::cout << "SETTING VIEWS: \t VIEW1 pt " << viewPho1_->photonPtr()->pt() << " \t VIEW 2 pt " << viewPho2_->photonPtr()->pt() << std::endl; 
 
 	math::XYZTLorentzVector pho1corr = DiPhotonCandidate::PhoP4Corr(photon1);
 	math::XYZTLorentzVector pho2corr = DiPhotonCandidate::PhoP4Corr(photon2);
