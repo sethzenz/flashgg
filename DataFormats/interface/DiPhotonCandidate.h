@@ -13,7 +13,7 @@
 namespace flashgg {
 //    class SinglePhotonView;
 
-    class DiPhotonCandidate : public reco::LeafCandidate
+    class DiPhotonCandidate : public math::XYZTLorentzVector //reco::LeafCandidate
     {
     public:
         DiPhotonCandidate();
@@ -123,7 +123,6 @@ namespace flashgg {
 		flashgg::SinglePhotonView viewPho2_;
     };
 
-    typedef flashgg::SinglePhotonView SPView;
 
 
 }

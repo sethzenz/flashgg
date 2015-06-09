@@ -76,49 +76,14 @@ namespace flashgg {
 
         Handle<View<flashgg::DiPhotonCandidate> > diPhotons;
         evt.getByToken( diPhotonToken_, diPhotons );
-        //  const PtrVector<flashgg::DiPhotonCandidate>& diPhotonPointers = diPhotons->ptrVector();
-
-        Handle<View<flashgg::DiPhotonMVAResult> > mvaResults;
-        evt.getByToken( mvaResultToken_, mvaResults );
-        //  const PtrVector<flashgg::DiPhotonMVAResult>& mvaResultPointers = mvaResults->ptrVector();
-
-        Handle<View<flashgg::VBFDiPhoDiJetMVAResult> > vbfDiPhoDiJetMvaResults;
-        evt.getByToken( vbfDiPhoDiJetMvaResultToken_, vbfDiPhoDiJetMvaResults );
-        //  const PtrVector<flashgg::VBFDiPhoDiJetMVAResult>& vbfDiPhoDiJetMvaResultPointers = vbfDiPhoDiJetMvaResults->ptrVector();
-
-        //		Handle<View<flashgg::VBFMVAResult> > vbfMvaResults;
-        //    evt.getByToken(vbfMvaResultToken_,vbfMvaResults);
-        //    const PtrVector<flashgg::VBFMVAResult>& vbfMvaResultPointers = vbfMvaResults->ptrVector();
-
-
-        std::auto_ptr<vector<VBFTag> > tags( new vector<VBFTag> );
-
-        assert( diPhotons->size() == vbfDiPhoDiJetMvaResults->size() ); // We are relying on corresponding sets - update this to give an error/exception
-        //    assert(diPhotons->size() == vbfMvaResultPointers.size()); // We are relying on corresponding sets - update this to give an error/exception
-        assert( diPhotons->size() ==
-                mvaResults->size() ); // We are relying on corresponding sets - update this to give an error/exception
 
         for( unsigned int candIndex = 0; candIndex < diPhotons->size() ; candIndex++ ) {
-            edm::Ptr<flashgg::VBFDiPhoDiJetMVAResult> vbfdipho_mvares = vbfDiPhoDiJetMvaResults->ptrAt( candIndex );
-            //      edm::Ptr<flashgg::VBFMVAResult> vbf_mvares = vbfMvaResultPointers[candIndex];
-            edm::Ptr<flashgg::DiPhotonMVAResult> mvares = mvaResults->ptrAt( candIndex );
-
             edm::Ptr<flashgg::DiPhotonCandidate> dipho = diPhotons->ptrAt( candIndex );
 
-            VBFTag tag_obj( dipho, mvares, vbfdipho_mvares );
-            tag_obj.setDiPhotonIndex( candIndex );
+            cout << "dipho->mass() " << dipho->mass() << endl;
 
-            int catnum = chooseCategory( vbfdipho_mvares->vbfDiPhoDiJetMvaResult );
-            tag_obj.setCategoryNumber( catnum );
-
-            // Leave in debugging statement temporarily while tag framework is being developed
-            //std::cout << "[VBF] MVA is "<< mvares->vbfDiPhoDiJetMvaResult << " and VBF category is " << tag_obj.categoryNumber() << std::endl;
-
-            if( tag_obj.categoryNumber() >= 0 ) {
-                tags->push_back( tag_obj );
-            }
         }
-        evt.put( tags );
+//        evt.put( tags );
     }
 }
 

@@ -117,6 +117,8 @@ namespace flashgg {
                 DiPhotonCandidate dipho( pp1, pp2, pvx );
                 dipho.setVertexIndex( ivtx );
 
+                cout << "DiPhoton pt: " << dipho.pt();
+                cout << "Pho1 pt: " << dipho.leadingPhoton()->pt() << endl;
                 // Obviously the last selection has to be for this diphoton or this is wrong
                 vertexSelector_->writeInfoFromLastSelectionTo( dipho );
 

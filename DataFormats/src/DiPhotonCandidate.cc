@@ -12,30 +12,36 @@ DiPhotonCandidate::~DiPhotonCandidate() {}
 DiPhotonCandidate::DiPhotonCandidate( edm::Ptr<flashgg::Photon> photon1, edm::Ptr<flashgg::Photon> photon2, edm::Ptr<reco::Vertex> vertex)
 {
     vertex_ = vertex;
-	if(photon1->pt() > photon2->pt()){
+	if(DiPhotonCandidate::PhoP4Corr(photon1).pt() > DiPhotonCandidate::PhoP4Corr(photon2).pt()){
 //		viewPho1_ = new flashgg::SinglePhotonView(photon1, vertex);
 //		viewPho2_ = new flashgg::SinglePhotonView(photon2, vertex);
 		viewPho1_ = flashgg::SinglePhotonView(photon1, vertex);
 		viewPho2_ = flashgg::SinglePhotonView(photon2, vertex);
+        corrPho1_ = DiPhotonCandidate::PhoP4Corr(photon1);
+        corrPho2_ = DiPhotonCandidate::PhoP4Corr(photon2);
 	} else {
 //		viewPho1_ = new flashgg::SinglePhotonView(photon2, vertex);
 //		viewPho2_ = new flashgg::SinglePhotonView(photon1, vertex);
 		viewPho1_ = flashgg::SinglePhotonView(photon2, vertex);
 		viewPho2_ = flashgg::SinglePhotonView(photon1, vertex);
+        corrPho1_ = DiPhotonCandidate::PhoP4Corr(photon2);
+        corrPho2_ = DiPhotonCandidate::PhoP4Corr(photon1);
 	}
 
 //    std::cout << "SETTING VIEWS: \t VIEW1 pt " << viewPho1_->photonPtr()->pt() << " \t VIEW 2 pt " << viewPho2_->photonPtr()->pt() << std::endl; 
 
-	math::XYZTLorentzVector pho1corr = DiPhotonCandidate::PhoP4Corr(photon1);
-	math::XYZTLorentzVector pho2corr = DiPhotonCandidate::PhoP4Corr(photon2);
-/*
-	double thisX = pho1corr.px() + pho2corr.Px();
-	double thisY = pho1corr.py() + pho2corr.Py();
-	double thisZ = pho1corr.pz() + pho2corr.Pz();
-	double thisE = pho1corr.energy() + pho2corr.energy();
+//	math::XYZTLorentzVector pho1corr = DiPhotonCandidate::PhoP4Corr(photon1);
+//	math::XYZTLorentzVector pho2corr = DiPhotonCandidate::PhoP4Corr(photon2);
+//	corrPho1_ = DiPhotonCandidate::PhoP4Corr(photon1);
+//	corrPho2_ = DiPhotonCandidate::PhoP4Corr(photon2);
+//
+	double thisX = corrPho1_.px() + corrPho2_.Px();
+	double thisY = corrPho1_.py() + corrPho2_.Py();
+	double thisZ = corrPho1_.pz() + corrPho2_.Pz();
+	double thisE = corrPho1_.energy() + corrPho2_.energy();
 	this->SetPxPyPzE(thisX, thisY, thisZ, thisE);
-*/
-	this->setP4( pho1corr + pho2corr);
+
+//	this->setP4( corrPho1_ + corrPho2_);
 
     // Adding momenta
     // Needs its own object - but why?
