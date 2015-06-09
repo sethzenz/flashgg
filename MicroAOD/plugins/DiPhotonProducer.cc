@@ -89,7 +89,7 @@ namespace flashgg {
 //    cout << "evt.id().event()= " << evt.id().event() << "\tevt.isRealData()= " << evt.isRealData() << "\tphotons->size()= " << photons->size() << "\tprimaryVertices->size()= " << primaryVertices->size() << endl;
 
         for( unsigned int i = 0 ; i < photons->size() ; i++ ) {
-            if(diPhotonColl->size() > 0 ) break;
+//            if(diPhotonColl->size() > 0 ) break;
             Ptr<flashgg::Photon> pp1 = photons->ptrAt( i );
             for( unsigned int j = i + 1 ; j < photons->size() ; j++ ) {
                 Ptr<flashgg::Photon> pp2 = photons->ptrAt( j );

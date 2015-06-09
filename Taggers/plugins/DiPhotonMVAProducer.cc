@@ -119,7 +119,7 @@ namespace flashgg {
             cout << "GETTING pho2 PTR" << endl;
             const flashgg::SinglePhotonView v2 = diPhotons->ptrAt( candIndex )->subLeadingView();
             cout << "PT "  << endl;
-            cout << "Pho1 pt " << v1->pt() << " \t Pho2 pt " << v2->pt() << endl;
+            cout << "Pho1 pt " << v1.photonRef()->pt() << " \t Pho2 pt " << v2->pt() << endl;
 
 
             const flashgg::Photon *g1 = diPhotons->ptrAt( candIndex )->leadingPhoton();
