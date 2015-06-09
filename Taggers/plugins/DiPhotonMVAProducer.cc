@@ -89,8 +89,10 @@ namespace flashgg {
 
     void DiPhotonMVAProducer::produce( Event &evt, const EventSetup & )
     {
+        std::cout << " DiPhotonMVAProducer::produce " << std::endl;
         Handle<View<flashgg::DiPhotonCandidate> > diPhotons;
         evt.getByToken( diPhotonToken_, diPhotons );
+        std::cout << " Got by token!" << std::endl;
         // const PtrVector<flashgg::DiPhotonCandidate>& diPhotonPointers = diPhotons->ptrVector();
 
         Handle<reco::BeamSpot> recoBeamSpotHandle;
@@ -108,9 +110,15 @@ namespace flashgg {
         for( unsigned int candIndex = 0; candIndex < diPhotons->size() ; candIndex++ ) {
             flashgg::DiPhotonMVAResult mvares;
 
+            std::cout << " Start of diphoton " << candIndex << std::endl;
+
             edm::Ptr<reco::Vertex> vtx = diPhotons->ptrAt( candIndex )->vtx();
+            std::cout << " Got vtx!" << std::endl;
+            std::cout << " diPhotons->ptrAt( candIndex ).isNonnull() = " << diPhotons->ptrAt( candIndex ).isNonnull() << std::endl;
             const flashgg::Photon *g1 = diPhotons->ptrAt( candIndex )->leadingPhoton();
+            std::cout << " Got leading photon!" <<std::endl;
             const flashgg::Photon *g2 = diPhotons->ptrAt( candIndex )->subLeadingPhoton();
+            std::cout << " Got subleading photon!" <<std::endl;
 
             //used for photon resolution wrt to correct vertex//
             TVector3 Photon1Dir;
