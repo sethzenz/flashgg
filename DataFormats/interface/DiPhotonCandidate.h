@@ -11,7 +11,7 @@
 
 
 namespace flashgg {
-    class SinglePhotonView;
+//    class SinglePhotonView;
 
     class DiPhotonCandidate : public reco::LeafCandidate
     {
@@ -28,8 +28,8 @@ namespace flashgg {
         flashgg::Photon &getLeadingPhoton(); // { return viewPho1_->photon(); }
 		flashgg::Photon &getSubLeadingPhoton(); // { return viewPho2_->photon(); }
 
-        flashgg::SinglePhotonView * leadingView() const {return viewPho1_; }
-        flashgg::SinglePhotonView * subLeadingView() const {return viewPho2_; }
+        flashgg::SinglePhotonView leadingView() const {return viewPho1_; }
+        flashgg::SinglePhotonView subLeadingView() const {return viewPho2_; }
 		
         void setLogSumPt2( float val ) { logsumpt2_ = val; }
         void setPtBal( float val ) { ptbal_ = val; }
@@ -118,9 +118,12 @@ namespace flashgg {
 		math::XYZTLorentzVector corrPho1_;
 		math::XYZTLorentzVector corrPho2_;
 		
-		flashgg::SinglePhotonView * viewPho1_;
-		flashgg::SinglePhotonView * viewPho2_;
+//		SPView viewPho1_;
+		flashgg::SinglePhotonView viewPho1_;
+		flashgg::SinglePhotonView viewPho2_;
     };
+
+    typedef flashgg::SinglePhotonView SPView;
 
 
 }

@@ -13,11 +13,15 @@ DiPhotonCandidate::DiPhotonCandidate( edm::Ptr<flashgg::Photon> photon1, edm::Pt
 {
     vertex_ = vertex;
 	if(photon1->pt() > photon2->pt()){
-		viewPho1_ = new flashgg::SinglePhotonView(photon1, vertex);
-		viewPho2_ = new flashgg::SinglePhotonView(photon2, vertex);
+//		viewPho1_ = new flashgg::SinglePhotonView(photon1, vertex);
+//		viewPho2_ = new flashgg::SinglePhotonView(photon2, vertex);
+		viewPho1_ = flashgg::SinglePhotonView(photon1, vertex);
+		viewPho2_ = flashgg::SinglePhotonView(photon2, vertex);
 	} else {
-		viewPho1_ = new flashgg::SinglePhotonView(photon2, vertex);
-		viewPho2_ = new flashgg::SinglePhotonView(photon1, vertex);
+//		viewPho1_ = new flashgg::SinglePhotonView(photon2, vertex);
+//		viewPho2_ = new flashgg::SinglePhotonView(photon1, vertex);
+		viewPho1_ = flashgg::SinglePhotonView(photon2, vertex);
+		viewPho2_ = flashgg::SinglePhotonView(photon1, vertex);
 	}
 
 //    std::cout << "SETTING VIEWS: \t VIEW1 pt " << viewPho1_->photonPtr()->pt() << " \t VIEW 2 pt " << viewPho2_->photonPtr()->pt() << std::endl; 
@@ -43,23 +47,27 @@ DiPhotonCandidate::DiPhotonCandidate( edm::Ptr<flashgg::Photon> photon1, edm::Pt
 
 const flashgg::Photon *DiPhotonCandidate::leadingPhoton() const
 {
-	return viewPho1_->photonPtr();
+//	return viewPho1_->photonPtr();
+	return viewPho1_.photonPtr();
 }
 
 const flashgg::Photon *DiPhotonCandidate::subLeadingPhoton() const
 {
-	return viewPho2_->photonPtr();
+//	return viewPho2_->photonPtr();
+	return viewPho2_.photonPtr();
 }
 
 flashgg::Photon &DiPhotonCandidate::getLeadingPhoton()
 {
-	return const_cast<flashgg::Photon &>(*viewPho1_->photonPtr());
+//	return const_cast<flashgg::Photon &>(*viewPho1_->photonPtr());
+	return const_cast<flashgg::Photon &>(*viewPho1_.photonPtr());
 //	return remove_const<flashgg::Photon>(viewPho1_->photon());
 }
 
 flashgg::Photon &DiPhotonCandidate::getSubLeadingPhoton()
 {
-	return const_cast<flashgg::Photon &>(*viewPho2_->photonPtr());
+//	return const_cast<flashgg::Photon &>(*viewPho2_->photonPtr());
+	return const_cast<flashgg::Photon &>(*viewPho2_.photonPtr());
 //	return const_cast<flashgg::Photon>(viewPho2_->photon());
 }
 

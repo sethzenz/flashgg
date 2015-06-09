@@ -1,7 +1,7 @@
 #include "flashgg/DataFormats/interface/SinglePhotonView.h"
 
 namespace flashgg {
-	
+	/*
 	SinglePhotonView::SinglePhotonView( const DiPhotonCandidate *dipho, int daughter )
 	{
 		hasPhoton_ = 1;
@@ -25,7 +25,7 @@ namespace flashgg {
 			phoRef_ = dipho->subLeadingView()->photonRef();
 		}
 	}
-
+*/
     bool SinglePhotonView::MakePhoton() const
     {
 		if ( 0 ) return false;
