@@ -140,11 +140,8 @@ namespace flashgg {
                 //setdiphotonindex
                 //setMET
                 vhettags->push_back( tag_obj );
-<<<<<<< HEAD
-=======
                 truths->push_back( truth_obj );
                 vhettags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx++ ) ) );
->>>>>>> workspace combiners, systematics, tag truth
             }
         }
         evt.put( vhettags );
