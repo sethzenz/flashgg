@@ -122,6 +122,8 @@ namespace flashgg {
                 // Obviously the last selection has to be for this diphoton or this is wrong
                 vertexSelector_->writeInfoFromLastSelectionTo( dipho );
 
+                dipho.leadingView().MakePersistent();
+
                 // store the diphoton into the collection
                 diPhotonColl->push_back( dipho );
             }

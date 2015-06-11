@@ -35,13 +35,14 @@ DiPhotonCandidate::DiPhotonCandidate( edm::Ptr<flashgg::Photon> photon1, edm::Pt
 //	corrPho1_ = DiPhotonCandidate::PhoP4Corr(photon1);
 //	corrPho2_ = DiPhotonCandidate::PhoP4Corr(photon2);
 //
-	double thisX = corrPho1_.px() + corrPho2_.Px();
-	double thisY = corrPho1_.py() + corrPho2_.Py();
-	double thisZ = corrPho1_.pz() + corrPho2_.Pz();
-	double thisE = corrPho1_.energy() + corrPho2_.energy();
-	this->SetPxPyPzE(thisX, thisY, thisZ, thisE);
 
-//	this->setP4( corrPho1_ + corrPho2_);
+//	double thisX = corrPho1_.px() + corrPho2_.Px();
+//	double thisY = corrPho1_.py() + corrPho2_.Py();
+//	double thisZ = corrPho1_.pz() + corrPho2_.Pz();
+//	double thisE = corrPho1_.energy() + corrPho2_.energy();
+//	this->SetPxPyPzE(thisX, thisY, thisZ, thisE);
+
+    this->setP4( corrPho1_ + corrPho2_);
 
     // Adding momenta
     // Needs its own object - but why?

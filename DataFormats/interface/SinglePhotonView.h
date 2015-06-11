@@ -6,6 +6,7 @@
 #include "DataFormats/Common/interface/Ptr.h"
 
 #include <string>
+#include <vector>
 
 namespace flashgg {
 	
@@ -44,6 +45,10 @@ namespace flashgg {
         float extraChIsoWrtChoosenVtx( const std::string &key ) const { MakePhoton(); return ( pho_->extraChgIsoWrtVtx( key, vtxRef_ ) ); }
 
         bool hasPhoton() const { return hasPhoton_; }
+
+        void MakePersistent()  { MakePhoton(); persistVec_.push_back(*pho_); std::cout << "size of persistent vector: " << persistVec_.size() << std::endl;}
+        void AddPersistent( flashgg::Photon PersPho_) { persistVec_.push_back(PersPho_); }
+        flashgg::Photon getPersistent() { flashgg::Photon Pho; if (persistVec_.size() > 0 ) Pho = persistVec_[0]; return Pho ;}
 		
 //		flashgg::Photon pho4MomCorrection( edm::Ptr<flashgg::Photon> photon, edm::Ptr<reco::Vertex> vtx ) const;
 
@@ -56,6 +61,7 @@ namespace flashgg {
 		bool hasPhoton_;
 		bool hasVtx_;
 		bool MakePhoton() const;
+        std::vector<flashgg::Photon> persistVec_;
     };
 }
 

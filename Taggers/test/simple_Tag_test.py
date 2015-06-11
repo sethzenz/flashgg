@@ -22,7 +22,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 #                                        monitorPssAndPrivate = cms.untracked.bool(True)
 #                                       )
 
-process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring("file:/afs/cern.ch/work/r/rateixei/work/DiPhoSizeFlashGG/CMSSW_7_4_0_pre9/src/flashgg/MicroAOD/test/myMicroAODOutputFile_mod_1p5k.root"))
+process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring("file:../../MicroAOD/test/myMicroAODOutputFile_mod_1p5k.root"))
 
 process.load("flashgg/Taggers/flashggTagSequence_cfi")
 process.load("flashgg/Taggers/flashggTagTester_cfi")
