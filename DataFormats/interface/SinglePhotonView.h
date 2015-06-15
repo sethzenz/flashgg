@@ -46,7 +46,7 @@ namespace flashgg {
 
         bool hasPhoton() const { return hasPhoton_; }
 
-        void MakePersistent()  { MakePhoton(); persistVec_.push_back(pho_); std::cout << "size of persistent vector: " << persistVec_.size() << std::endl;}
+        void MakePersistent()  { MakePhoton(); flashgg::Photon tempPho = pho_;  persistVec_.push_back(tempPho); std::cout << "size of persistent vector: " << persistVec_.size() << std::endl;}
         void AddPersistent( flashgg::Photon PersPho_) { persistVec_.push_back(PersPho_); }
         flashgg::Photon getPersistent() { flashgg::Photon Pho; if (persistVec_.size() > 0 ) Pho = persistVec_[0]; return Pho ;}
 		
