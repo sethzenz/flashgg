@@ -28,7 +28,7 @@ namespace flashgg {
 */
     bool SinglePhotonView::MakePhoton() const
     {
-		if ( 0 ) return false;
+		if ( hasPhoton_ ) return false;
 		else if ( hasVtx_ ){
 		    float vtx_X = vtxRef_->x();
 		    float vtx_Y = vtxRef_->y();
@@ -45,10 +45,15 @@ namespace flashgg {
 		    math::XYZVector p = ( direction.Unit() ) * ( phoRef_->energy() );
 		    math::XYZTLorentzVector corrected_p4( p.x(), p.y(), p.z(), phoRef_->energy() );
 			
-			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
-			pho_->setP4(corrected_p4);
+            pho_ =  flashgg::Photon(*phoRef_);
+//            pho_ = new flashgg::Photon(*phoRef_);
+//			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
+			pho_.setP4(corrected_p4);
+            hasPhoton_ = true;
 		} else {
-			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
+            pho_ = flashgg::Photon(*phoRef_);
+//			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
+            hasPhoton_ = true;
 		}
 		return true;
     }

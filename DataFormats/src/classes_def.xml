@@ -65,8 +65,8 @@
 <class name="edm::Wrapper<std::vector<edm::Ptr<flashgg::DiPhotonCandidate> > >"/>
 <!-- <class name="flashgg::SinglePhotonView"></class> -->
 <class name="flashgg::SinglePhotonView"><field name="pho_" transient="true"/></class>
-<ioread sourceClass = "flashgg::SinglePhotonView" version="[1-]" targetClass="flashgg::SinglePhotonView" source="" target="pho_">
-	<![CDATA[ pho_=0;
+<ioread sourceClass = "flashgg::SinglePhotonView" version="[1-]" targetClass="flashgg::SinglePhotonView" source="" target="hasPhoton_">
+	<![CDATA[ hasPhoton_ = false;
 	]]>
 </ioread>
 

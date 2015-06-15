@@ -23,30 +23,30 @@ namespace flashgg {
 		
 //		SinglePhotonView( const DiPhotonCandidate *dipho, int daughter );
 //		SinglePhotonView( dipho_ptr_type dipho, int daughter );
-        SinglePhotonView() : pho_( 0 ), hasPhoton_( 0 ) {}
-        SinglePhotonView( edm::Ptr<flashgg::Photon> pho, edm::Ptr<reco::Vertex> vtx ) : pho_( 0 ), phoRef_( pho ), vtxRef_( vtx ), hasPhoton_( 0 ), hasVtx_( 1 ) {}
-        SinglePhotonView( edm::Ptr<flashgg::Photon> pho ) : pho_( 0 ), phoRef_( pho ), hasPhoton_( 0 ), hasVtx_( 0 ) {}
+        SinglePhotonView() : hasPhoton_( 0 ) {}
+        SinglePhotonView( edm::Ptr<flashgg::Photon> pho, edm::Ptr<reco::Vertex> vtx ) : phoRef_( pho ), vtxRef_( vtx ), hasPhoton_( 0 ), hasVtx_( 1 ) {}
+        SinglePhotonView( edm::Ptr<flashgg::Photon> pho ) : phoRef_( pho ), hasPhoton_( 0 ), hasVtx_( 0 ) {}
 
 
-        const cand_type &photon() const { MakePhoton(); return *pho_; }
+        const cand_type &photon() const { MakePhoton(); return pho_; }
 		
-		const cand_type * photonPtr() const  { MakePhoton(); return pho_; }
+		const cand_type * photonPtr() const  { MakePhoton(); return &pho_; }
 		
-        const cand_type *operator->() const { MakePhoton(); return pho_; }
+        const cand_type *operator->() const { MakePhoton(); return &pho_; }
 		
         const pho_ptr_type photonRef() const { return phoRef_; }
 
-        float pfChIso02WrtChosenVtx() const { MakePhoton(); return ( pho_->pfChgIso02WrtVtx( vtxRef_ ) ); }
-        float pfChIso03WrtChosenVtx() const { MakePhoton(); return ( pho_->pfChgIso03WrtVtx( vtxRef_ ) ); }
-        float pfChIso04WrtChosenVtx() const { MakePhoton(); return ( pho_->pfChgIso04WrtVtx( vtxRef_ ) ); }
+        float pfChIso02WrtChosenVtx() const { MakePhoton(); return ( pho_.pfChgIso02WrtVtx( vtxRef_ ) ); }
+        float pfChIso03WrtChosenVtx() const { MakePhoton(); return ( pho_.pfChgIso03WrtVtx( vtxRef_ ) ); }
+        float pfChIso04WrtChosenVtx() const { MakePhoton(); return ( pho_.pfChgIso04WrtVtx( vtxRef_ ) ); }
 
-        float phoIdMvaWrtChosenVtx() const { MakePhoton(); return ( pho_->phoIdMvaDWrtVtx( vtxRef_ ) ); }
+        float phoIdMvaWrtChosenVtx() const { MakePhoton(); return ( pho_.phoIdMvaDWrtVtx( vtxRef_ ) ); }
 
-        float extraChIsoWrtChoosenVtx( const std::string &key ) const { MakePhoton(); return ( pho_->extraChgIsoWrtVtx( key, vtxRef_ ) ); }
+        float extraChIsoWrtChoosenVtx( const std::string &key ) const { MakePhoton(); return ( pho_.extraChgIsoWrtVtx( key, vtxRef_ ) ); }
 
         bool hasPhoton() const { return hasPhoton_; }
 
-        void MakePersistent()  { MakePhoton(); persistVec_.push_back(*pho_); std::cout << "size of persistent vector: " << persistVec_.size() << std::endl;}
+        void MakePersistent()  { MakePhoton(); persistVec_.push_back(pho_); std::cout << "size of persistent vector: " << persistVec_.size() << std::endl;}
         void AddPersistent( flashgg::Photon PersPho_) { persistVec_.push_back(PersPho_); }
         flashgg::Photon getPersistent() { flashgg::Photon Pho; if (persistVec_.size() > 0 ) Pho = persistVec_[0]; return Pho ;}
 		
@@ -55,10 +55,10 @@ namespace flashgg {
 
 
     private:
-        mutable flashgg::Photon *pho_;
+        mutable flashgg::Photon pho_;
         edm::Ptr<flashgg::Photon> phoRef_;
         edm::Ptr<reco::Vertex> vtxRef_;
-		bool hasPhoton_;
+		mutable bool hasPhoton_;
 		bool hasVtx_;
 		bool MakePhoton() const;
         std::vector<flashgg::Photon> persistVec_;
