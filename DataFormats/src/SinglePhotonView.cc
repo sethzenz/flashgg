@@ -43,6 +43,7 @@ namespace flashgg {
 
 		    math::XYZVector direction = sc_Pos - vtx_Pos;
 		    math::XYZVector p = ( direction.Unit() ) * ( phoRef_->energy() );
+
 		    math::XYZTLorentzVector corrected_p4( p.x(), p.y(), p.z(), phoRef_->energy() );
 			
             pho_ =  flashgg::Photon(*phoRef_);
@@ -50,6 +51,29 @@ namespace flashgg {
 //			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
 			pho_.setP4(corrected_p4);
             hasPhoton_ = true;
+
+            /*
+            std::cout << " IGNORE " << p.x() << std::endl;
+            //		    math::XYZTLorentzVector corrected_p4( p.x(), p.y(), p.z(), phoRef_->energy() ); 
+            math::XYZTLorentzVector corrected_p4( 999., 0., 0., 999. ); // artificial for testing obvs
+
+            std::cout << "--- TESTING A PHOTON WITH VECTOR LENGTH " << persistVec_.size() << " ---" << std::endl;
+            std::cout << " Before building pho: phoRef_.get() = " << phoRef_.get() << std::endl;
+            std::cout << " Before building pho: phoRef_->pt() = " << phoRef_->pt() << std::endl;
+            std::cout << " Before building pho: pho_ = " << pho_ << std::endl;
+            std::cout << " Before building pho: corrected_p4.pt() = " << corrected_p4.pt() << std::endl;
+			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
+        	std::cout << " After building pho: phoRef_.get() = " << phoRef_.get() << std::endl;
+	        std::cout << " After building pho: phoRef_->pt() = " << phoRef_->pt() << std::endl;
+            std::cout << " After building pho: pho_ = " << pho_ << std::endl;
+            std::cout << " After building pho: pho_->pt() = " << pho_->pt() << std::endl;
+			pho_->setP4(corrected_p4);
+            std::cout << " After correcting p4: phoRef_.get() = " << phoRef_.get() << std::endl;
+            std::cout << " After correcting p4: phoRef_->pt() = " << phoRef_->pt() << std::endl;
+            std::cout << " After correcting p4: pho_ = " << pho_ << std::endl;
+            std::cout << " After correcting p4: pho_->pt() = " << pho_->pt() << std::endl;
+            std::cout << "--- DONE TESTING THE PHOTON WITH VECTOR LENGTH " << persistVec_.size() << " ---" << std::endl;
+            */
 		} else {
             pho_ = flashgg::Photon(*phoRef_);
 //			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
