@@ -7,9 +7,11 @@
 
 namespace flashgg {
 
+    typedef StringCutObjectSelector<Photon, true> selector_type;
+
     struct ScaleBin {
 
-        StringCutObjectSelector<Photon, true> selector;
+        selector_type selector;
         double shift;
         double shift_err;
 
@@ -24,13 +26,12 @@ namespace flashgg {
 
     public:
         PhotonScaleString( const edm::ParameterSet &conf );
-
         void applyCorrection( flashgg::Photon &y, int syst_shift ) override;
         std::string shiftLabel( int ) override;
 
     private:
         std::vector<ScaleBin> bins_;
-        StringCutObjectSelector<Photon, true> overall_range_;
+        selector_type overall_range_;
         bool debug_;
     };
 

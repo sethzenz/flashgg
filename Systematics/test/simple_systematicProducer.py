@@ -20,7 +20,9 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
 #                                       )
 
 processId = "ggh"
-process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring("file:myMicroAODOutputFile_%s.root" % processId))
+process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring("file:myMicroAODOutputFile_%s.root" % processId),
+#                             skipEvents=cms.untracked.uint32(4965)
+)
 
 process.load("flashgg.Systematics.flashggPhotonSmear_cfi")
 
@@ -33,7 +35,7 @@ process.flashggSmearDiPhoton.SystMethods.append(cms.PSet( PhotonMethodName = cms
                                                         NSigmas = cms.vint32(0),
                                                         OverallRange = cms.string("1"),
                                                         Bins = cms.VPSet(cms.PSet( Range = cms.string("1"), Shift = cms.double(targetMass/srcMass - 1.), Uncertainty = cms.double(0.))),
-                                                        Debug = cms.untracked.bool(True)
+                                                        Debug = cms.untracked.bool(False)
                                                         )
                                               )
 
