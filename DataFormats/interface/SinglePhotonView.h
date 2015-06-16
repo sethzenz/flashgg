@@ -48,7 +48,9 @@ namespace flashgg {
 
         void MakePersistent()  { MakePhoton(); flashgg::Photon tempPho = pho_;  persistVec_.push_back(tempPho); std::cout << "size of persistent vector: " << persistVec_.size() << std::endl;}
         void AddPersistent( flashgg::Photon PersPho_) { persistVec_.push_back(PersPho_); }
-        flashgg::Photon getPersistent() { flashgg::Photon Pho; if (persistVec_.size() > 0 ) Pho = persistVec_[0]; return Pho ;}
+        flashgg::Photon getPersistent() const { flashgg::Photon Pho; if (persistVec_.size() > 0 ) Pho = persistVec_[0]; return Pho ;}
+
+        void debugPersistent() const { std::cout << "debugPersistent persistVec_.size() " << persistVec_.size() << std::endl; }
 		
 //		flashgg::Photon pho4MomCorrection( edm::Ptr<flashgg::Photon> photon, edm::Ptr<reco::Vertex> vtx ) const;
 

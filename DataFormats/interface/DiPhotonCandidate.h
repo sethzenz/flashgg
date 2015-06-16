@@ -29,8 +29,12 @@ namespace flashgg {
         flashgg::Photon &getLeadingPhoton(); // { return viewPho1_->photon(); }
 		flashgg::Photon &getSubLeadingPhoton(); // { return viewPho2_->photon(); }
 
-        flashgg::SinglePhotonView leadingView() const {return viewPho1_; }
-        flashgg::SinglePhotonView subLeadingView() const {return viewPho2_; }
+        flashgg::SinglePhotonView &leadingView() {return viewPho1_; }
+        flashgg::SinglePhotonView &subLeadingView() {return viewPho2_; }
+
+        const flashgg::SinglePhotonView &leadingView() const { return viewPho1_; }
+        const flashgg::SinglePhotonView &subLeadingView() const { return viewPho2_; }
+
 		
         void setLogSumPt2( float val ) { logsumpt2_ = val; }
         void setPtBal( float val ) { ptbal_ = val; }

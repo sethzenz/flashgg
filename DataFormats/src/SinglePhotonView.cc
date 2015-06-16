@@ -51,6 +51,7 @@ namespace flashgg {
 //			pho_ = const_cast<flashgg::Photon *>(phoRef_.get());
 			pho_.setP4(corrected_p4);
             hasPhoton_ = true;
+            std::cout << " Made a photon with pt " << pho_.pt() << std::endl;
 
             /*
             std::cout << " IGNORE " << p.x() << std::endl;

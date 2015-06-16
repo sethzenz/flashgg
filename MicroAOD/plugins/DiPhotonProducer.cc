@@ -124,6 +124,13 @@ namespace flashgg {
 
                 dipho.leadingView().MakePersistent();
 
+                std::cout << "dipho.leadingView().debugPersistent() on next line" << std::endl;
+                dipho.leadingView().debugPersistent();
+
+                std::cout << "dipho.subLeadingView().debugPersistent() on next line" << std::endl;
+                dipho.subLeadingView().debugPersistent();
+
+
                 // store the diphoton into the collection
                 diPhotonColl->push_back( dipho );
             }

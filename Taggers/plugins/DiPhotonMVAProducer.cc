@@ -120,6 +120,13 @@ namespace flashgg {
             const flashgg::SinglePhotonView v2 = diPhotons->ptrAt( candIndex )->subLeadingView();
             cout << "PT "  << endl;
             cout << "Pho1 pt " << v1.photonRef()->pt() << " \t Pho2 pt " << v2->pt() << endl;
+            std::cout << "Pho1 getPersistent pt " << v1.getPersistent().pt() << std::endl;
+
+            std::cout << "diPhotons->ptrAt( candIndex )->leadingView().debugPersistent() on next line" << std::endl;
+            diPhotons->ptrAt( candIndex )->leadingView().debugPersistent();
+
+            std::cout << "diPhotons->ptrAt( candIndex )->subLeadingView().debugPersistent() on next line" << std::endl;
+            diPhotons->ptrAt( candIndex )->subLeadingView().debugPersistent();
 
 
             const flashgg::Photon *g1 = diPhotons->ptrAt( candIndex )->leadingPhoton();
