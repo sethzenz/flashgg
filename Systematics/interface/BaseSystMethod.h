@@ -1,5 +1,5 @@
-#ifndef FLASHgg_BaseSystMethods_h
-#define FLASHgg_BaseSystMethods_h
+#ifndef FLASHgg_BaseSystMethod_h
+#define FLASHgg_BaseSystMethod_h
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/Common/interface/Handle.h"
@@ -7,19 +7,19 @@
 namespace flashgg {
 
     template <class flashgg_object, class param_var>
-    class BaseSystMethods
+    class BaseSystMethod
     {
 
     public:
 
-        BaseSystMethods( const edm::ParameterSet &conf ):
+        BaseSystMethod( const edm::ParameterSet &conf ):
             _Name( conf.getParameter<std::string>( "MethodName" ) ),
             _Label( conf.getParameter<std::string>( "Label" ) )  { }
-        BaseSystMethods() {};
-        virtual ~BaseSystMethods() {};
+        BaseSystMethod() {};
+        virtual ~BaseSystMethod() {};
 
-        BaseSystMethods( const BaseSystMethods & ) = delete;
-        BaseSystMethods &operator=( const BaseSystMethods & ) = delete;
+        BaseSystMethod( const BaseSystMethod & ) = delete;
+        BaseSystMethod &operator=( const BaseSystMethod & ) = delete;
 
         virtual void applyCorrection( flashgg_object &, param_var syst_value ) = 0; //main function//
 
@@ -40,18 +40,18 @@ namespace flashgg {
 #include "flashgg/DataFormats/interface/Photon.h"
 #include "flashgg/DataFormats/interface/DiPhotonCandidate.h"
 //template <class T, class U> struct A {
-//    typedef edmplugin::PluginFactory< flashgg::BaseSystMethods<T,U>* (const edm::ParameterSet & ) > FlashggSystematicMethodsFactory;
+//    typedef edmplugin::PluginFactory< flashgg::BaseSystMethod<T,U>* (const edm::ParameterSet & ) > FlashggSystematicMethodsFactory;
 //}
 
-//typedef template< class T, class U> edmplugin::PluginFactory< flashgg::BaseSystMethods<T,U>* (const edm::ParameterSet & ) > FlashggSystematicMethodsFactory;
-template< class T, class U > using FlashggSystematicMethodsFactory = edmplugin::PluginFactory< flashgg::BaseSystMethods<T, U>* ( const edm::ParameterSet & ) >;
+//typedef template< class T, class U> edmplugin::PluginFactory< flashgg::BaseSystMethod<T,U>* (const edm::ParameterSet & ) > FlashggSystematicMethodsFactory;
+template< class T, class U > using FlashggSystematicMethodsFactory = edmplugin::PluginFactory< flashgg::BaseSystMethod<T, U>* ( const edm::ParameterSet & ) >;
 typedef FlashggSystematicMethodsFactory<flashgg::Photon, int> FlashggSystematicPhotonMethodsFactory;
 typedef FlashggSystematicMethodsFactory<flashgg::DiPhotonCandidate, int> FlashggSystematicDiPhotonMethodsFactory;
 typedef FlashggSystematicMethodsFactory<flashgg::Photon, std::pair<int, int> > FlashggSystematicPhotonMethodsFactory2D;
 typedef FlashggSystematicMethodsFactory<flashgg::DiPhotonCandidate, std::pair<int, int> > FlashggSystematicDiPhotonMethodsFactory2D;
-//typedef edmplugin::PluginFactory< flashgg::BaseSystMethods<flashgg::Photon, int>* ( const edm::ParameterSet & ) > FlashggSystematicPhotonMethodsFactory;
-//typedef edmplugin::PluginFactory< flashgg::BaseSystMethods<flashgg::Photon,float>* ( const edm::ParameterSet&) > FlashggSystematicPhotonMethodsFactory;
-//typedef edmplugin::PluginFactory< flashgg::BaseSystMethods<flashgg::DiPhotonCandidate>* ( const edm::ParameterSet&) > FlashggSystematicDiPhotonMethodsFactory;
+//typedef edmplugin::PluginFactory< flashgg::BaseSystMethod<flashgg::Photon, int>* ( const edm::ParameterSet & ) > FlashggSystematicPhotonMethodsFactory;
+//typedef edmplugin::PluginFactory< flashgg::BaseSystMethod<flashgg::Photon,float>* ( const edm::ParameterSet&) > FlashggSystematicPhotonMethodsFactory;
+//typedef edmplugin::PluginFactory< flashgg::BaseSystMethod<flashgg::DiPhotonCandidate>* ( const edm::ParameterSet&) > FlashggSystematicDiPhotonMethodsFactory;
 
 #endif
 // Local Variables:

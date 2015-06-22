@@ -1,4 +1,4 @@
-#include "flashgg/Systematics/interface/BaseSystMethods.h"
+#include "flashgg/Systematics/interface/BaseSystMethod.h"
 
 EDM_REGISTER_PLUGINFACTORY( FlashggSystematicPhotonMethodsFactory,
                             "SystematicPhotonMethodsFactory" );

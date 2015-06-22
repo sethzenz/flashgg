@@ -1,7 +1,7 @@
 #ifndef FLASHgg_DiPhotonFromPhotonBase_h
 #define FLASHgg_DiPhotonFromPhotonBase_h
 
-#include "flashgg/Systematics/interface/BaseSystMethods.h"
+#include "flashgg/Systematics/interface/BaseSystMethod.h"
 #include "DataFormats/Common/interface/Handle.h"
 #include "DataFormats/Common/interface/PtrVector.h"
 #include "flashgg/DataFormats/interface/DiPhotonCandidate.h"
@@ -12,7 +12,7 @@ namespace flashgg {
 
 
     template <class param_var>
-    class DiPhotonFromPhotonBase : public BaseSystMethods<DiPhotonCandidate, param_var>
+    class DiPhotonFromPhotonBase : public BaseSystMethod<DiPhotonCandidate, param_var>
     {
 
     public:
@@ -25,12 +25,12 @@ namespace flashgg {
         bool debug_;
 
     private:
-        std::unique_ptr<BaseSystMethods<flashgg::Photon, param_var> > photon_corr_;
+        std::unique_ptr<BaseSystMethod<flashgg::Photon, param_var> > photon_corr_;
     };
 
     template<class param_var>
     DiPhotonFromPhotonBase<param_var>::DiPhotonFromPhotonBase( const edm::ParameterSet &conf ) :
-        BaseSystMethods<DiPhotonCandidate, param_var>::BaseSystMethods( conf ),
+        BaseSystMethod<DiPhotonCandidate, param_var>::BaseSystMethod( conf ),
         debug_( conf.getUntrackedParameter<bool>( "Debug", false ) )
     {
         std::string photonMethodName = conf.getParameter<std::string>( "PhotonMethodName" );

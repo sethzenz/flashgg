@@ -10,7 +10,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "TrackingTools/IPTools/interface/IPTools.h"
 
-#include "flashgg/Systematics/interface/BaseSystMethods.h"
+#include "flashgg/Systematics/interface/BaseSystMethod.h"
 
 //#include <type_traits>
 //#include <typeinfo>
@@ -31,17 +31,17 @@ namespace flashgg {
     private:
 
         void produce( edm::Event &, const edm::EventSetup & ) override;
-        void ApplyCorrections( flashgg_object &y, shared_ptr<BaseSystMethods<flashgg_object, param_var> > CorrToShift, param_var syst_shift );
-        void ApplyCorrections( flashgg_object &y, shared_ptr<BaseSystMethods<flashgg_object, pair<param_var, param_var> > > CorrToShift,
+        void ApplyCorrections( flashgg_object &y, shared_ptr<BaseSystMethod<flashgg_object, param_var> > CorrToShift, param_var syst_shift );
+        void ApplyCorrections( flashgg_object &y, shared_ptr<BaseSystMethod<flashgg_object, pair<param_var, param_var> > > CorrToShift,
                                pair<param_var, param_var>  syst_shift );
 
         edm::EDGetTokenT<View<flashgg_object> > ObjectToken_;
 
-        std::vector<shared_ptr<BaseSystMethods<flashgg_object, param_var> > > Corrections_;
+        std::vector<shared_ptr<BaseSystMethod<flashgg_object, param_var> > > Corrections_;
         std::vector<std::vector<param_var> > sigmas_;
         std::vector<std::string> collectionLabelsNonCentral_;
 
-        std::vector<shared_ptr<BaseSystMethods<flashgg_object, pair<param_var, param_var> > > > Corrections2D_;
+        std::vector<shared_ptr<BaseSystMethod<flashgg_object, pair<param_var, param_var> > > > Corrections2D_;
         std::vector<std::vector<pair<param_var, param_var> > > sigmas2D_;
     };
 
@@ -122,7 +122,7 @@ namespace flashgg {
     ///fucntion takes in the current corection one is looping through and compares with its own internal loop, given that this will be within the corr and sys loop it takes care of the 2n+1 collection number////
     template <typename flashgg_object, typename param_var>
     void ObjectSystematicProducer<flashgg_object, param_var>::ApplyCorrections( flashgg_object &y,
-            shared_ptr<BaseSystMethods<flashgg_object, param_var> > CorrToShift,
+            shared_ptr<BaseSystMethod<flashgg_object, param_var> > CorrToShift,
             param_var syst_shift )
     {
         std::cout << " 1d before 1d " << std::endl;
@@ -143,7 +143,7 @@ namespace flashgg {
 
     template <typename flashgg_object, typename param_var>
     void ObjectSystematicProducer<flashgg_object, param_var>::ApplyCorrections( flashgg_object &y,
-            shared_ptr<BaseSystMethods<flashgg_object, pair<param_var, param_var> > > CorrToShift,
+            shared_ptr<BaseSystMethod<flashgg_object, pair<param_var, param_var> > > CorrToShift,
             pair<param_var, param_var>  syst_shift )
     {
         std::cout << "2d before 1d" << std::endl;

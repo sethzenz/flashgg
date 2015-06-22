@@ -1,7 +1,7 @@
 #ifndef FLASHgg_ObjectSystMethodBinnedByFunctor_h
 #define FLASHgg_ObjectSystMethodBinnedByFunctor_h
 
-#include "flashgg/Systematics/interface/BaseSystMethods.h"
+#include "flashgg/Systematics/interface/BaseSystMethod.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/Common/interface/Handle.h"
 #include "CommonTools/Utils/interface/StringObjectFunction.h"
@@ -9,7 +9,7 @@
 namespace flashgg {
 
     template <class flashgg_object, class param_var>
-    class ObjectSystMethodBinnedByFunctor : public BaseSystMethods<flashgg_object, param_var>
+    class ObjectSystMethodBinnedByFunctor : public BaseSystMethod<flashgg_object, param_var>
     {
 
     public:
@@ -26,7 +26,7 @@ namespace flashgg {
         };
 
         ObjectSystMethodBinnedByFunctor( const edm::ParameterSet &conf ) :
-            BaseSystMethods<flashgg_object, param_var>::BaseSystMethods( conf ),
+            BaseSystMethod<flashgg_object, param_var>::BaseSystMethod( conf ),
             debug_( conf.getUntrackedParameter<bool>( "Debug", false ) )
         {
             const auto &pset = conf.getParameterSet( "BinList" );
