@@ -4,6 +4,11 @@ EDM_REGISTER_PLUGINFACTORY( FlashggSystematicPhotonMethodsFactory,
                             "SystematicPhotonMethodsFactory" );
 EDM_REGISTER_PLUGINFACTORY( FlashggSystematicDiPhotonMethodsFactory,
                             "SystematicDiPhotonMethodsFactory" );
+EDM_REGISTER_PLUGINFACTORY( FlashggSystematicPhotonMethodsFactory2D,
+                            "SystematicPhotonMethodsFactory2D" );
+EDM_REGISTER_PLUGINFACTORY( FlashggSystematicDiPhotonMethodsFactory2D,
+                            "SystematicDiPhotonMethodsFactory2D" );
+
 
 //EDM_REGISTER_PLUGINFACTORY(FlashggSystematicDiPhotonMethodsFactory,
 //				"SystematicDiPhotonMethodsFactory");

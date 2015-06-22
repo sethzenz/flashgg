@@ -26,7 +26,7 @@ namespace flashgg {
         const std::string &name() const { return _Name; };
         const std::string &label() const { return _Label; };
 
-        virtual std::string shiftLabel( param_var syst_val ) = 0;
+        virtual std::string shiftLabel( param_var syst_val ) const = 0;
 
     private:
         const std::string _Name;
@@ -47,7 +47,8 @@ namespace flashgg {
 template< class T, class U > using FlashggSystematicMethodsFactory = edmplugin::PluginFactory< flashgg::BaseSystMethods<T, U>* ( const edm::ParameterSet & ) >;
 typedef FlashggSystematicMethodsFactory<flashgg::Photon, int> FlashggSystematicPhotonMethodsFactory;
 typedef FlashggSystematicMethodsFactory<flashgg::DiPhotonCandidate, int> FlashggSystematicDiPhotonMethodsFactory;
-
+typedef FlashggSystematicMethodsFactory<flashgg::Photon, std::pair<int, int> > FlashggSystematicPhotonMethodsFactory2D;
+typedef FlashggSystematicMethodsFactory<flashgg::DiPhotonCandidate, std::pair<int, int> > FlashggSystematicDiPhotonMethodsFactory2D;
 //typedef edmplugin::PluginFactory< flashgg::BaseSystMethods<flashgg::Photon, int>* ( const edm::ParameterSet & ) > FlashggSystematicPhotonMethodsFactory;
 //typedef edmplugin::PluginFactory< flashgg::BaseSystMethods<flashgg::Photon,float>* ( const edm::ParameterSet&) > FlashggSystematicPhotonMethodsFactory;
 //typedef edmplugin::PluginFactory< flashgg::BaseSystMethods<flashgg::DiPhotonCandidate>* ( const edm::ParameterSet&) > FlashggSystematicDiPhotonMethodsFactory;

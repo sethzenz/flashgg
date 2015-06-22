@@ -72,7 +72,7 @@ namespace flashgg {
             for( const auto &bin : bins_ ) {
                 bool found = true;
                 for( unsigned int i = 0 ; i < func_vals.size() ; i++ ) {
-                    if( func_vals[i] < bin.min[i] || func_vals[i] > bin.max[i] ) {
+                    if( func_vals[i] < bin.min[i] || func_vals[i] >= bin.max[i] ) {
                         found = false;
                         break;
                     }

@@ -1,55 +1,32 @@
-#include "flashgg/Systematics/interface/BaseSystMethods.h"
+#include "flashgg/Systematics/interface/ObjectSystMethodBinnedByFunctor.h"
 #include "DataFormats/Common/interface/Handle.h"
 #include "DataFormats/Common/interface/PtrVector.h"
 #include "flashgg/DataFormats/interface/Photon.h"
 #include "CommonTools/Utils/interface/StringCutObjectSelector.h"
 
-
 namespace flashgg {
 
-    typedef StringCutObjectSelector<Photon, true> selector_type;
-
-    struct ScaleBin {
-
-        selector_type selector;
-        double shift;
-        double shift_err;
-
-        ScaleBin( std::string s, double val, double err ) :
-            selector( s ),
-            shift( val ),
-            shift_err( err ) {}
-    };
-
-    class PhotonScaleString: public BaseSystMethods<flashgg::Photon, int>
+    class PhotonScaleString: public ObjectSystMethodBinnedByFunctor<flashgg::Photon, int>
     {
 
     public:
+        typedef StringCutObjectSelector<Photon, true> selector_type;
+
         PhotonScaleString( const edm::ParameterSet &conf );
         void applyCorrection( flashgg::Photon &y, int syst_shift ) override;
-        std::string shiftLabel( int ) override;
+        std::string shiftLabel( int ) const override;
 
     private:
-        std::vector<ScaleBin> bins_;
         selector_type overall_range_;
-        bool debug_;
     };
 
     PhotonScaleString::PhotonScaleString( const edm::ParameterSet &conf ) :
-        BaseSystMethods( conf ),
-        overall_range_( conf.getParameter<std::string>( "OverallRange" ) ),
-        debug_( conf.getUntrackedParameter<bool>( "Debug", false ) )
+        ObjectSystMethodBinnedByFunctor( conf ),
+        overall_range_( conf.getParameter<std::string>( "OverallRange" ) )
     {
-        const auto &vpset = conf.getParameterSetVector( "Bins" );
-        for( const auto &pset : vpset ) {
-            std::string range = pset.getParameter<std::string>( "Range" );
-            double shift = pset.getParameter<double>( "Shift" );
-            double uncertainty = pset.getParameter<double>( "Uncertainty" );
-            bins_.emplace_back( range, shift, uncertainty );
-        }
     }
 
-    std::string PhotonScaleString::shiftLabel( int syst_value )
+    std::string PhotonScaleString::shiftLabel( int syst_value ) const
     {
         std::string result;
         if( syst_value == 0 ) {
@@ -65,16 +42,16 @@ namespace flashgg {
     void PhotonScaleString::applyCorrection( flashgg::Photon &y, int syst_shift )
     {
         if( overall_range_( y ) ) {
-            for( auto bin = bins_.begin() ; bin != bins_.end() ; bin++ ) {
-                if( ( bin->selector )( y ) ) {
-                    float scale = 1 + bin->shift + syst_shift * bin->shift_err;
-                    if( debug_ ) {
-                        std::cout << "  " << shiftLabel( syst_shift ) << ": Photon has pt= " << y.pt() << " eta=" << y.eta()
-                                  << " and we apply a multiplicative correction of " << scale << std::endl;
-                    }
-                    y.updateEnergy( shiftLabel( syst_shift ), scale * y.energy() );
-                    break;
+            auto val_err = binContents( y );
+            if( val_err.first.size() == 1 && val_err.second.size() == 1 ) { // otherwise no-op because we don't have an entry
+                float shift_val = val_err.first[0];
+                float shift_err = val_err.second[0];
+                float scale = 1 + shift_val + syst_shift * shift_err;
+                if( debug_ ) {
+                    std::cout << "  " << shiftLabel( syst_shift ) << ": Photon has pt= " << y.pt() << " eta=" << y.eta()
+                              << " and we apply a multiplicative correction of " << scale << std::endl;
                 }
+                y.updateEnergy( shiftLabel( syst_shift ), scale * y.energy() );
             }
         }
     }

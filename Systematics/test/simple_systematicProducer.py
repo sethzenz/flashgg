@@ -28,20 +28,44 @@ process.load("flashgg.Systematics.flashggPhotonSmear_cfi")
 
 # Code to artificially scale photon energies to make different mass points for signal fit tests
 srcMass = 130.
-targetMass = 130.
+targetMass = 125.
 process.flashggSmearDiPhoton.SystMethods.append(cms.PSet( PhotonMethodName = cms.string("FlashggPhotonScaleString"),
-                                                        MethodName = cms.string("FlashggDiPhotonFromPhoton"),
-                                                        Label = cms.string("FakeMassScale"),
-                                                        NSigmas = cms.vint32(0),
-                                                        OverallRange = cms.string("1"),
-                                                        Bins = cms.VPSet(cms.PSet( Range = cms.string("1"), Shift = cms.double(targetMass/srcMass - 1.), Uncertainty = cms.double(0.))),
-                                                        Debug = cms.untracked.bool(False)
+                                                          MethodName = cms.string("FlashggDiPhotonFromPhoton"),
+                                                          Label = cms.string("FakeMassScale"),
+                                                          NSigmas = cms.vint32(0),
+                                                          OverallRange = cms.string("1"),
+                                                          BinList = cms.PSet(variables=cms.vstring(),
+                                                                             bins=cms.VPSet(cms.PSet (lowBounds = cms.vdouble(), 
+                                                                                                      upBounds =  cms.vdouble(), 
+                                                                                                      values = cms.vdouble( targetMass/srcMass - 1. ), 
+                                                                                                      uncertainties = cms.vdouble( 0. )))),
+                                                          Debug = cms.untracked.bool(True)
                                                         )
-                                              )
+                                                )
+process.flashggSmearDiPhoton.SystMethods2D.append(cms.PSet( PhotonMethodName = cms.string("FlashggPhotonSmearString"),
+                                                          MethodName = cms.string("FlashggDiPhotonFromPhoton2D"),
+                                                          Label = cms.string("JustATest"),
+                                                          NSigmas = cms.PSet( firstVar = cms.vint32(1,-1,0,0), 
+                                                                              secondVar = cms.vint32(0,0,1,-1)),
+                                                          OverallRange = cms.string("1"),
+                                                          BinList = cms.PSet(variables=cms.vstring(),
+                                                                             bins=cms.VPSet(cms.PSet (lowBounds = cms.vdouble(),
+                                                                                                      upBounds =  cms.vdouble(),
+                                                                                                      values = cms.vdouble( 0.,0. ),
+                                                                                                      uncertainties = cms.vdouble( 1.,10. )))),
+                                                         Debug = cms.untracked.bool(True)
+                                                         )
+                                               )
 
 for pset in process.flashggSmearDiPhoton.SystMethods:
-    if pset.MethodName == "FlashggDiPhotonFromPhoton" and pset.PhotonMethodName == "FlashggPhotonScaleString":
-        print pset
+    print "=== 1D syst method pset ==="
+    print pset
+    print
+
+for pset in process.flashggSmearDiPhoton.SystMethods2D:
+    print "=== 2D syst method pset ==="
+    print pset
+    print
 
 process.load("flashgg/Taggers/flashggTagSequence_cfi")
 process.load("flashgg/Taggers/flashggTagTester_cfi")
