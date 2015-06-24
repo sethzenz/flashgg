@@ -21,7 +21,7 @@ namespace flashgg {
         void applyCorrection( DiPhotonCandidate &y, param_var syst_shift ) override;
         std::string shiftLabel( param_var ) const override;
 
-        void setRandomEngine( CLHEP::HepRandomEngine &eng )
+        void setRandomEngine( CLHEP::HepRandomEngine &eng ) override
         {
             std::cout << " DiPhotonFromPhotonBase::setRandomEngine " << std::endl;
             BaseSystMethod<DiPhotonCandidate, param_var>::setRandomEngine( eng );
