@@ -33,7 +33,12 @@ namespace flashgg {
 
         virtual std::string shiftLabel( param_var syst_val ) const = 0;
 
-        void setRandomEngine( CLHEP::HepRandomEngine &eng ) { _RandomEngine = &eng; }
+        void setRandomEngine( CLHEP::HepRandomEngine &eng )
+        {
+            std::cout << " BaseSystMethod::setRandomEngine - " << _Name << std::endl;
+            _RandomEngine = &eng;
+        }
+
         CLHEP::HepRandomEngine *RandomEngine() const
         {
             if( _RandomEngine == nullptr ) {

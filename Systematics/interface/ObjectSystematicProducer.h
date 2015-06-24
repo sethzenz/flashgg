@@ -119,6 +119,7 @@ namespace flashgg {
                 produces<vector<flashgg_object> >( collection_label );
                 collectionLabelsNonCentral_.push_back( collection_label );
             }
+            ipset2D++;
         }
     }
 
