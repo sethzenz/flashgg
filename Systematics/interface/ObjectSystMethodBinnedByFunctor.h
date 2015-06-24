@@ -34,31 +34,12 @@ namespace flashgg {
                 functors_.emplace_back( variable );
             }
 
-            // for consistency checks
-            unsigned int b_size = functors_.size();
-            unsigned int v_size = 0;
-            unsigned int u_size = 0;
-
             for( const auto &b : pset.getParameterSetVector( "bins" ) ) {
                 bins_.emplace_back( b.getParameter<std::vector<double> >( "lowBounds" ),
                                     b.getParameter<std::vector<double> >( "upBounds" ),
                                     b.getParameter<std::vector<double> >( "values" ),
                                     b.getParameter<std::vector<double> >( "uncertainties" ) );
 
-                if( debug_ ) { // consistency checks
-                    assert( b_size == bins_.back().min.size() );
-                    assert( bins_.back().min.size() == bins_.back().max.size() );
-                    assert( b_size == bins_.back().min.size() );
-                    if( v_size == 0 ) {
-                        v_size = bins_.back().val.size();
-                        u_size = bins_.back().unc.size();
-                        assert( v_size > 0 );
-                        assert( u_size > 0 );
-                    } else {
-                        assert( v_size == bins_.back().val.size() );
-                        assert( u_size == bins_.back().unc.size() );
-                    }
-                }
             }
         }
 

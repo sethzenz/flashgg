@@ -49,7 +49,10 @@ namespace flashgg {
     ObjectSystematicProducer<flashgg_object, param_var>::ObjectSystematicProducer( const ParameterSet &iConfig ) :
         ObjectToken_( consumes<View<flashgg_object> >( iConfig.getParameter<InputTag>( "src" ) ) )
     {
-        std::cout << " Top of produce " << std::endl;
+        edm::Service<edm::RandomNumberGenerator> rng;
+        if( ! rng.isAvailable() ) {
+            throw cms::Exception( "Configuration" ) << "ObjectSystematicProducer requires the RandomNumberGeneratorService  - please add to configuration";
+        }
 
         produces<std::vector<flashgg_object> >(); // Central value
         std::vector<edm::ParameterSet> vpset = iConfig.getParameter<std::vector<edm::ParameterSet> >( "SystMethods" );
@@ -168,6 +171,28 @@ namespace flashgg {
         evt.getByToken( ObjectToken_, objects );
 
         std::cout << " start of produce" << std::endl;
+
+        // Give each corrector a pointer to the random service engine that it can use if needs it
+        edm::Service<edm::RandomNumberGenerator> rng;
+
+        std::cout << " rng.isAvailable()=" << rng.isAvailable() << std::endl;
+
+        CLHEP::HepRandomEngine &engine = rng->getEngine( evt.streamID() );
+
+        std::cout << " Got engine!" << std::endl;
+
+        for( unsigned int ncorr = 0 ; ncorr < Corrections_.size() ; ncorr++ ) {
+            std::cout << " Setting engine 1D " << ncorr << std::endl;
+            Corrections_.at( ncorr )->setRandomEngine( engine );
+            std::cout << " Set engine 1D " << ncorr << " label=" << Corrections_.at( ncorr )->shiftLabel( param_var( 0 ) ) << std::endl;
+        }
+        for( unsigned int ncorr = 0 ; ncorr < Corrections2D_.size() ; ncorr++ ) {
+            std::cout << " Setting engine 2D " << ncorr << std::endl;
+            Corrections2D_.at( ncorr )->setRandomEngine( engine );
+            std::cout << " Setting engine 2D " << ncorr << " label=" << Corrections2D_.at( ncorr )->shiftLabel( make_pair( param_var( 0 ), param_var( 0 ) ) ) << std::endl;
+        }
+
+        std::cout << "Engines set!" << std::endl;
 
         // Build central collection
         auto_ptr<vector<flashgg_object> > centralObjectColl( new vector<flashgg_object> );

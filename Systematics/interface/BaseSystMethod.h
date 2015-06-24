@@ -3,6 +3,9 @@
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "DataFormats/Common/interface/Handle.h"
+#include "CLHEP/Random/RandomEngine.h"
+#include "FWCore/Utilities/interface/RandomNumberGenerator.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
 
 namespace flashgg {
 
@@ -14,7 +17,9 @@ namespace flashgg {
 
         BaseSystMethod( const edm::ParameterSet &conf ):
             _Name( conf.getParameter<std::string>( "MethodName" ) ),
-            _Label( conf.getParameter<std::string>( "Label" ) )  { }
+            _Label( conf.getParameter<std::string>( "Label" ) ),
+            _RandomEngine( nullptr )
+        { }
         BaseSystMethod() {};
         virtual ~BaseSystMethod() {};
 
@@ -28,10 +33,19 @@ namespace flashgg {
 
         virtual std::string shiftLabel( param_var syst_val ) const = 0;
 
+        void setRandomEngine( CLHEP::HepRandomEngine &eng ) { _RandomEngine = &eng; }
+        CLHEP::HepRandomEngine *RandomEngine() const
+        {
+            if( _RandomEngine == nullptr ) {
+                throw cms::Exception( "Configuration" ) << "Tried to access BaseSystMethod::RandomEngine() when it is not set";
+            }
+            return _RandomEngine;
+        }
+
     private:
         const std::string _Name;
         const std::string _Label;
-        //typename flashgg_object object;
+        CLHEP::HepRandomEngine *_RandomEngine;
 
     };
 }
