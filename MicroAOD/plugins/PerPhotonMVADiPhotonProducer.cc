@@ -40,8 +40,8 @@ namespace flashgg {
             auto_ptr<vector<DiPhotonCandidate> > output( new vector<DiPhotonCandidate> );
             computer_.update( evt );
             for( auto dipho : *input ) {
-                computer_.fill( dipho.getLeadingPhoton() );
-                computer_.fill( dipho.getSubLeadingPhoton() );
+                computer_.fill( dipho.leadingPhoton() );
+                computer_.fill( dipho.subLeadingPhoton() );
                 output->push_back( dipho );
             }
             evt.put( output );

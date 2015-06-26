@@ -130,6 +130,7 @@ namespace flashgg {
             param_var syst_shift )
     {
         //        std::cout << " 1d before 1d " << std::endl;
+        std::cout << " In ObjectSystematicProducer::ApplyCorrections pt m " << y.pt() << " " << y.mass() << std::endl;
         for( unsigned int shift = 0; shift < Corrections_.size(); shift++ ) {
             if( CorrToShift == Corrections_.at( shift ) ) {
                 Corrections_.at( shift )->applyCorrection( y, syst_shift );
@@ -150,6 +151,7 @@ namespace flashgg {
             shared_ptr<BaseSystMethod<flashgg_object, pair<param_var, param_var> > > CorrToShift,
             pair<param_var, param_var>  syst_shift )
     {
+        std::cout << " In ObjectSystematicProducer::ApplyCorrections pt m " << y.pt() << " " << y.mass() << std::endl;
         //        std::cout << "2d before 1d" << std::endl;
         for( unsigned int shift = 0; shift < Corrections_.size(); shift++ ) {
             Corrections_.at( shift )->applyCorrection( y, param_var( 0 ) );
@@ -198,7 +200,9 @@ namespace flashgg {
         // Build central collection
         auto_ptr<vector<flashgg_object> > centralObjectColl( new vector<flashgg_object> );
         for( unsigned int i = 0; i < objects->size(); i++ ) {
+            std::cout << "ObjectSystematicProducer: Initial ptr pt m " << objects->ptrAt( i )->pt() << " " << objects->ptrAt( i )->mass() << std::endl;
             flashgg_object obj = flashgg_object( *objects->ptrAt( i ) );
+            std::cout << "ObjectSystematicProducer: Copied obj pt m " << obj.pt() << " " << obj.mass() << std::endl;
             ApplyCorrections( obj, nullptr, param_var( 0 ) );
             centralObjectColl->push_back( obj );
         }

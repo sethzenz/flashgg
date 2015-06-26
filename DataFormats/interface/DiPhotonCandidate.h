@@ -11,9 +11,7 @@
 
 
 namespace flashgg {
-//    class SinglePhotonView;
 
-//    class DiPhotonCandidate : public math::XYZTLorentzVector //reco::LeafCandidate
     class DiPhotonCandidate : public reco::LeafCandidate
     {
     public:
@@ -23,18 +21,17 @@ namespace flashgg {
 
         const edm::Ptr<reco::Vertex> vtx() const { return vertex_; }
 
-        const flashgg::Photon *leadingPhoton() const; // { return viewPho1_->photonPtr(); }
-        const flashgg::Photon *subLeadingPhoton() const; // { return viewPho1_->photonPtr(); }
+        const flashgg::Photon *leadingPhoton() const;
+        const flashgg::Photon *subLeadingPhoton() const;
 
-        flashgg::Photon &getLeadingPhoton(); // { return viewPho1_->photon(); }
-        flashgg::Photon &getSubLeadingPhoton(); // { return viewPho2_->photon(); }
+        flashgg::Photon &leadingPhoton();
+        flashgg::Photon &subLeadingPhoton();
 
-        flashgg::SinglePhotonView &leadingView() {return viewPho1_; }
-        flashgg::SinglePhotonView &subLeadingView() {return viewPho2_; }
+        flashgg::SinglePhotonView &leadingView() { return viewPho1_; }
+        flashgg::SinglePhotonView &subLeadingView() { return viewPho2_; }
 
         const flashgg::SinglePhotonView &leadingView() const { return viewPho1_; }
         const flashgg::SinglePhotonView &subLeadingView() const { return viewPho2_; }
-
 
         void setLogSumPt2( float val ) { logsumpt2_ = val; }
         void setPtBal( float val ) { ptbal_ = val; }
@@ -73,8 +70,7 @@ namespace flashgg {
         float vtxProbMVA() const { return vtxprobmva_; }
         float sumPt() const
         {
-//            return ( this->daughter( 0 )->pt() + this->daughter( 1 )->pt() );
-            return ( corrPho1_.pt() + corrPho2_.pt() );
+            return ( leadingPhoton()->pt() + subLeadingPhoton()->pt() );
         }
         int vertexIndex() const { return vertex_index_; }
 
@@ -97,6 +93,8 @@ namespace flashgg {
         bool operator <( const DiPhotonCandidate &b ) const;
 
         math::XYZTLorentzVector PhoP4Corr( edm::Ptr<flashgg::Photon> ) const;
+
+        void computeP4AndOrder();
 
     private:
 
@@ -127,10 +125,9 @@ namespace flashgg {
 
         std::string systLabel_;
 
-        math::XYZTLorentzVector corrPho1_;
-        math::XYZTLorentzVector corrPho2_;
+        //        math::XYZTLorentzVector corrPho1_;
+        //        math::XYZTLorentzVector corrPho2_;
 
-//		SPView viewPho1_;
         flashgg::SinglePhotonView viewPho1_;
         flashgg::SinglePhotonView viewPho2_;
     };
