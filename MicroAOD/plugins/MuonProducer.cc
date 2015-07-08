@@ -29,7 +29,7 @@ namespace flashgg {
     };
 
     MuonProducer::MuonProducer( const ParameterSet &iConfig ):
-        muonToken_( consumes<View<pat::Muon> >( iConfig.getUntrackedParameter<InputTag>( "muonTag", InputTag( "slimmedMuons" ) ) ) )
+        muonToken_( consumes<View<pat::Muon> >( iConfig.getParameter<InputTag>( "muonTag" ) ) )
     {
         produces<vector<flashgg::Muon> >();
     }

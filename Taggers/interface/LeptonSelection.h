@@ -16,6 +16,7 @@
 #include "DataFormats/PatCandidates/interface/Muon.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "flashgg/DataFormats/interface/Electron.h"
+#include "flashgg/DataFormats/interface/Muon.h"
 #include "DataFormats/BeamSpot/interface/BeamSpot.h"
 
 #include "DataFormats/TrackReco/interface/HitPattern.h"
@@ -33,7 +34,7 @@ using namespace edm;
 
 namespace flashgg {
 
-    std::vector<edm::Ptr<pat::Muon> > selectMuons( const std::vector<edm::Ptr<pat::Muon> > &muonPointers, Ptr<flashgg::DiPhotonCandidate> dipho,
+    std::vector<edm::Ptr<flashgg::Muon> > selectMuons( const std::vector<edm::Ptr<flashgg::Muon> > &muonPointers, Ptr<flashgg::DiPhotonCandidate> dipho,
             const std::vector<edm::Ptr<reco::Vertex> > &vertexPointers, double muonEtaThreshold, double muonPtThreshold, double muPFIsoSumRelThreshold,
             double dRPhoLeadMuonThreshold, double dRPhoSubLeadMuonThreshold );
 
