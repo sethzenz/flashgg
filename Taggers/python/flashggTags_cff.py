@@ -34,7 +34,7 @@ flashggVHEtTag = cms.EDProducer("FlashggVHEtTagProducer",
 
 flashggTTHLeptonicTag = cms.EDProducer("FlashggTTHLeptonicTagProducer",
 					DiPhotonTag=cms.InputTag('flashggDiPhotons'),
-					TTHJetTag=cms.untracked.InputTag('flashggJets'),
+					JetTag=cms.InputTag('flashggJets'),
 					ElectronTag=cms.InputTag('flashggElectrons'),
 					MuonTag=cms.InputTag('flashggMuons'),
 					VertexTag=cms.untracked.InputTag('offlineSlimmedPrimaryVertices'),

@@ -167,6 +167,11 @@ namespace flashgg {
             }
         }
         std::cout << " Applied a central weight of " << theWeight << " - as part of 1d shift" << std::endl;
+        if( CorrToShift == nullptr ) {
+            std::cout << "   Shift was central " << std::endl;
+        } else {
+            std::cout << "   Shift was " << CorrToShift->shiftLabel( syst_shift ) << std::endl;
+        }
         y.setCentralWeight( theWeight );
         std::cout << " 1d end " << std::endl;
     }
@@ -196,7 +201,6 @@ namespace flashgg {
                 Corrections2D_.at( ncorr )->applyCorrection( y, PAIR_ZERO );
             }
         }
-        std::cout << "Oy vey, is setCentralWeight causing a seg fault?" << std::endl;
         y.setCentralWeight( theWeight );
         std::cout << " Applied a central weight of " << theWeight << " - as part of 2d shift" << std::endl;
     }

@@ -19,7 +19,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
 #                                        monitorPssAndPrivate = cms.untracked.bool(True)
 #                                       )
 
-processId = "ggh"
+processId = "tth"
 process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring("file:myMicroAODOutputFile_%s.root" % processId),
 #                             skipEvents=cms.untracked.uint32(4965)
 )

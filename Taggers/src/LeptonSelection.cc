@@ -18,6 +18,17 @@ namespace flashgg {
         for( unsigned int muonIndex = 0; muonIndex < muonPointers.size(); muonIndex++ ) {
             Ptr<flashgg::Muon> muon = muonPointers[muonIndex];
 
+            /*
+            std::cout << " Muon index " << muonIndex << " has pt eta weight: "
+                      << muon->pt() << " " << muon->eta() << " "
+                      << muon->centralWeight() << std::endl;
+            auto weightList = muon->weightList();
+            for( unsigned int i = 0 ; i < weightList.size() ; i++ ) {
+                std::cout << "    " << weightList[i] << " " << muon->weight( weightList[i] );
+            }
+            std::cout << std::endl;
+            */
+
             if( fabs( muon->eta() ) > muonEtaThreshold ) { continue; }
             if( muon->pt() < muonPtThreshold ) { continue; }
 
@@ -76,15 +87,16 @@ namespace flashgg {
 
             Ptr<flashgg::Electron> Electron = ElectronPointers[ElectronIndex];
 
+            /*
             std::cout << " Electron index " << ElectronIndex << " has pt eta weight: "
                       << Electron->pt() << " " << Electron->eta() << " "
                       << Electron->centralWeight() << std::endl;
-
             auto weightList = Electron->weightList();
             for( unsigned int i = 0 ; i < weightList.size() ; i++ ) {
                 std::cout << "    " << weightList[i] << " " << Electron->weight( weightList[i] );
             }
             std::cout << std::endl;
+            */
 
             float Electron_eta = fabs( Electron->superCluster()->eta() );
 
@@ -104,6 +116,7 @@ namespace flashgg {
             if( dxy > TransverseImpactParam ) { continue; }
             if( dz > LongitudinalImapctParam ) { continue; }
 
+            std::cout << "    ... pushing back Electron index " << ElectronIndex << std::endl;
             goodElectrons.push_back( Electron );
         }
 

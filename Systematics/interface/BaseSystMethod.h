@@ -6,11 +6,12 @@
 #include "CLHEP/Random/RandomEngine.h"
 #include "FWCore/Utilities/interface/RandomNumberGenerator.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
+#include "flashgg/DataFormats/interface/ObjectWeight.h"
 
 namespace flashgg {
 
     template <class flashgg_object, class param_var>
-    class BaseSystMethod
+    class BaseSystMethod : public ObjectWeight
     {
 
     public:
