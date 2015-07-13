@@ -6,12 +6,11 @@ microAODDefaultOutputCommand = cms.untracked.vstring("drop *",
                                                      "drop *_flashggDiPhotons_*_*", # keep preselected only
                                                      "drop patPackedCandidates_*_*_*", # for intermediate PFCHSLeg jet constituents
                                                      "drop *_flashggPrunedGenParticles_*_*",   
-                                                     "keep recoGenParticles_flashggPrunedGenParticles_*_*", # this line, and preceding, drop unneded association object
+                                                     "keep recoGenParticles_flashggPrunedGenParticles_*_*", # this line, and preceding, drop unneeded association object
                                                      "keep *_offlineSlimmedPrimaryVertices_*_*",
                                                      "keep *_reducedEgamma_reduced*Clusters_*",
                                                      "keep *_reducedEgamma_*PhotonCores_*",
-                                                     "keep *_slimmedMuons_*_*",
-                                                     "keep *_slimmedMETs_*_*",
+                                                     "keep *_slimmedMETs_*_FLASHggMicroAOD", # keep remade slimmed MET only
                                                      "keep *_fixedGridRhoAll_*_*",
                                                      "keep *_offlineBeamSpot_*_*",
                                                      "keep *_TriggerResults_*_*",
