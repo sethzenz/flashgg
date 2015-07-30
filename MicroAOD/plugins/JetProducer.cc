@@ -33,6 +33,8 @@ namespace flashgg {
         unique_ptr<PileupJetIdAlgo>  pileupJetIdAlgo_;
         ParameterSet pileupJetIdParameters_;
         bool usePuppi;
+        bool relevantVertexOnlyForJetId_;
+        unsigned int jetCollectionNumber_;
     };
 
 
@@ -42,7 +44,9 @@ namespace flashgg {
         vertexToken_( consumes<View<reco::Vertex> >( iConfig.getParameter<InputTag> ( "VertexTag" ) ) ),
         vertexCandidateMapToken_( consumes<VertexCandidateMap>( iConfig.getParameter<InputTag>( "VertexCandidateMapTag" ) ) ),
         pileupJetIdParameters_( iConfig.getParameter<ParameterSet>( "PileupJetIdParameters" ) ),
-        usePuppi( iConfig.getUntrackedParameter<bool>( "UsePuppi", false ) )
+        usePuppi( iConfig.getUntrackedParameter<bool>( "UsePuppi", false ) ),
+        relevantVertexOnlyForJetId_( iConfig.getParameter<bool>( "RelevantVertexOnlyForJetId" ) ),
+        jetCollectionNumber_( iConfig.getParameter<unsigned int>( "JetCollectionNumber" ) )
     {
         pileupJetIdAlgo_.reset( new PileupJetIdAlgo( pileupJetIdParameters_ ) );
 
@@ -81,13 +85,14 @@ namespace flashgg {
                 Ptr<DiPhotonCandidate> diPhoton = diPhotons->ptrAt( j );
                 Ptr<reco::Vertex> vtx = diPhoton->vtx();
                 if( !usePuppi ) {
-                    if( !fjet.hasPuJetId( vtx ) ) {
+                    bool doVertex = ( !fjet.hasPuJetId( vtx ) ) && ( ( !relevantVertexOnlyForJetId_ ) || ( diPhoton->jetCollectionIndex() == jetCollectionNumber_ ) );
+                    if( doVertex ) {
                         PileupJetIdentifier lPUJetId = pileupJetIdAlgo_->computeIdVariables( pjet.get(), vtx, *vertexCandidateMap, true );
-                        fjet.setPuJetId( vtx, lPUJetId ); //temporarily make all jets pass
+                        fjet.setPuJetId( vtx, lPUJetId );
                     }
                 }
             }
-            if( !usePuppi ) {
+            if( ( !usePuppi ) | ( !relevantVertexOnlyForJetId_ ) ) {
                 if( primaryVertices->size() > 0 && !fjet.hasPuJetId( primaryVertices->ptrAt( 0 ) ) ) {
                     PileupJetIdentifier lPUJetId = pileupJetIdAlgo_->computeIdVariables( pjet.get(), primaryVertices->ptrAt( 0 ), *vertexCandidateMap, true );
                     fjet.setPuJetId( primaryVertices->ptrAt( 0 ), lPUJetId );

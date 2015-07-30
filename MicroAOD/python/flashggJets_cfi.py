@@ -88,7 +88,9 @@ def addFlashggPFCHSJets(process, vertexIndex = 0, doQGTagging = True, label ='',
                                VertexTag   = cms.InputTag('offlineSlimmedPrimaryVertices'),
                                JetTag      = cms.InputTag('patJetsAK4PFCHSLeg' + label),
                                VertexCandidateMapTag = cms.InputTag("flashggVertexMapForCHS"),
-                               PileupJetIdParameters = cms.PSet(pu_jetid)
+                               PileupJetIdParameters = cms.PSet(pu_jetid),
+                               RelevantVertexOnlyForJetId = cms.bool(True),
+                               JetCollectionNumber = cms.uint32(int(label))
   )
   setattr( process, 'flashggPFCHSJets'+ label, flashggJets)
   
