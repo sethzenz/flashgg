@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SETUP_REMOTES=true
+SETUP_REMOTES=false
 
 echo
 echo "Welcome to the FLASHgg automagic setup script!"
@@ -91,7 +91,7 @@ git cms-merge-topic sethzenz:topic-weights-count-74X
 echo "Setting up PUPPI..."
 git cms-addpkg CommonTools/PileupAlgos
 #git cms-merge-topic yhaddad:topic-puppi-flashgg-74X
-git-cherry-pick 9d1e0ff5eea4c76e7ebd30f5017a2c29fbe0f751
+git cms-merge-topic sethzenz:topic-puppi-7_4_12 
 echo
 
 echo "Setting up Conversion tools for pat electron..."

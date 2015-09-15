@@ -168,7 +168,7 @@ def addFlashggPuppiJets(process,
                           JetTag                = cms.InputTag('patJetsAK4PUPPI' + label),
                           VertexCandidateMapTag = cms.InputTag("flashggVertexMapForPUPPI"),
                           UsePuppi              = cms.untracked.bool(True),
-                          PileupJetIdParameters = cms.PSet(pu_jetid)
+#                          PileupJetIdParameters = cms.PSet(pu_jetid)
                         ))
   setattr( process, 'selectedFlashggPUPPIJets'+ label,
            cms.EDFilter("FLASHggJetSelector",

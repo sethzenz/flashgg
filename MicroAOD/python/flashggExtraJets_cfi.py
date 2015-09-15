@@ -62,7 +62,7 @@ def addStandardPuppiJets(process,
   from CommonTools.PileupAlgos.Puppi_cff           import puppi 
   from RecoJets.JetProducers.ak4PFJets_cfi         import ak4PFJets
   from PhysicsTools.PatAlgos.tools.jetTools        import addJetCollection
-  from RecoJets.JetProducers.PileupJetIDParams_cfi import cutbased_new as pu_jetid
+#  from RecoJets.JetProducers.PileupJetIDParams_cfi import cutbased_new as pu_jetid
   from flashgg.MicroAOD.flashggJets_cfi            import flashggBTag
   
   setattr(process, 'flashggStdPuppi' + label,
@@ -110,8 +110,9 @@ def addStandardPuppiJets(process,
                          JetTag                = cms.InputTag('patJetsAK4PUPPIstd' + label),
                          VertexCandidateMapTag = cms.InputTag("flashggVertexMapForPUPPI"),
                          UsePuppi              = cms.untracked.bool(True),
-                         PileupJetIdParameters = cms.PSet(pu_jetid))
-        )
+#                         PileupJetIdParameters = cms.PSet(pu_jetid))
+                         )
+          )
   setattr(process, 'selectedFlashggStdPUPPIJets' + label,
           cms.EDFilter("FLASHggJetSelector",
                        src = cms.InputTag( 'flashggStdPUPPIJets'),
