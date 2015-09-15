@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SETUP_REMOTES=false
+SETUP_REMOTES=true
 
 echo
 echo "Welcome to the FLASHgg automagic setup script!"
@@ -74,20 +74,24 @@ fi
 
 cd $CMSSW_BASE/src
 
-echo
-echo "Setting up pileupjetid..."
-git cms-addpkg RecoJets/JetProducers
-git cms-merge-topic sethzenz:topic-pujid-74X
-echo
+# Removed because it requires new merging and it is not needed for default PFCHS
+# Will be restored if/when required for future studies
+#echo
+#echo "Setting up pileupjetid..."
+#git cms-addpkg RecoJets/JetProducers
+#git cms-merge-topic sethzenz:topic-pujid-74X
+#echo
 
 echo "Setting up weight counter..."
 git cms-addpkg CommonTools/UtilAlgos 
 git cms-addpkg DataFormats/Common
 git cms-merge-topic sethzenz:topic-weights-count-74X
 
+# PUPPI is automagically in the release since 7_4_11 and 7_5_2, but we still need Multi-PUPPI
 echo "Setting up PUPPI..."
 git cms-addpkg CommonTools/PileupAlgos
-git cms-merge-topic yhaddad:topic-puppi-flashgg-74X
+#git cms-merge-topic yhaddad:topic-puppi-flashgg-74X
+git-cherry-pick 9d1e0ff5eea4c76e7ebd30f5017a2c29fbe0f751
 echo
 
 echo "Setting up Conversion tools for pat electron..."

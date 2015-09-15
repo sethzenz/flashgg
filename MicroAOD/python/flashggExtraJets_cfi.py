@@ -4,7 +4,7 @@
 
 import FWCore.ParameterSet.Config as cms
 
-from RecoJets.JetProducers.PileupJetIDParams_cfi import cutbased_new as pu_jetid
+#from RecoJets.JetProducers.PileupJetIDParams_cfi import cutbased_new as pu_jetid
 from PhysicsTools.PatAlgos.tools.jetTools        import addJetCollection
 from flashgg.MicroAOD.flashggJets_cfi            import flashggBTag
 
@@ -41,7 +41,7 @@ def addFlashggPF(process, doQGTagging =  True, label ='', debug = False):
                                  VertexTag=cms.InputTag('offlineSlimmedPrimaryVertices'),
                                  JetTag=cms.InputTag('patJetsAK4PF' + label ),
                                  VertexCandidateMapTag = cms.InputTag("flashggVertexMapForCHS"),
-                                 PileupJetIdParameters=cms.PSet(pu_jetid),
+#                                 PileupJetIdParameters=cms.PSet(pu_jetid),
   )
   setattr(process, 'flashggJetsPF' + label, flashggJetsPF)
   if doQGTagging:
