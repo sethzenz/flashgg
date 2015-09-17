@@ -95,6 +95,9 @@ class JobsManager(object):
                 make_option("-C","--cont",dest="cont",default=False, action="store_true",
                             help="continue interrupted task."
                             ),
+                make_option("-b","--batch-system",dest="batchSystem",type="string",
+                            default="lsf",help="Batch system name. Currently supported: sge lsf, default: %default"
+                            ),
                 ]
                               )
         
@@ -114,7 +117,7 @@ class JobsManager(object):
         Run all jobs.
         """
         self.parallel = Parallel(self.options.ncpu,lsfQueue=self.options.queue,lsfJobName="%s/runJobs" % self.options.outputDir,
-                                 asyncLsf=self.options.asyncLsf)
+                                 asyncLsf=self.options.asyncLsf, batchSystem = self.options.batchSystem)
         
         if self.options.summary:
             self.options.dry_run = True

@@ -134,6 +134,121 @@ class LsfMonitor:
                     jobsmap.pop(jobid)
             sleep(0.1)
 
+class SGEJob(LsfJob):
+    """ a thread to run qsub and wait until it completes """
+
+    def __str__(self):
+        return "SGEJob: %s %s" % ( self.lsfQueue, self.jobName )
+
+    def __call__(self,cmd):
+
+        qsubCmdParts = [ "qsub",
+                         "-q " + self.lsfQueue,
+                         ]
+
+        self.cmd = cmd
+        if not self.async:
+            qsubCmdParts.append("-sync y")  # qsub waits until job completes
+
+        if( self.jobName ):
+            logdir = os.path.dirname(self.jobName)
+            if not os.path.exists(logdir):
+                os.mkdir(logdir)
+            qsubCmdParts.append("-N " + self.jobName.strip("/").replace("/","_"))
+            qsubCmdParts.append("-o %s.log -e %s.log" % (self.jobName,self.jobName))
+
+        qsubCmd = " ".join(qsubCmdParts)
+
+        import subprocess
+        sge = subprocess.Popen(qsubCmd, shell=True, # bufsize=bufsize,                                                                                                                                                               
+                               stdin=subprocess.PIPE,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE,
+                               close_fds=True)
+
+        script = ""
+        script += "#!/bin/sh\n"
+
+        script += "cd " + os.environ['CMSSW_BASE']+"\n"
+        script += "eval `scram runtime -sh`"+"\n"
+        script += "cd " + os.getcwd()+"\n"
+
+        # the user command                                                                                                                                                                                                           
+        script += cmd+"\n"
+
+        out,err = sge.communicate(script)
+
+        # wait for the job to complete                                                                                                                                                                                               
+        ## self.exitStatus = sge.wait()                                                                                                                                                                                              
+        self.exitStatus = sge.returncode
+
+        if self.exitStatus != 0:
+            print "error running job",self.jobName, self.exitStatus
+            print out
+            print err
+        else:
+            self.jobid = None
+            for line in out.split("\n"):
+                if line.startswith("Your job"):
+                    self.jobid = int(line.split(" ")[2])
+                    break
+
+        if self.async:
+            return self.exitStatus, (out,(self.jobName,self.jobid))
+
+        return self.handleOutput()
+
+    def handleOutput(self):
+        ## print "handleOutput"                                                                                                                                                                                                     
+
+        if self.async:
+            result = commands.getstatusoutput("qstat")
+#                print "We are in handleOutput and we have the following output:",result
+            self.exitStatus = 0 # assume it is done unless listed
+            for line in result[1].split("\n"):
+                if line.startswith(str(self.jobid)):
+                    self.exitStatus = -1
+                    break
+
+        output = ""
+        if self.jobName:
+            try:
+                with open("%s.log" % self.jobName) as lf:
+                    output = lf.read()
+                    lf.close()
+            except:
+                output = "%s.log" % self.jobName
+
+        return self.exitStatus, output
+
+class SGEMonitor(LsfMonitor):
+    def __call__(self):
+        jobsmap = {}
+
+        while not self.stop:
+            if not self.jobsqueue.empty():
+                job = self.jobsqueue.get()
+                jobsmap[str(job.jobid)] = job
+
+            status = commands.getstatusoutput("qstat")
+            jobids = []
+            statuses = []
+            for line in status[1].split("\n")[2:]:
+                toks = line.split()
+                jobids.append(toks[0])
+                statuses.append(toks[2])
+#                print "DEBUG jobid jobids",jobid,jobids[0]
+#                print type(jobid),type(jobids[0])
+#                print
+#                print jobs
+            for jobid in jobsmap.keys():
+                if not jobids.count(jobid):
+                    # i.e. job is no longer on the list, and hence done
+                    lsfJob = jobsmap[jobid]
+                    self.retqueue.put( (lsfJob, [lsfJob.cmd], lsfJob.handleOutput()) )
+                    jobsmap.pop(jobid)
+            sleep(5.)
+
 class Wrap:
     def __init__(self, func, args, retqueue, runqueue):
         self.retqueue = retqueue
@@ -154,7 +269,7 @@ class Wrap:
 
     
 class Parallel:
-    def __init__(self,ncpu,lsfQueue=None,lsfJobName="job",asyncLsf=False,maxThreads=500):
+    def __init__(self,ncpu,lsfQueue=None,lsfJobName="job",asyncLsf=False,maxThreads=500,batchSystem="lsf"):
         self.returned = Queue()
 	self.njobs = 0
         self.lsfJobs = Queue()
@@ -164,13 +279,20 @@ class Parallel:
         self.sem = Semaphore()
         self.maxThreads = maxThreads
         self.asyncLsf = asyncLsf
+        self.batchSystem = batchSystem
+
         if self.lsfQueue:
             self.running = Queue()
         else:
             self.running = Queue(ncpu)
             
         if self.lsfQueue and self.asyncLsf:
-            self.lsfMon = LsfMonitor(self.lsfJobs,self.returned)
+            if self.batchSystem == "lsf":
+                self.lsfMon = LsfMonitor(self.lsfJobs,self.returned)
+            elif self.batchSystem == "sge":
+                self.lsfMon = SGEMonitor(self.lsfJobs,self.returned)
+            else:
+                raise Exception,"Unrecognized batchSystem variable:",self.batchSystem
             thread = Thread(None,self.lsfMon)
             thread.start()
         
@@ -204,7 +326,10 @@ class Parallel:
         if not self.asyncLsf:
             return
         
-        job = LsfJob(self.lsfQueue,jobName,async=True)
+        if self.batchSystem == "lsf":
+            job = LsfJob(self.lsfQueue,jobName,async=True)
+        elif self.batchSystem == "sge":
+            job = SGEJob(self.lsfQueue,jobName,async=True)
         job.jobid = batchId
         job.cmd = " ".join([cmd]+args)
         self.lsfJobs.put(job)
@@ -240,7 +365,10 @@ class Parallel:
             if self.lsfQueue and not interactive:
                 if not jobName:
                     jobName = "%s%d" % (self.lsfJobName,self.getJobId())
-                cmd = LsfJob(self.lsfQueue,jobName,async=self.asyncLsf)
+                if self.batchSystem == "lsf":    
+                    cmd = LsfJob(self.lsfQueue,jobName,async=self.asyncLsf)
+                elif self.batchSystem == "sge":
+                    cmd = SGEJob(self.lsfQueue,jobName,async=self.asyncLsf)
             else:
                 cmd = commands.getstatusoutput
 
