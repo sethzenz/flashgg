@@ -104,6 +104,16 @@ cd RunIISpring15-ReMiniAOD-BetaV7-25ns
 echo crabConfig_*.py | xargs -n 1 crab sub
 ```
 
+#### Spring15BetaV7 on ReMiniAOD 50ns
+
+```
+cd $CMSSW_BASE/src/flashgg/MetaData/work
+./prepareCrabJobs.py -C RunIISpring15-ReMiniAOD-BetaV7-50ns -U 5 -L 5 -s campaigns/RunIISpring15-ReMiniAOD-BetaV7-50ns.json -V Spring15BetaV7 -p ${CMSSW_BASE}/src/flashgg/MicroAOD/test/microAODstd.py --lumiMask ${PWD}/jsons/Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2.txt -e "bunchSpacing=50"
+cd RunIISpring15-ReMiniAOD-BetaV7-50ns
+echo crabConfig_*.py | xargs -n 1 crab sub
+```
+
+
 #### Spring15BetaV6 on ReMiniAOD 25ns
 
 ```
