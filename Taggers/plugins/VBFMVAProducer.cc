@@ -35,7 +35,11 @@ namespace flashgg {
         FileInPath vbfMVAweightfile_;
         bool _isLegacyMVA;
         bool _usePuJetID;
+        bool _requireOppositeEta;
+        bool _useHighestDijetMinv;
+        double _minDrToPhoton;
         double _minDijetMinv;
+        double _minJetPt;
 
         typedef std::vector<edm::Handle<edm::View<flashgg::Jet> > > JetCollectionVector;
 
@@ -60,7 +64,18 @@ namespace flashgg {
         inputTagJets_( iConfig.getParameter<std::vector<edm::InputTag> >( "inputTagJets" ) ),
         _isLegacyMVA( iConfig.getUntrackedParameter<bool>( "UseLegacyMVA" , false ) ),
         _usePuJetID( iConfig.getUntrackedParameter<bool>( "UsePuJetID" , false ) ),
-        _minDijetMinv( iConfig.getParameter<double>( "MinDijetMinv" ) )
+        _requireOppositeEta( iConfig.getUntrackedParameter<bool>( "RequireOppositeEta", false ) ),        
+        _useHighestDijetMinv( iConfig.getUntrackedParameter<bool>( "UseHighestDijetMinv", false ) ),
+        _minDrToPhoton( iConfig.getUntrackedParameter<double>( "MinDrToPhoton", 0.4) ),
+        _minDijetMinv( iConfig.getParameter<double>( "MinDijetMinv" ) ),
+        _minJetPt( iConfig.getUntrackedParameter<double>( "MinJetPt", 0.) )
+        /*
+        bool _requireOppositeEta;
+        bool _useHighestDijetMinv;
+        double _minDrToPhoton;
+        double _minDijetMinv;
+        double _minJetPt;
+        */
     {
 
         vbfMVAweightfile_ = iConfig.getParameter<edm::FileInPath>( "vbfMVAweightfile" );
@@ -114,13 +129,6 @@ namespace flashgg {
     {
         Handle<View<flashgg::DiPhotonCandidate> > diPhotons;
         evt.getByToken( diPhotonToken_, diPhotons );
-        // const PtrVector<flashgg::DiPhotonCandidate>& diPhotonPointers = diPhotons->ptrVector();
-        //Handle<View<flashgg::Jet> > jetsDz;
-        //evt.getByToken( jetTokenDz_, jetsDz );
-        //	const PtrVector<flashgg::Jet>& jetPointersDz = jetsDz->ptrVector();
-        // get the iso deposits
-        //IsoDepositMaps electronIso(inputTagElectronIsoDeposits_.size());
-        //IsoDepositMaps photonIsoDep(inputTagPhotonIsoDeposits_.size());
 
         JetCollectionVector Jets( inputTagJets_.size() );
         for( size_t j = 0; j < inputTagJets_.size(); ++j ) {
@@ -128,7 +136,6 @@ namespace flashgg {
         }
 
         std::auto_ptr<vector<VBFMVAResult> > vbf_results( new vector<VBFMVAResult> );
-
 
         for( unsigned int candIndex = 0; candIndex < diPhotons->size() ; candIndex++ ) {
 
@@ -150,8 +157,9 @@ namespace flashgg {
             // First find dijet by looking for highest-pt jets...
             std::pair <int, int> dijet_indices( -1, -1 );
             std::pair <float, float> dijet_pts( -1., -1. );
+            float mjj_so_far = -999.;
             //			float PuIDCutoff = 0.8;
-            float dr2pho = 0.5;
+            //            float dr2pho = _minDrToPhoton;
 
             float phi1 = diPhotons->ptrAt( candIndex )->leadingPhoton()->phi();
             float eta1 = diPhotons->ptrAt( candIndex )->leadingPhoton()->eta();
@@ -163,24 +171,69 @@ namespace flashgg {
             // take the jets corresponding to the diphoton candidate
             unsigned int jetCollectionIndex = diPhotons->ptrAt( candIndex )->jetCollectionIndex();
 
+            if ( Jets[jetCollectionIndex]->size() < 2 ) continue;
+
             for( UInt_t jetLoop = 0; jetLoop < Jets[jetCollectionIndex]->size() ; jetLoop++ ) {
 
                 Ptr<flashgg::Jet> jet  = Jets[jetCollectionIndex]->ptrAt( jetLoop );
+
+                std::cout << "  Jet " << jetLoop << " pt eta _requireOppositeEta _useHighestDijetMinv " << jet->pt() << " " << jet->eta() 
+                          << " " << _requireOppositeEta << " " << _useHighestDijetMinv << std::endl;
 
                 //pass PU veto??
                 //if (jet->puJetId(diPhotons[candIndex]) <  PuIDCutoff) {continue;}
                 if( _usePuJetID && !jet->passesPuJetId( diPhotons->ptrAt( candIndex ) ) ) { continue; }
                 // within eta 4.7?
+
                 if( fabs( jet->eta() ) > 4.7 ) { continue; }
                 // close to lead photon?
+
                 float dPhi = deltaPhi( jet->phi(), phi1 );
                 float dEta = jet->eta() - eta1;
-                if( sqrt( dPhi * dPhi + dEta * dEta ) < dr2pho ) { continue; }
+                if( sqrt( dPhi * dPhi + dEta * dEta ) < _minDrToPhoton ) { std::cout << " Jet " << jetLoop << " near photon" << std::endl; continue; }
+
                 // close to sublead photon?
                 dPhi = deltaPhi( jet->phi(), phi2 );
                 dEta = jet->eta() - eta2;
-                if( sqrt( dPhi * dPhi + dEta * dEta ) < dr2pho ) { continue; }
+                if( sqrt( dPhi * dPhi + dEta * dEta ) < _minDrToPhoton ) { std::cout << " Jet " << jetLoop << " near photon" << std::endl; continue; }
 
+                if ( jet->pt() < _minJetPt ) { continue; }
+
+                if (dijet_indices.first == -1) {
+                    std::cout << " Lead jet has pt=" << jet->pt() << " eta=" << jet->eta() << " " << jetLoop << std::endl;
+                    dijet_indices.first = jetLoop;
+                    dijet_pts.first = jet->pt();
+                } else {
+                    if ( _requireOppositeEta ) {
+                        float eta_product = (jet->eta())*(Jets[jetCollectionIndex]->ptrAt( dijet_indices.first )->eta());
+                        std::cout << " RequireOppositeEta is on!" << std::endl;
+                        if ( eta_product > 0. ) { std::cout << " Skipping this jet!" << std::endl; continue; } else { std::cout << " But this dijet is fine!" << std::endl; }
+                    } else {
+                        std::cout << " RequireOppositeEta is off!" << std::endl;
+                    }
+                    if ( _useHighestDijetMinv ) {
+                        std::cout << " Use highest DijetMinv is on!" << std::endl;
+                        auto lead_p4 = Jets[jetCollectionIndex]->ptrAt( dijet_indices.first )->p4();
+                        auto sublead_p4 = jet->p4();
+                        double mjj = (lead_p4+sublead_p4).M();
+                        if (mjj > mjj_so_far) {
+                            std::cout << " Improving old mjj=" << mjj_so_far << " to " << mjj << " with index " << jetLoop << std::endl;
+                            dijet_indices.second = jetLoop;
+                            dijet_pts.second = jet->pt();
+                            mjj_so_far = mjj;
+                        }
+                    } else {
+                        std::cout << " Use highest DijetMinv is off so we take the second jet and call if a day jetLoop=" << jetLoop <<std::endl;
+                        dijet_indices.second = jetLoop;
+                        dijet_pts.second = jet->pt();
+                        break;
+                    }
+                }
+
+                // OLD CODE
+                // jets are sorted descending in pt (enforced by JetProducer)
+                // So it is not possible for a later jet to have higher pt
+                /*
                 if( jet->pt() > dijet_pts.first ) {
                     // if pt of this jet is higher than the one currently in lead position
                     // then shift back lead jet into sublead position...
@@ -195,10 +248,14 @@ namespace flashgg {
                     dijet_indices.second = jetLoop;
                     dijet_pts.second = jet->pt();
                 }
+                */
                 // if the jet's pt is neither higher than the lead jet or sublead jet, then forget it!
-                if( dijet_indices.first != -1 && dijet_indices.second != -1 ) {hasValidVBFDijet = 1;}
+                //                if( dijet_indices.first != -1 && dijet_indices.second != -1 ) {hasValidVBFDijet = 1;}
 
             }
+
+            hasValidVBFDijet = ( dijet_indices.first != -1 && dijet_indices.second != -1 );
+
             //std::cout << "[VBF] has valid VBF Dijet ? "<< hasValidVBFDijet<< std::endl;
             if( hasValidVBFDijet ) {
 
@@ -220,12 +277,11 @@ namespace flashgg {
 
                 auto diphoton_p4 = leadPho_p4 + sublPho_p4;
                 auto dijet_p4 = leadJet_p4 + sublJet_p4;
-                float dijet_dPhi_ = fabs( dijet_p4.Phi() - diphoton_p4.Phi() );
-
-                dijet_dPhi_trunc_ = std::min( dijet_dPhi_, ( float ) 2.916 );
 
                 dijet_Zep_ = fabs( diphoton_p4.Eta() - 0.5 * ( leadJet_p4.Eta() + sublJet_p4.Eta() ) );
-                dijet_dPhi_ = deltaPhi( dijet_p4.Phi(), diphoton_p4.Phi() );
+                float dijet_dPhi_ = fabs( deltaPhi( dijet_p4.Phi(), diphoton_p4.Phi() ) );
+                dijet_dPhi_trunc_ = std::min( dijet_dPhi_, (float) 2.916 );
+                //                std::cout << " dphi (trunc): " << dijet_dPhi_ << " " << dijet_dPhi_trunc_ << std::endl;
                 dijet_Mjj_ = dijet_p4.M();
                 dipho_PToM_ = diphoton_p4.Pt() / diphoton_p4.M();
                 leadPho_PToM_ = diPhotons->ptrAt( candIndex )->leadingPhoton()->pt() / diphoton_p4.M();
