@@ -256,6 +256,58 @@ namespace flashgg {
 
             hasValidVBFDijet = ( dijet_indices.first != -1 && dijet_indices.second != -1 );
 
+            // Extra loop for 3rd jet                                                                                                                                                                                            
+            int jet3_index = -1;
+            float jet3_mjjj = -999.;
+            float jet3_dr = 999.;
+            if ( hasValidVBFDijet ) {
+                for( UInt_t jetLoop = 0; jetLoop < Jets[jetCollectionIndex]->size() ; jetLoop++ ) {
+                    if ( jetLoop == dijet_indices.first || jetLoop == dijet_indices.second ) continue;
+                    Ptr<flashgg::Jet> jet  = Jets[jetCollectionIndex]->ptrAt( jetLoop );
+
+                    if( _usePuJetID && !jet->passesPuJetId( diPhotons->ptrAt( candIndex ) ) ) { continue; }
+                    if( fabs( jet->eta() ) > 4.7 ) { continue; }
+                    float dPhi = deltaPhi( jet->phi(), phi1 );
+                    float dEta = jet->eta() - eta1;
+                    if( sqrt( dPhi * dPhi + dEta * dEta ) < _minDrToPhoton ) { continue; }
+                    dPhi = deltaPhi( jet->phi(), phi2 );
+                    dEta = jet->eta() - eta2;
+                    if( sqrt( dPhi * dPhi + dEta * dEta ) < _minDrToPhoton ) { continue; }
+                    if ( jet->pt() < _minJetPt ) { continue; }
+
+                    unsigned jet3Mode == 2; // FIXME
+
+                    if ( jet3Mode == 0 /* lead pt */ ) {
+                        jet3_index = jetLoop;
+                        break;
+                    } else if ( jet3Mode == 1 /* highest m_jjj */ ) {
+                        auto dijet_p4 = ( Jets[jetCollectionIndex]->ptrAt( dijet_indices.first )->p4() + Jets[jetCollectionIndex]->ptrAt( dijet_indices.second )->p4());
+                        float mjjj = (dijet_p4 + jet->p4()).M();
+                        if (mjjj > jet3_mjjj) {
+                            jet3_index = jetLoop;
+                            jet3_mjjj = mjjj;
+                        }
+                    } else if ( jet3Mode == 2 /* closest to another jet */ ) {
+                        auto j1 = Jets[jetCollectionIndex]->ptrAt( dijet_indices.first );
+                        auto j2 = Jets[jetCollectionIndex]->ptrAt( dijet_indices.second );
+                        dPhi = deltaPhi( jet->phi(), j1->phi() );
+                        dEta = jet->eta() - j1->eta();
+                        float dr = sqrt( dPhi * dPhi + dEta * dEta );
+                        if( dr < jet3_dr ) {
+                            jet3_index = jetLoop;
+                            jet3_dr = dr;
+                        }
+                        dPhi = deltaPhi( jet->phi(), j2->phi() );
+                        dEta = jet->eta() - j2->eta();
+                        dr = sqrt( dPhi * dPhi + dEta * dEta );
+                        if( dr < jet3_dr ) {
+                            jet3_index = jetLoop;
+                            jet3_dr = dr;
+                        }
+                    }
+                }
+            }
+
             //std::cout << "[VBF] has valid VBF Dijet ? "<< hasValidVBFDijet<< std::endl;
             if( hasValidVBFDijet ) {
 
