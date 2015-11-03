@@ -62,6 +62,7 @@ namespace flashgg {
         unsigned nevt_dijet;
         unsigned nevt_tightenpho;
         unsigned nevt_dijetpresel;
+        unsigned nevt_dijetmultiple;
         unsigned nevt_dijetallsame;
         /*
  Number of diphotons: 3
@@ -106,6 +107,7 @@ namespace flashgg {
         nevt_dijet = 0;
         nevt_tightenpho = 0;
         nevt_dijetpresel = 0;
+        nevt_dijetmultiple = 0;
         nevt_dijetallsame = 0;
     }
 
@@ -273,6 +275,7 @@ namespace flashgg {
         }
         if (mjjs.size() > 0) {
             nevt_dijetpresel++;
+            if (mjjs.size() > 1) nevt_dijetmultiple++;
             if (mjjs[0] == mjjsOpposite[0] && mjjs[0] == mjjsHighest[0]) {
                 nevt_dijetallsame++;
             }
@@ -443,7 +446,11 @@ namespace flashgg {
         std::cout << "  and a dijet (pt0 > 30, pt1 > 20): " << nevt_dijet << " (" << (float(nevt_dijet)/nevt_total) << ") " << std::endl;
         std::cout << "  and photon pt0 > mgg/2: " << nevt_tightenpho << " (" << (float(nevt_tightenpho)/nevt_total) << ") " << std::endl;
         std::cout << "  and mgg > 250 (dijet presel): " << nevt_dijetpresel << " (" << (float(nevt_dijetpresel)/nevt_total) << ") " << std::endl;
-        std::cout << "  and answer same for all 3 sublead jet methods: " << nevt_dijetallsame << " (" << (float(nevt_dijetallsame)/nevt_total) << ") " << std::endl;
+
+        std::cout << std::endl << "END OF CUTFLOW, TWO FURTHER SEPARATEQUESTIONS, with full list of cuts (i.e. dijet presel) as denominator:" << std::endl << std::endl;
+        std::cout << "    Fraction with multiple dipho/dijets to consider: " << nevt_dijetmultiple 
+                  << nevt_dijetmultiple << " (" << (float(nevt_dijetmultiple)/nevt_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: " << nevt_dijetallsame << " (" << (float(nevt_dijetallsame)/nevt_dijetpresel) << ") " << std::endl;
         
         std::cout << std::endl << std::endl;
     }
