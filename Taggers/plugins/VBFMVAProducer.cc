@@ -223,7 +223,7 @@ namespace flashgg {
                             mjj_so_far = mjj;
                         }
                     } else {
-                        std::cout << " Use highest DijetMinv is off so we take the second jet and call if a day jetLoop=" << jetLoop <<std::endl;
+                        std::cout << " Use highest DijetMinv is off so we take the second jet and call it a day jetLoop=" << jetLoop <<std::endl;
                         dijet_indices.second = jetLoop;
                         dijet_pts.second = jet->pt();
                         break;
@@ -262,7 +262,7 @@ namespace flashgg {
             float jet3_dr = 999.;
             if ( hasValidVBFDijet ) {
                 for( UInt_t jetLoop = 0; jetLoop < Jets[jetCollectionIndex]->size() ; jetLoop++ ) {
-                    if ( jetLoop == dijet_indices.first || jetLoop == dijet_indices.second ) continue;
+                    if ( (int)jetLoop == dijet_indices.first || (int)jetLoop == dijet_indices.second ) continue;
                     Ptr<flashgg::Jet> jet  = Jets[jetCollectionIndex]->ptrAt( jetLoop );
 
                     if( _usePuJetID && !jet->passesPuJetId( diPhotons->ptrAt( candIndex ) ) ) { continue; }
@@ -275,7 +275,7 @@ namespace flashgg {
                     if( sqrt( dPhi * dPhi + dEta * dEta ) < _minDrToPhoton ) { continue; }
                     if ( jet->pt() < _minJetPt ) { continue; }
 
-                    unsigned jet3Mode == 2; // FIXME
+                    unsigned jet3Mode = 2; // FIXME
 
                     if ( jet3Mode == 0 /* lead pt */ ) {
                         jet3_index = jetLoop;
@@ -307,6 +307,9 @@ namespace flashgg {
                     }
                 }
             }
+
+            std::cout << jet3_index << " " << jet3_mjjj<< " " << jet3_dr << std::endl;
+
 
             //std::cout << "[VBF] has valid VBF Dijet ? "<< hasValidVBFDijet<< std::endl;
             if( hasValidVBFDijet ) {
