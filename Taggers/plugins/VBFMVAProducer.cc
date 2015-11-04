@@ -39,7 +39,14 @@ namespace flashgg {
         bool       _usePuJetID;
         bool       _useJetID;
         string     _JetIDLevel;
-        double     _minDijetMinv;
+        bool _requireOppositeEta;
+        bool _useHighestDijetMinv;
+        double _minDrToPhoton;
+        double _minDijetMinv;
+        double _minJetPt;
+        unsigned int _thirdJetMode;
+        bool _verbose;
+
         
         typedef std::vector<edm::Handle<edm::View<flashgg::Jet> > > JetCollectionVector;
         
@@ -72,7 +79,13 @@ namespace flashgg {
         _usePuJetID   ( iConfig.getUntrackedParameter<bool>  ( "UsePuJetID"  , false ) ),
         _useJetID     ( iConfig.getUntrackedParameter<bool>  ( "UseJetID"    , false ) ),
         _JetIDLevel   ( iConfig.getUntrackedParameter<string>( "JetIDLevel", "Loose" ) ), // Loose == 0, Tight == 1
-        _minDijetMinv ( iConfig.getParameter<double>         ( "MinDijetMinv" ) )
+        _requireOppositeEta( iConfig.getUntrackedParameter<bool>( "RequireOppositeEta", false ) ),        
+        _useHighestDijetMinv( iConfig.getUntrackedParameter<bool>( "UseHighestDijetMinv", false ) ),
+        _minDrToPhoton( iConfig.getUntrackedParameter<double>( "MinDrToPhoton", 0.4) ),
+        _minDijetMinv( iConfig.getParameter<double>( "MinDijetMinv" ) ),
+        _minJetPt( iConfig.getUntrackedParameter<double>( "MinJetPt", 0.) ),
+        _thirdJetMode( iConfig.getUntrackedParameter<unsigned int>( "ThirdJetMode", 0) ),
+        _verbose( iConfig.getUntrackedParameter<bool>( "Verbose", false) )
     {
         vbfMVAweightfile_ = iConfig.getParameter<edm::FileInPath>( "vbfMVAweightfile" );
         
@@ -153,25 +166,25 @@ namespace flashgg {
             // First find dijet by looking for highest-pt jets...
             std::pair <int, int>     dijet_indices( -1, -1 );
             std::pair <float, float> dijet_pts( -1., -1. );
-            int jet_3_index = -1;
-            int jet_3_pt    = -1;
-            float dr2pho = 0.5;
             
             float phi1 = diPhotons->ptrAt( candIndex )->leadingPhoton()->phi();
             float eta1 = diPhotons->ptrAt( candIndex )->leadingPhoton()->eta();
             float phi2 = diPhotons->ptrAt( candIndex )->subLeadingPhoton()->phi();
             float eta2 = diPhotons->ptrAt( candIndex )->subLeadingPhoton()->eta();
 
-            bool hasValidVBFDiJet  = 0;
-            bool hasValidVBFTriJet = 0;
+            bool hasValidVBFDijet  = 0;
+            bool hasValidVBFTrijet = 0;
+            float mjj_so_far = -999.;
             
-            int  n_jets_count = 0;
             // take the jets corresponding to the diphoton candidate
             unsigned int jetCollectionIndex = diPhotons->ptrAt( candIndex )->jetCollectionIndex();
                         
             for( UInt_t jetLoop = 0; jetLoop < Jets[jetCollectionIndex]->size() ; jetLoop++ ) {
                 Ptr<flashgg::Jet> jet  = Jets[jetCollectionIndex]->ptrAt( jetLoop );
-                //if (jet->puJetId(diPhotons[candIndex]) <  PuIDCutoff) {continue;}
+
+                if ( _verbose ) std::cout << "  Jet " << jetLoop << " pt eta _requireOppositeEta _useHighestDijetMinv _thirdJetMode" << jet->pt() << " " << jet->eta() 
+                          << " " << _requireOppositeEta << " " << _useHighestDijetMinv << " " << _thirdJetMode << std::endl;
+
                 if( _usePuJetID && !jet->passesPuJetId(diPhotons->ptrAt( candIndex ))){ continue;}
                 if( _useJetID ){
                     if( _JetIDLevel == "Loose" && !jet->passesJetID  ( flashgg::Loose ) ) continue;
@@ -184,48 +197,118 @@ namespace flashgg {
                 // close to lead photon?
                 float dPhi = deltaPhi( jet->phi(), phi1 );
                 float dEta = jet->eta() - eta1;
-                if( sqrt( dPhi * dPhi + dEta * dEta ) < dr2pho ) { continue; }
-                
+                if( sqrt( dPhi * dPhi + dEta * dEta ) < _minDrToPhoton ) { if ( _verbose ) std::cout << " Jet " << jetLoop << " near photon" << std::endl; continue; }
+
                 // close to sublead photon?
                 dPhi = deltaPhi( jet->phi(), phi2 );
                 dEta = jet->eta() - eta2;
-                if( sqrt( dPhi * dPhi + dEta * dEta ) < dr2pho ) { continue; }
+                if( sqrt( dPhi * dPhi + dEta * dEta ) < _minDrToPhoton ) { if ( _verbose ) std::cout << " Jet " << jetLoop << " near photon" << std::endl; continue; }
+
+                if ( jet->pt() < _minJetPt ) { continue; }
                 
-                if( jet->pt() > dijet_pts.first ) {
-                    // if pt of this jet is higher than the one currently in lead position
-                    // then shift back lead jet into sublead position...
-                    dijet_indices.second = dijet_indices.first;
-                    dijet_pts.second     = dijet_pts.first;
-                    // .. and put the new jet as the lead jet.
+                if (dijet_indices.first == -1) {
+                    if ( _verbose ) std::cout << " Lead jet has pt=" << jet->pt() << " eta=" << jet->eta() << " " << jetLoop << std::endl;
                     dijet_indices.first = jetLoop;
-                    dijet_pts.first     = jet->pt();
-                    
-                    // trijet indicies
-                    //jet_3_index = dijet_indices.second;
-                    //jet_3_pt    = dijet_pts.second;
-                } else if( jet->pt() > dijet_pts.second ) { 
-                    // for the 3rd jets
-                    jet_3_index = dijet_indices.second;
-                    jet_3_pt    = dijet_pts.second;
-                    
-                    // this condition is added here to force to have the leading 
-                    // and subleading jets in two different hemispheres 
-                    // if the jet's pt isn't as high as the lead jet's but i higher 
-                    // than the sublead jet's The replace the sublead jet by this new jet.
-                    dijet_indices.second = jetLoop;
-                    dijet_pts.second     = jet->pt();
-                    
-                }else if( jet->pt() > jet_3_pt ){//&& dijet_indices.first != int(jetLoop) && dijet_indices.second != int(jetLoop)){
-                    jet_3_index = jetLoop;
-                    jet_3_pt    = jet->pt();
+                    dijet_pts.first = jet->pt();
+                } else {
+                    if ( _requireOppositeEta ) {
+                        float eta_product = (jet->eta())*(Jets[jetCollectionIndex]->ptrAt( dijet_indices.first )->eta());
+                        if ( _verbose ) std::cout << " RequireOppositeEta is on!" << std::endl;
+                        if ( eta_product > 0. ) { if ( _verbose ) std::cout << " Skipping this jet!" << std::endl; continue; } else { if ( _verbose ) std::cout << " But this dijet is fine!" << std::endl; }
+                    } else {
+                        if ( _verbose ) std::cout << " RequireOppositeEta is off!" << std::endl;
+                    }
+                    if ( _useHighestDijetMinv ) {
+                        if ( _verbose ) std::cout << " Use highest DijetMinv is on!" << std::endl;
+                        auto lead_p4 = Jets[jetCollectionIndex]->ptrAt( dijet_indices.first )->p4();
+                        auto sublead_p4 = jet->p4();
+                        double mjj = (lead_p4+sublead_p4).M();
+                        if (mjj > mjj_so_far) {
+                            if ( _verbose ) std::cout << " Improving old mjj=" << mjj_so_far << " to " << mjj << " with index " << jetLoop << std::endl;
+                            dijet_indices.second = jetLoop;
+                            dijet_pts.second = jet->pt();
+                            mjj_so_far = mjj;
+                        }
+                    } else {
+                        if ( _verbose ) std::cout << " Use highest DijetMinv is off so we take the second jet and call it a day jetLoop=" << jetLoop <<std::endl;
+                        dijet_indices.second = jetLoop;
+                        dijet_pts.second = jet->pt();
+                        break;
+                    }
                 }
-                n_jets_count++;
-                // if the jet's pt is neither higher than the lead jet or sublead jet, then forget it!
-                if( dijet_indices.first != -1 && dijet_indices.second != -1 ) {hasValidVBFDiJet  = 1;}
-                if( hasValidVBFDiJet          && jet_3_index != -1          ) {hasValidVBFTriJet = 1;}
             }
+
+            hasValidVBFDijet = ( dijet_indices.first != -1 && dijet_indices.second != -1 );
+
+            // Extra loop for 3rd jet                                                                                                                                                                                            
+            int jet3_index = -1;
+            float jet3_mjjj = -999.;
+            if (_thirdJetMode == 3) {
+                jet3_mjjj = 9999999.; // going for lowest
+            }
+            float jet3_dr = 999.;
+            if ( hasValidVBFDijet ) {
+                for( UInt_t jetLoop = 0; jetLoop < Jets[jetCollectionIndex]->size() ; jetLoop++ ) {
+                    if ( (int)jetLoop == dijet_indices.first || (int)jetLoop == dijet_indices.second ) continue;
+                    Ptr<flashgg::Jet> jet  = Jets[jetCollectionIndex]->ptrAt( jetLoop );
+
+                    if( _usePuJetID && !jet->passesPuJetId( diPhotons->ptrAt( candIndex ) ) ) { continue; }
+                    if( fabs( jet->eta() ) > 4.7 ) { continue; }
+                    float dPhi = deltaPhi( jet->phi(), phi1 );
+                    float dEta = jet->eta() - eta1;
+                    if( sqrt( dPhi * dPhi + dEta * dEta ) < _minDrToPhoton ) { continue; }
+                    dPhi = deltaPhi( jet->phi(), phi2 );
+                    dEta = jet->eta() - eta2;
+                    if( sqrt( dPhi * dPhi + dEta * dEta ) < _minDrToPhoton ) { continue; }
+                    if ( jet->pt() < _minJetPt ) { continue; }
+
+                    if ( _thirdJetMode == 0 /* lead pt */ ) {
+                        if ( _verbose ) std::cout << " Setting 3rd jet to highest pt remaining: " << jetLoop << std::endl;
+                        jet3_index = jetLoop;
+                        break;
+                    } else if ( _thirdJetMode == 1 /* closest to another jet */ ) {
+                        auto j1 = Jets[jetCollectionIndex]->ptrAt( dijet_indices.first );
+                        auto j2 = Jets[jetCollectionIndex]->ptrAt( dijet_indices.second );
+                        dPhi = deltaPhi( jet->phi(), j1->phi() );
+                        dEta = jet->eta() - j1->eta();
+                        float dr = sqrt( dPhi * dPhi + dEta * dEta );
+                        if( dr < jet3_dr ) {
+                            jet3_index = jetLoop;
+                            jet3_dr = dr;
+                            if ( _verbose ) std::cout << " Setting 3rd jet to be the one closest to lead jet (not final): index=" << jetLoop << " dr=" << jet3_dr << " pt=" << jet->pt() << std::endl;
+                        }
+                        dPhi = deltaPhi( jet->phi(), j2->phi() );
+                        dEta = jet->eta() - j2->eta();
+                        dr = sqrt( dPhi * dPhi + dEta * dEta );
+                        if( dr < jet3_dr ) {
+                            jet3_index = jetLoop;
+                            jet3_dr = dr;
+                            if ( _verbose ) std::cout << " Setting 3rd jet to be the one closest to sublead jet (not final): index=" << jetLoop << " dr=" << jet3_dr << " pt=" << jet->pt() << std::endl;
+                        }
+                    } else if ( _thirdJetMode == 2 /* highest m_jjj */ ) {
+                        auto dijet_p4 = ( Jets[jetCollectionIndex]->ptrAt( dijet_indices.first )->p4() + Jets[jetCollectionIndex]->ptrAt( dijet_indices.second )->p4());
+                        float mjjj = (dijet_p4 + jet->p4()).M();
+                        if (mjjj > jet3_mjjj) {
+                            jet3_index = jetLoop;
+                            jet3_mjjj = mjjj;
+                            if ( _verbose ) std::cout << " Setting 3rd jet to be the one giving highest mjjj (not final): index=" << jetLoop << " mjjj=" << jet3_mjjj << " pt=" << jet->pt() << std::endl;
+                        }
+                    } else if ( _thirdJetMode == 3 /* lowest m_jjj */ ) {
+                        auto dijet_p4 = ( Jets[jetCollectionIndex]->ptrAt( dijet_indices.first )->p4() + Jets[jetCollectionIndex]->ptrAt( dijet_indices.second )->p4());
+                        float mjjj = (dijet_p4 + jet->p4()).M();
+                        if (mjjj < jet3_mjjj) {
+                            jet3_index = jetLoop;
+                            jet3_mjjj = mjjj;
+                            if ( _verbose ) std::cout << " Setting 3rd jet to be the one giving lowest mjjj (not final): index=" << jetLoop << " mjjj=" << jet3_mjjj << " pt=" << jet->pt() << std::endl;
+                        }
+                    }
+                }
+            }
+
+            if( hasValidVBFDijet          && jet3_index != -1          ) {hasValidVBFTrijet = 1;}
+
             //std::cout << "[VBF] has valid VBF Dijet ? "<< hasValidVBFDijet<< std::endl;
-            if( hasValidVBFDiJet ) {
+            if( hasValidVBFDijet ) {
                 
                 std::pair < Ptr<flashgg::Jet>, Ptr<flashgg::Jet> > dijet;
                 // fill dijet pair with lead jet as first, sublead as second.
@@ -277,9 +360,9 @@ namespace flashgg {
                 mvares.subleadJet_ptr = edm::Ptr<flashgg::Jet>();
             }
             
-            if ( hasValidVBFDiJet && hasValidVBFTriJet){
-                mvares.subsubleadJet     = *Jets[jetCollectionIndex]->ptrAt( jet_3_index );
-                mvares.subsubleadJet_ptr =  Jets[jetCollectionIndex]->ptrAt( jet_3_index );
+            if ( hasValidVBFDijet && hasValidVBFTrijet){
+                mvares.subsubleadJet     = *Jets[jetCollectionIndex]->ptrAt( jet3_index );
+                mvares.subsubleadJet_ptr =  Jets[jetCollectionIndex]->ptrAt( jet3_index );
                 mvares.hasValidVBFTriJet = 1;
             }else{
                 mvares.subsubleadJet_ptr =  edm::Ptr<flashgg::Jet>();
