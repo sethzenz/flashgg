@@ -83,8 +83,8 @@ cfgTools.addCategories(process.vbfTagDumper,
                         "genZ           :=tagTruth().genPV().z",
                         "vtxZ           :=diPhoton().vtx().z",
                         "dZ            :=abs(tagTruth().genPV().z-diPhoton().vtx().z)",
-                        "leadQuarkPt                  := tagTruth().pt_Q1",
-                        "matchingGenJetToLeadPt    := tagTruth().pt_genPartMatchingToJ1"
+#                        "leadQuarkPt                  := tagTruth().pt_Q1",
+#                        "matchingGenJetToLeadPt    := tagTruth().pt_genPartMatchingToJ1"
                         ],
                        histograms=["CMS_hgg_mass>>mass(160,100,180)",
                                    "subleadPt:leadPt>>ptLeadvsSub(180,20,200:180,20,200)",
