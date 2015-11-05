@@ -45,9 +45,12 @@ namespace flashgg {
         EDGetTokenT<View<reco::GenParticle> > genPartToken_;
         EDGetTokenT<View<reco::GenJet> > genJetToken_;
         
+        bool requirePhotonAcceptance_;
+        
         float photonIdCut_;
         float loosePhotonIdCut_;
         unsigned nevt_total;
+        unsigned nevt_photon_acc;
         unsigned nevt_dipho;
         unsigned nevt_presel;
         unsigned nevt_leadpt;
@@ -88,7 +91,8 @@ namespace flashgg {
         vbfMvaResultTokenHighest_( consumes<View<flashgg::VBFMVAResult> >( iConfig.getParameter<InputTag> ( "VBFMVAResultTagHighest" ) ) ),
         mvaResultToken_( consumes<View<flashgg::DiPhotonMVAResult> >( iConfig.getParameter<InputTag> ( "MVAResultTag" ) ) ),
         genPartToken_( consumes<View<reco::GenParticle> >( iConfig.getParameter<InputTag> ( "GenParticleTag" ) ) ),
-        genJetToken_( consumes<View<reco::GenJet> >( iConfig.getParameter<InputTag> ( "GenJetTag" ) ) )
+        genJetToken_( consumes<View<reco::GenJet> >( iConfig.getParameter<InputTag> ( "GenJetTag" ) ) ),
+        requirePhotonAcceptance_(  iConfig.getUntrackedParameter<bool> ( "RequirePhotonAcceptance" , true ) )
     {
         photonIdCut_ = 0.; //non-trivial value
         loosePhotonIdCut_ = -0.2;
@@ -148,6 +152,20 @@ namespace flashgg {
 
         std::cout << std::endl;
         std::cout << " --- start of event --- " << std::endl;
+
+        bool pass_phoacceptance = 0;
+
+        for( unsigned int gpLoop = 0 ; gpLoop < genParticles->size() ; gpLoop++ ) {
+            edm::Ptr<reco::GenParticle> gp = genParticles->ptrAt( gpLoop );
+            if ( gp->pdgId() == 22 ) {
+                std::cout << "Gen Photon status pt eta " << gp->status() << " " << gp->pt() << " " << gp->eta() << std::endl;
+            }
+        }
+
+        if ( requirePhotonAcceptance_ ) {
+            std::cout << " pass_phoacceptance=" << pass_phoacceptance << std::endl;
+        }
+
         std::cout << " Number of diphotons: " << diPhotons->size() << std::endl;
         unsigned passptpho1 = 0;
         unsigned passptpho2 = 0;
