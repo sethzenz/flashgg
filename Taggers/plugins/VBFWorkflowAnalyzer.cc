@@ -62,11 +62,29 @@ namespace flashgg {
         unsigned nevt_bothlooseMVA;
         unsigned nevt_leadMVA;
         unsigned nevt_bothMVA;
+        unsigned nevt_jet_acc;
         unsigned nevt_dijet;
         unsigned nevt_tightenpho;
         unsigned nevt_dijetpresel;
         unsigned nevt_dijetmultiple;
         unsigned nevt_dijetallsame;
+        
+        unsigned nevt_j2; 
+        unsigned nevt_j2_dijet;
+        unsigned nevt_j2_tightenpho;
+        unsigned nevt_j2_dijetpresel;
+        unsigned nevt_j2_dijetmultiple;
+        unsigned nevt_j2_dijetallsame;
+
+        unsigned nevt_j3;
+        unsigned nevt_j3_dijet;
+        unsigned nevt_j3_tightenpho;
+        unsigned nevt_j3_dijetpresel;
+        unsigned nevt_j3_dijetmultiple;
+        unsigned nevt_j3_dijetallsame;
+
+        
+
         /*
  Number of diphotons: 3
  Number of preselected diphotons: 1
@@ -97,6 +115,7 @@ namespace flashgg {
         photonIdCut_ = 0.; //non-trivial value
         loosePhotonIdCut_ = -0.2;
         nevt_total = 0;
+        nevt_photon_acc = 0;
         nevt_dipho = 0;
         nevt_presel = 0;
         nevt_leadpt = 0;
@@ -108,11 +127,27 @@ namespace flashgg {
         nevt_bothlooseMVA = 0;
         nevt_leadMVA = 0;
         nevt_bothMVA = 0;
+        nevt_jet_acc = 0;
         nevt_dijet = 0;
         nevt_tightenpho = 0;
         nevt_dijetpresel = 0;
         nevt_dijetmultiple = 0;
         nevt_dijetallsame = 0;
+
+        nevt_j2 = 0;
+        nevt_j2_dijet = 0;
+        nevt_j2_tightenpho = 0;
+        nevt_j2_dijetpresel = 0;
+        nevt_j2_dijetmultiple = 0;
+        nevt_j2_dijetallsame = 0;
+
+        nevt_j3 = 0;
+        nevt_j3_dijet = 0;
+        nevt_j3_tightenpho = 0;
+        nevt_j3_dijetpresel = 0;
+        nevt_j3_dijetmultiple = 0;
+        nevt_j3_dijetallsame = 0;
+
     }
 
     void VBFWorkflowAnalyzer::produce( Event &evt, const EventSetup & )
@@ -152,18 +187,49 @@ namespace flashgg {
 
         std::cout << std::endl;
         std::cout << " --- start of event --- " << std::endl;
+        nevt_total++;
 
+        bool pass_acceptance_leadpho = 0;
+        unsigned npho_pass_acceptance = 0;
         bool pass_phoacceptance = 0;
+        bool pass_acceptance_leadjet = 0;
+
+        vector<unsigned int> jetList;
 
         for( unsigned int gpLoop = 0 ; gpLoop < genParticles->size() ; gpLoop++ ) {
             edm::Ptr<reco::GenParticle> gp = genParticles->ptrAt( gpLoop );
-            if ( gp->pdgId() == 22 ) {
-                std::cout << "Gen Photon status pt eta " << gp->status() << " " << gp->pt() << " " << gp->eta() << std::endl;
+            if ( gp->pdgId() == 22  && fabs( gp->phi() ) < 2.5 ) {
+                std::cout << "Gen Photon status pt eta phi " << gp->status() << " " << gp->pt() << " " << gp->eta() << " " << gp->phi() << std::endl;
+                if ( gp->pt() > 30. ) pass_acceptance_leadpho = 1;
+                if ( gp->pt() > 20. ) npho_pass_acceptance += 1;
+            }
+            if ( abs( gp->pdgId() ) <= 9 && abs( gp->eta() ) < 4.7 && gp->pt() > 20. ) {
+                std::cout << "Gen parton pdgId status pt eta phi " << gp->pdgId() << " " << gp->status() << " " << gp->pt() << " " << gp->eta() << " " << gp->phi() << std::endl;
+                if ( gp->pt() > 30. ) pass_acceptance_leadjet = 1;
+                float dr_sofar = 999.;
+                for ( unsigned nj = 0 ; nj < jetList.size() ; nj++ ) {
+                    edm::Ptr<reco::GenParticle> other = genParticles->ptrAt( jetList[nj] );
+                    float dr = deltaR ( other->eta(), other->phi(), gp->eta(), gp->phi() );
+                    if ( dr < dr_sofar ) dr_sofar = dr;
+                }
+                if ( dr_sofar >= 0.4 ) {
+                    jetList.push_back( gpLoop );
+                } else {
+                    std::cout << " Rejected overlap! " << std::endl;
+                }
             }
         }
 
-        if ( requirePhotonAcceptance_ ) {
-            std::cout << " pass_phoacceptance=" << pass_phoacceptance << std::endl;
+        if ( npho_pass_acceptance >= 2 && pass_acceptance_leadpho ) { 
+            pass_phoacceptance = 1;
+            nevt_photon_acc++;
+        }
+
+        std::cout << " Passed photon acceptance? " << pass_phoacceptance << std::endl;
+
+        if ( requirePhotonAcceptance_ && ! pass_phoacceptance ) {
+            std::cout << " FAILED PHOTON ACCEPTANCE, SKIPPING EVENT" << std::endl << std::endl;
+            return;
         }
 
         std::cout << " Number of diphotons: " << diPhotons->size() << std::endl;
@@ -187,7 +253,6 @@ namespace flashgg {
         std::cout << " (unpresel) number of diphotons with mgg in mass range also: " << passmgg << std::endl;
         std::cout << " Number of preselected diphotons: " << preselectedDiPhotons->size() << std::endl;
 
-        nevt_total++;
         if (diPhotons->size() > 0) nevt_dipho++;
         if (preselectedDiPhotons->size() > 0) nevt_presel++;
 
@@ -238,7 +303,7 @@ namespace flashgg {
                 if (i0 || i1) nipass1++;
                 if (i0 && i1) nipass2++;
             }
-            if (i0 && i1) {
+            if (i0 && i1 && jetList.size() >= 2 && pass_acceptance_leadjet ) {
                 edm::Ptr<flashgg::VBFMVAResult> vbfmvares = vbfMvaResults->ptrAt( candIndex );
                 edm::Ptr<flashgg::VBFMVAResult> vbfmvaresOpposite = vbfMvaResultsOpposite->ptrAt( candIndex );
                 edm::Ptr<flashgg::VBFMVAResult> vbfmvaresHighest = vbfMvaResultsHighest->ptrAt( candIndex );
@@ -282,20 +347,40 @@ namespace flashgg {
             std::cout << "   With >=1 photon having phoIdMVA > " << photonIdCut_ << ": " << nipass1 << std::endl;
             std::cout << "   With 2 photons having phoIdMVA > " << photonIdCut_ << ": " << nipass2 << std::endl;
         }
+        if ( nipass1 && nipass2 ) { 
+            if ( jetList.size() >= 2 && pass_acceptance_leadjet ) {
+                nevt_jet_acc++;
+                std::cout << "  Passed parton jet acceptance!  Count:" << jetList.size() << std::endl;
+                if ( jetList.size() == 2) nevt_j2++;
+                if ( jetList.size() == 3) nevt_j3++;
+            }
+        }
         if (valid_dijet) {
             nevt_dijet++;
             std::cout <<  "  With chosen dijet pt0,1 > 30,20, |eta| < 4.7: " << valid_dijet << std::endl;
+            if ( jetList.size() == 2) nevt_j2_dijet++;
+            if ( jetList.size() == 3) nevt_j3_dijet++;
         }
         if (dijet_tighten_pho) {
             nevt_tightenpho++;
+            if ( jetList.size() == 2) nevt_j2_tightenpho++;
+            if ( jetList.size() == 3) nevt_j3_tightenpho++;
             std::cout << "   With lead photon pt > mgg/2: " << dijet_tighten_pho << std::endl;
             std::cout << "   With mjj > 250 (preselected): " << mjjs.size() << std::endl;
         }
         if (mjjs.size() > 0) {
             nevt_dijetpresel++;
-            if (mjjs.size() > 1) nevt_dijetmultiple++;
+            if ( jetList.size() == 2) nevt_j2_dijetpresel++;
+            if ( jetList.size() == 3) nevt_j3_dijetpresel++;
+            if (mjjs.size() > 1) {
+                nevt_dijetmultiple++;
+                if ( jetList.size() == 2) nevt_j2_dijetmultiple++;
+                if ( jetList.size() == 3) nevt_j3_dijetmultiple++;
+            }
             if (mjjs[0] == mjjsOpposite[0] && mjjs[0] == mjjsHighest[0]) {
                 nevt_dijetallsame++;
+                if ( jetList.size() == 2) nevt_j2_dijetallsame++;
+                if ( jetList.size() == 3) nevt_j3_dijetallsame++;
             }
             std::cout << std::endl << "     pT(H) list: ";
             for (unsigned int i = 0 ; i < pths.size() ; i++) {
@@ -449,26 +534,56 @@ namespace flashgg {
         std::cout << std::endl << std::endl << "  FINAL VBFWORKFLOWANALYZER NUMBERS" << std::endl << std::endl;
         
         std::cout << std::setprecision(3);
+        unsigned nevt_denom = nevt_total;
+        if (requirePhotonAcceptance_) nevt_denom = nevt_photon_acc;
         std::cout << "Events: " << nevt_total << std::endl;
-        std::cout << "Events with a diphoton: " << nevt_dipho << " (" << (float(nevt_dipho)/nevt_total) << ") " << std::endl;
-        std::cout << "Events with a preselected diphoton: " << nevt_presel << " (" << (float(nevt_presel)/nevt_total) << ") " << std::endl;
-        std::cout << "  with pt0 > mgg/3: " << nevt_leadpt << " (" << (float(nevt_leadpt)/nevt_total) << ") " << std::endl;
-        std::cout << "   and pt1 > mgg/4: " << nevt_bothpt << " (" << (float(nevt_bothpt)/nevt_total) << ") " << std::endl;
-        std::cout << "   and 100 < mgg < 180: " << nevt_mgg << " (" << (float(nevt_mgg)/nevt_total) << ") " << std::endl;
-        std::cout << "   and >=1 ele veto: " << nevt_leadeleveto << " (" << (float(nevt_leadeleveto)/nevt_total) << ") " << std::endl;
-        std::cout << "  and both ele veto: " << nevt_botheleveto << " (" << (float(nevt_botheleveto)/nevt_total) << ") " << std::endl;
-        std::cout << "  and mva0 > " << loosePhotonIdCut_ << ": " << nevt_leadlooseMVA << " (" << (float(nevt_leadlooseMVA)/nevt_total) << ") " << std::endl;
-        std::cout << "  and mva1 > " << loosePhotonIdCut_ <<": " << nevt_bothlooseMVA << " (" << (float(nevt_bothlooseMVA)/nevt_total) << ") " << std::endl;
-        std::cout << "  and mva0 > " << photonIdCut_ <<": " << nevt_leadMVA << " (" << (float(nevt_leadMVA)/nevt_total) << ") " << std::endl;
-        std::cout << "  and mva1 > " << photonIdCut_ <<": " << nevt_bothMVA << " (" << (float(nevt_bothMVA)/nevt_total) << ") " << std::endl;
-        std::cout << "  and a dijet (pt0 > 30, pt1 > 20): " << nevt_dijet << " (" << (float(nevt_dijet)/nevt_total) << ") " << std::endl;
-        std::cout << "  and photon pt0 > mgg/2: " << nevt_tightenpho << " (" << (float(nevt_tightenpho)/nevt_total) << ") " << std::endl;
-        std::cout << "  and mgg > 250 (dijet presel): " << nevt_dijetpresel << " (" << (float(nevt_dijetpresel)/nevt_total) << ") " << std::endl;
+        std::cout << "Events passing truth-level diphoton acceptance (|eta| < 2.5, pt > 30, 20): " << nevt_photon_acc << " (" << (float(nevt_photon_acc)/nevt_total) << ") " << std::endl;
+        std::cout << "Denominator for next fractions is: " << nevt_denom << std::endl;
+        std::cout << " Events with a diphoton: " << nevt_dipho << " (" << (float(nevt_dipho)/nevt_denom) << ") " << std::endl;
+        std::cout << " Events with a preselected diphoton: " << nevt_presel << " (" << (float(nevt_presel)/nevt_denom) << ") " << std::endl;
+        std::cout << "  with pt0 > mgg/3: " << nevt_leadpt << " (" << (float(nevt_leadpt)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and pt1 > mgg/4: " << nevt_bothpt << " (" << (float(nevt_bothpt)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and 100 < mgg < 180: " << nevt_mgg << " (" << (float(nevt_mgg)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and >=1 ele veto: " << nevt_leadeleveto << " (" << (float(nevt_leadeleveto)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and both ele veto: " << nevt_botheleveto << " (" << (float(nevt_botheleveto)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and mva0 > " << loosePhotonIdCut_ << ": " << nevt_leadlooseMVA << " (" << (float(nevt_leadlooseMVA)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and mva1 > " << loosePhotonIdCut_ <<": " << nevt_bothlooseMVA << " (" << (float(nevt_bothlooseMVA)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and mva0 > " << photonIdCut_ <<": " << nevt_leadMVA << " (" << (float(nevt_leadMVA)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and mva1 > " << photonIdCut_ <<": " << nevt_bothMVA << " (" << (float(nevt_bothMVA)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and >= 2 gen-level partons (pt > 30, pt > 20): " << nevt_jet_acc << " (" << (float(nevt_jet_acc)/nevt_denom) << " ) " << std::endl;
+        std::cout << "   and a dijet (pt0 > 30, pt1 > 20): " << nevt_dijet << " (" << (float(nevt_dijet)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and photon pt0 > mgg/2: " << nevt_tightenpho << " (" << (float(nevt_tightenpho)/nevt_denom) << ") " << std::endl;
+        std::cout << "   and mgg > 250 (dijet presel): " << nevt_dijetpresel << " (" << (float(nevt_dijetpresel)/nevt_denom) << ") " << std::endl;
 
-        std::cout << std::endl << "END OF CUTFLOW, TWO FURTHER SEPARATEQUESTIONS, with full list of cuts (i.e. dijet presel) as denominator:" << std::endl << std::endl;
+        std::cout << std::endl << "END OF CUTFLOW, TWO FURTHER SEPARATE QUESTIONS, with full list of cuts (i.e. dijet presel) as denominator:" << std::endl << std::endl;
         std::cout << "    Fraction with multiple dipho/dijets to consider: " << nevt_dijetmultiple 
                   << nevt_dijetmultiple << " (" << (float(nevt_dijetmultiple)/nevt_dijetpresel) << ") " << std::endl;
-        std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: " << nevt_dijetallsame << " (" << (float(nevt_dijetallsame)/nevt_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: " 
+                  << nevt_dijetallsame << " (" << (float(nevt_dijetallsame)/nevt_dijetpresel) << ") " << std::endl;
+
+        std::cout << std::endl;
+        std::cout << " Number of events passing parton acceptance with exactly 2 partons: " << nevt_j2 << " (" << (float(nevt_j2)/nevt_denom) << " ) " << std::endl;
+        std::cout << "                 (Using this as the denominator for next fractions)" << std::endl;
+        std::cout << "   and a dijet (pt0 > 30, pt1 > 20): " << nevt_j2_dijet << " (" << (float(nevt_j2_dijet)/nevt_j2) << ") " << std::endl;
+        std::cout << "   and photon pt0 > mgg/2: " << nevt_j2_tightenpho << " (" << (float(nevt_j2_tightenpho)/nevt_j2) << ") " << std::endl;
+        std::cout << "   and mgg > 250 (dijet presel): " << nevt_j2_dijetpresel << " (" << (float(nevt_j2_dijetpresel)/nevt_j2) << ") " << std::endl;
+        std::cout << " And the two further questions, with exactly 2 partons + presel as denominator:" << std::endl;
+        std::cout << "    Fraction with multiple dipho/dijets to consider: " << nevt_j2_dijetmultiple
+                  << nevt_j2_dijetmultiple << " (" << (float(nevt_j2_dijetmultiple)/nevt_j2_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: "
+                  << nevt_j2_dijetallsame << " (" << (float(nevt_j2_dijetallsame)/nevt_j2_dijetpresel) << ") " << std::endl;
+
+        std::cout << std::endl;
+        std::cout << " Number of events passing parton acceptance with exactly 3 partons: " << nevt_j3 << " (" << (float(nevt_j3)/nevt_denom) << " ) " << std::endl;
+        std::cout << "                 (Using this as the denominator for next fractions)" << std::endl;
+        std::cout << "   and a dijet (pt0 > 30, pt1 > 20): " << nevt_j3_dijet << " (" << (float(nevt_j3_dijet)/nevt_j3) << ") " << std::endl;
+        std::cout << "   and photon pt0 > mgg/2: " << nevt_j3_tightenpho << " (" << (float(nevt_j3_tightenpho)/nevt_j3) << ") " << std::endl;
+        std::cout << "   and mgg > 250 (dijet presel): " << nevt_j3_dijetpresel << " (" << (float(nevt_j3_dijetpresel)/nevt_j3) << ") " << std::endl;
+        std::cout << " And the two further questions, with exactly 3 partons + presel as denominator:" << std::endl;
+        std::cout << "    Fraction with multiple dipho/dijets to consider: " << nevt_j3_dijetmultiple
+                  << nevt_j3_dijetmultiple << " (" << (float(nevt_j3_dijetmultiple)/nevt_j3_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: "
+                  << nevt_j3_dijetallsame << " (" << (float(nevt_j3_dijetallsame)/nevt_j3_dijetpresel) << ") " << std::endl;
         
         std::cout << std::endl << std::endl;
     }
