@@ -41,11 +41,17 @@ namespace flashgg {
         EDGetTokenT<View<VBFMVAResult> > vbfMvaResultToken_;
         EDGetTokenT<View<VBFMVAResult> > vbfMvaResultTokenOpposite_;
         EDGetTokenT<View<VBFMVAResult> > vbfMvaResultTokenHighest_;
+        EDGetTokenT<View<VBFMVAResult> > vbfMvaResultTokenThirdJetHighPt_;
+        EDGetTokenT<View<VBFMVAResult> > vbfMvaResultTokenThirdJetMaxMjjj_;
+        EDGetTokenT<View<VBFMVAResult> > vbfMvaResultTokenThirdJetMinMjjj_;
+        EDGetTokenT<View<VBFMVAResult> > vbfMvaResultTokenThirdJetMinDr_;
+
         EDGetTokenT<View<DiPhotonMVAResult> > mvaResultToken_;
         EDGetTokenT<View<reco::GenParticle> > genPartToken_;
         EDGetTokenT<View<reco::GenJet> > genJetToken_;
         
-        bool requirePhotonAcceptance_;
+        bool requireAcceptance_;
+        bool useGenJets_;
         
         float photonIdCut_;
         float loosePhotonIdCut_;
@@ -68,6 +74,13 @@ namespace flashgg {
         unsigned nevt_dijetpresel;
         unsigned nevt_dijetmultiple;
         unsigned nevt_dijetallsame;
+        unsigned nevt_dijet_correct;
+        unsigned nevt_dijet_correctOpposite;
+        unsigned nevt_dijet_correctHighest;
+        unsigned nevt_dijet_correctThirdJetHighPt;
+        unsigned nevt_dijet_correctThirdJetMinDr;
+        unsigned nevt_dijet_correctThirdJetMinMjjj;
+        unsigned nevt_dijet_correctThirdJetMaxMjjj;
         
         unsigned nevt_j2; 
         unsigned nevt_j2_dijet;
@@ -75,6 +88,13 @@ namespace flashgg {
         unsigned nevt_j2_dijetpresel;
         unsigned nevt_j2_dijetmultiple;
         unsigned nevt_j2_dijetallsame;
+        unsigned nevt_j2_dijet_correct;
+        unsigned nevt_j2_dijet_correctOpposite;
+        unsigned nevt_j2_dijet_correctHighest;
+        unsigned nevt_j2_dijet_correctThirdJetHighPt;
+        unsigned nevt_j2_dijet_correctThirdJetMinDr;
+        unsigned nevt_j2_dijet_correctThirdJetMinMjjj;
+        unsigned nevt_j2_dijet_correctThirdJetMaxMjjj;
 
         unsigned nevt_j3;
         unsigned nevt_j3_dijet;
@@ -82,7 +102,13 @@ namespace flashgg {
         unsigned nevt_j3_dijetpresel;
         unsigned nevt_j3_dijetmultiple;
         unsigned nevt_j3_dijetallsame;
-
+        unsigned nevt_j3_dijet_correct;
+        unsigned nevt_j3_dijet_correctOpposite;
+        unsigned nevt_j3_dijet_correctHighest;
+        unsigned nevt_j3_dijet_correctThirdJetHighPt;
+        unsigned nevt_j3_dijet_correctThirdJetMinDr;
+        unsigned nevt_j3_dijet_correctThirdJetMinMjjj;
+        unsigned nevt_j3_dijet_correctThirdJetMaxMjjj;
         
 
         /*
@@ -107,10 +133,15 @@ namespace flashgg {
         vbfMvaResultToken_( consumes<View<flashgg::VBFMVAResult> >( iConfig.getParameter<InputTag> ( "VBFMVAResultTag" ) ) ),
         vbfMvaResultTokenOpposite_( consumes<View<flashgg::VBFMVAResult> >( iConfig.getParameter<InputTag> ( "VBFMVAResultTagOpposite" ) ) ),
         vbfMvaResultTokenHighest_( consumes<View<flashgg::VBFMVAResult> >( iConfig.getParameter<InputTag> ( "VBFMVAResultTagHighest" ) ) ),
+        vbfMvaResultTokenThirdJetHighPt_( consumes<View<flashgg::VBFMVAResult> >( iConfig.getParameter<InputTag> ( "VBFMVAResultTagThirdJetHighPt" ) ) ),
+        vbfMvaResultTokenThirdJetMaxMjjj_( consumes<View<flashgg::VBFMVAResult> >( iConfig.getParameter<InputTag> ( "VBFMVAResultTagThirdJetMaxMjjj" ) ) ),
+        vbfMvaResultTokenThirdJetMinMjjj_( consumes<View<flashgg::VBFMVAResult> >( iConfig.getParameter<InputTag> ( "VBFMVAResultTagThirdJetMinMjjj" ) ) ),
+        vbfMvaResultTokenThirdJetMinDr_( consumes<View<flashgg::VBFMVAResult> >( iConfig.getParameter<InputTag> ( "VBFMVAResultTagThirdJetMinDr" ) ) ),
         mvaResultToken_( consumes<View<flashgg::DiPhotonMVAResult> >( iConfig.getParameter<InputTag> ( "MVAResultTag" ) ) ),
         genPartToken_( consumes<View<reco::GenParticle> >( iConfig.getParameter<InputTag> ( "GenParticleTag" ) ) ),
         genJetToken_( consumes<View<reco::GenJet> >( iConfig.getParameter<InputTag> ( "GenJetTag" ) ) ),
-        requirePhotonAcceptance_(  iConfig.getUntrackedParameter<bool> ( "RequirePhotonAcceptance" , true ) )
+        requireAcceptance_(  iConfig.getUntrackedParameter<bool> ( "RequireAcceptance" , true ) ),
+        useGenJets_( iConfig.getUntrackedParameter<bool>( "UseGenJets", true ) )
     {
         photonIdCut_ = 0.; //non-trivial value
         loosePhotonIdCut_ = -0.2;
@@ -133,6 +164,13 @@ namespace flashgg {
         nevt_dijetpresel = 0;
         nevt_dijetmultiple = 0;
         nevt_dijetallsame = 0;
+        nevt_dijet_correct = 0;
+        nevt_dijet_correctOpposite = 0;
+        nevt_dijet_correctHighest = 0;
+        nevt_dijet_correctThirdJetHighPt = 0;
+        nevt_dijet_correctThirdJetMinDr = 0;
+        nevt_dijet_correctThirdJetMinMjjj = 0;
+        nevt_dijet_correctThirdJetMaxMjjj = 0;
 
         nevt_j2 = 0;
         nevt_j2_dijet = 0;
@@ -140,6 +178,13 @@ namespace flashgg {
         nevt_j2_dijetpresel = 0;
         nevt_j2_dijetmultiple = 0;
         nevt_j2_dijetallsame = 0;
+        nevt_j2_dijet_correct = 0;
+        nevt_j2_dijet_correctOpposite = 0;
+        nevt_j2_dijet_correctHighest = 0;
+        nevt_j2_dijet_correctThirdJetHighPt = 0;
+        nevt_j2_dijet_correctThirdJetMinDr = 0;
+        nevt_j2_dijet_correctThirdJetMinMjjj = 0;
+        nevt_j2_dijet_correctThirdJetMaxMjjj = 0;
 
         nevt_j3 = 0;
         nevt_j3_dijet = 0;
@@ -147,7 +192,13 @@ namespace flashgg {
         nevt_j3_dijetpresel = 0;
         nevt_j3_dijetmultiple = 0;
         nevt_j3_dijetallsame = 0;
-
+        nevt_j3_dijet_correct = 0;
+        nevt_j3_dijet_correctOpposite = 0;
+        nevt_j3_dijet_correctHighest = 0;
+        nevt_j3_dijet_correctThirdJetHighPt = 0;
+        nevt_j3_dijet_correctThirdJetMinDr = 0;
+        nevt_j3_dijet_correctThirdJetMinMjjj = 0;
+        nevt_j3_dijet_correctThirdJetMaxMjjj = 0;
     }
 
     void VBFWorkflowAnalyzer::produce( Event &evt, const EventSetup & )
@@ -170,6 +221,15 @@ namespace flashgg {
 
         Handle<View<flashgg::VBFMVAResult> > vbfMvaResultsHighest;
         evt.getByToken( vbfMvaResultTokenHighest_, vbfMvaResultsHighest );
+
+        Handle<View<flashgg::VBFMVAResult> > vbfMvaResultsThirdJetHighPt;
+        evt.getByToken( vbfMvaResultTokenThirdJetHighPt_, vbfMvaResultsThirdJetHighPt );
+        Handle<View<flashgg::VBFMVAResult> > vbfMvaResultsThirdJetMaxMjjj;
+        evt.getByToken( vbfMvaResultTokenThirdJetMaxMjjj_, vbfMvaResultsThirdJetMaxMjjj );
+        Handle<View<flashgg::VBFMVAResult> > vbfMvaResultsThirdJetMinMjjj;
+        evt.getByToken( vbfMvaResultTokenThirdJetMinMjjj_, vbfMvaResultsThirdJetMinMjjj );
+        Handle<View<flashgg::VBFMVAResult> > vbfMvaResultsThirdJetMinDr;
+        evt.getByToken( vbfMvaResultTokenThirdJetMinDr_, vbfMvaResultsThirdJetMinDr );
 
         //        Handle<View<flashgg::VBFDiPhoDiJetMVAResult> > vbfDiPhoDiJetMvaResults;
         //        evt.getByToken( vbfDiPhoDiJetMvaResultToken_, vbfDiPhoDiJetMvaResults );
@@ -194,8 +254,28 @@ namespace flashgg {
         bool pass_phoacceptance = 0;
         bool pass_acceptance_leadjet = 0;
 
-        vector<unsigned int> jetList;
+        vector<reco::Candidate::LorentzVector> jetList;
 
+        if ( useGenJets_ ) {
+            for ( unsigned int gjLoop = 0 ; gjLoop < genJets->size() ; gjLoop++ ) {
+                edm::Ptr<reco::GenJet> gj = genJets->ptrAt( gjLoop );
+                std::cout << " Gen jet pt eta " << gj->pt() << " " << gj->eta() << std::endl;
+                bool ok = true;
+                for( unsigned int gpLoop = 0 ; gpLoop < genParticles->size() ; gpLoop++ ) {
+                    edm::Ptr<reco::GenParticle> gp = genParticles->ptrAt( gpLoop );
+                    if ( gp->pdgId() == 22  && fabs( gp->phi() ) < 2.5 && deltaR( gp->eta(), gp->phi(), gj->eta(), gj->phi() ) < 0.4 ) {
+                        std::cout << "  ... Rejecting due to overlap with photon!";
+                        ok = false;
+                        break;
+                    }
+                }
+                if ( ok ) {
+                    if ( gj->pt() > 30. && fabs( gj->eta() ) < 4.7 ) pass_acceptance_leadjet = 1;
+                    if ( gj->pt() > 20. && fabs( gj->eta() ) < 4.7) jetList.push_back( gj->p4() );
+                }
+            }
+        } // otherwise use partons, see next section
+ 
         for( unsigned int gpLoop = 0 ; gpLoop < genParticles->size() ; gpLoop++ ) {
             edm::Ptr<reco::GenParticle> gp = genParticles->ptrAt( gpLoop );
             if ( gp->pdgId() == 22  && fabs( gp->phi() ) < 2.5 ) {
@@ -203,19 +283,25 @@ namespace flashgg {
                 if ( gp->pt() > 30. ) pass_acceptance_leadpho = 1;
                 if ( gp->pt() > 20. ) npho_pass_acceptance += 1;
             }
-            if ( abs( gp->pdgId() ) <= 9 && abs( gp->eta() ) < 4.7 && gp->pt() > 20. ) {
+            if ( (!useGenJets_) && abs( gp->pdgId() ) <= 9 && fabs( gp->eta() ) < 4.7 && gp->pt() > 20. ) {
                 std::cout << "Gen parton pdgId status pt eta phi " << gp->pdgId() << " " << gp->status() << " " << gp->pt() << " " << gp->eta() << " " << gp->phi() << std::endl;
                 if ( gp->pt() > 30. ) pass_acceptance_leadjet = 1;
                 float dr_sofar = 999.;
+                unsigned match_index = 999;
                 for ( unsigned nj = 0 ; nj < jetList.size() ; nj++ ) {
-                    edm::Ptr<reco::GenParticle> other = genParticles->ptrAt( jetList[nj] );
-                    float dr = deltaR ( other->eta(), other->phi(), gp->eta(), gp->phi() );
-                    if ( dr < dr_sofar ) dr_sofar = dr;
+                    float dr = deltaR ( jetList[nj].eta(), jetList[nj].phi(), gp->eta(), gp->phi() );
+                    if ( dr < dr_sofar ) {
+                        dr_sofar = dr;
+                        match_index = nj;
+                    }
                 }
                 if ( dr_sofar >= 0.4 ) {
-                    jetList.push_back( gpLoop );
+                    jetList.push_back( gp->p4() );
                 } else {
-                    std::cout << " Rejected overlap! " << std::endl;
+                    // merge
+                    jetList[match_index] = (jetList[match_index] + gp->p4());
+                    std::cout << " Merge into object with pt eta phi " << jetList[match_index].pt() << " " << jetList[match_index].eta() 
+                              << " " << jetList[match_index].phi() << std::endl;
                 }
             }
         }
@@ -227,7 +313,7 @@ namespace flashgg {
 
         std::cout << " Passed photon acceptance? " << pass_phoacceptance << std::endl;
 
-        if ( requirePhotonAcceptance_ && ! pass_phoacceptance ) {
+        if ( requireAcceptance_ && ! pass_phoacceptance ) {
             std::cout << " FAILED PHOTON ACCEPTANCE, SKIPPING EVENT" << std::endl << std::endl;
             return;
         }
@@ -266,6 +352,14 @@ namespace flashgg {
         vector<float> mjjs;
         vector<float> mjjsOpposite;
         vector<float> mjjsHighest;
+        vector<bool> correct;
+        vector<bool> correctOpposite;
+        vector<bool> correctHighest;
+        vector<bool> correctThirdJetHighPt;
+        vector<bool> correctThirdJetMinDr;
+        vector<bool> correctThirdJetMinMjjj;
+        vector<bool> correctThirdJetMaxMjjj;
+
         unsigned preselpassptpho1 = 0;
         unsigned preselpassptpho2 = 0;
         unsigned preselpassmgg = 0;
@@ -303,10 +397,14 @@ namespace flashgg {
                 if (i0 || i1) nipass1++;
                 if (i0 && i1) nipass2++;
             }
-            if (i0 && i1 && jetList.size() >= 2 && pass_acceptance_leadjet ) {
+            if (i0 && i1 && ((!requireAcceptance_) || (jetList.size() >= 2 && pass_acceptance_leadjet) ) ) {
                 edm::Ptr<flashgg::VBFMVAResult> vbfmvares = vbfMvaResults->ptrAt( candIndex );
                 edm::Ptr<flashgg::VBFMVAResult> vbfmvaresOpposite = vbfMvaResultsOpposite->ptrAt( candIndex );
                 edm::Ptr<flashgg::VBFMVAResult> vbfmvaresHighest = vbfMvaResultsHighest->ptrAt( candIndex );
+                edm::Ptr<flashgg::VBFMVAResult> vbfmvaresThirdJetHighPt = vbfMvaResultsThirdJetHighPt->ptrAt( candIndex );
+                edm::Ptr<flashgg::VBFMVAResult> vbfmvaresThirdJetMinMjjj = vbfMvaResultsThirdJetMinMjjj->ptrAt( candIndex );
+                edm::Ptr<flashgg::VBFMVAResult> vbfmvaresThirdJetMaxMjjj = vbfMvaResultsThirdJetMaxMjjj->ptrAt( candIndex );
+                edm::Ptr<flashgg::VBFMVAResult> vbfmvaresThirdJetMinDr = vbfMvaResultsThirdJetMinDr->ptrAt( candIndex );
                 if (vbfmvares->dijet_Mjj > -0.1 && vbfmvares->dijet_LeadJPt > 30. && vbfmvares->dijet_SubJPt > 20. ) {
                     valid_dijet++;
                     if ( dipho->leadingPhoton()->pt() > dipho->mass()/2 ) {
@@ -315,9 +413,67 @@ namespace flashgg {
                             mjjs.push_back(vbfmvares->dijet_Mjj);
                             mjjsOpposite.push_back(vbfmvaresOpposite->dijet_Mjj);
                             mjjsHighest.push_back(vbfmvaresHighest->dijet_Mjj);
+                            bool okj1 = 0, okj2 = 0;
+                            for ( unsigned nj = 0 ; nj < jetList.size() ; nj++ ) {
+                                if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvares->leadJet.eta(), vbfmvares->leadJet.phi() ) < 0.4 ) okj1 = 1;
+                                if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvares->subleadJet.eta(), vbfmvares->subleadJet.phi() ) < 0.4 ) okj2 = 1;
+                            }
+                            correct.push_back(okj1&&okj2);
                             pths.push_back(dipho->sumPt());
                         }
                     }
+                }
+                if (vbfmvaresOpposite->dijet_Mjj > -0.1 && vbfmvaresOpposite->dijet_LeadJPt > 30. && vbfmvaresOpposite->dijet_SubJPt > 20. 
+                    && dipho->leadingPhoton()->pt() > dipho->mass()/2 && vbfmvaresOpposite->dijet_Mjj > 250.) {
+                    bool okj1 = 0, okj2 = 0;
+                    for ( unsigned nj = 0 ; nj < jetList.size() ; nj++ ) {
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresOpposite->leadJet.eta(), vbfmvaresOpposite->leadJet.phi() ) < 0.4 ) okj1 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresOpposite->subleadJet.eta(), vbfmvaresOpposite->subleadJet.phi() ) < 0.4 ) okj2 = 1;
+                    }
+                    correctOpposite.push_back(okj1&&okj2);
+                }
+                if (vbfmvaresHighest->dijet_Mjj > -0.1 && vbfmvaresHighest->dijet_LeadJPt > 30. && vbfmvaresHighest->dijet_SubJPt > 20.
+                    && dipho->leadingPhoton()->pt() > dipho->mass()/2 && vbfmvaresHighest->dijet_Mjj > 250.) {
+                    bool okj1 = 0, okj2 = 0;
+                    for ( unsigned nj = 0 ; nj < jetList.size() ; nj++ ) {
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresHighest->leadJet.eta(), vbfmvaresHighest->leadJet.phi() ) < 0.4 ) okj1 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresHighest->subleadJet.eta(), vbfmvaresHighest->subleadJet.phi() ) < 0.4 ) okj2 = 1;
+                    }
+                    correctHighest.push_back(okj1&&okj2);
+                    okj1 = 0; okj2 = 0; bool okj3 = 0;
+                    for ( unsigned nj = 0 ; nj < jetList.size() ; nj++ ) {
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetHighPt->leadJet.eta(), vbfmvaresThirdJetHighPt->leadJet.phi() ) < 0.4 ) okj1 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetHighPt->subleadJet.eta(), vbfmvaresThirdJetHighPt->subleadJet.phi() ) < 0.4 ) okj2 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetHighPt->subsubleadJet.eta(), 
+                                      vbfmvaresThirdJetHighPt->subsubleadJet.phi() ) < 0.4 ) okj3 = 1;
+                    }
+                    correctThirdJetHighPt.push_back(okj1&&okj2&&okj3);
+                    okj1 = 0; okj2 = 0; okj3 = 0;
+                    for ( unsigned nj = 0 ; nj < jetList.size() ; nj++ ) {
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetMinMjjj->leadJet.eta(), vbfmvaresThirdJetMinMjjj->leadJet.phi() ) < 0.4 ) okj1 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetMinMjjj->subleadJet.eta(), vbfmvaresThirdJetMinMjjj->subleadJet.phi() ) < 0.4 ) okj2 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetMinMjjj->subsubleadJet.eta(),
+                                      vbfmvaresThirdJetMinMjjj->subsubleadJet.phi() ) < 0.4 ) okj3 = 1;
+                    }
+                    correctThirdJetMinMjjj.push_back(okj1&&okj2&&okj3);
+                    okj1 = 0; okj2 = 0; okj3 = 0;
+                    for ( unsigned nj = 0 ; nj < jetList.size() ; nj++ ) {
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetMaxMjjj->leadJet.eta(), vbfmvaresThirdJetMaxMjjj->leadJet.phi() ) < 0.4 ) okj1 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), 
+                                      vbfmvaresThirdJetMaxMjjj->subleadJet.eta(), vbfmvaresThirdJetMaxMjjj->subleadJet.phi() ) < 0.4 ) okj2 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetMaxMjjj->subsubleadJet.eta(),
+                                      vbfmvaresThirdJetMaxMjjj->subsubleadJet.phi() ) < 0.4 ) okj3 = 1;
+                    }
+                    correctThirdJetMaxMjjj.push_back(okj1&&okj2&&okj3);
+                    okj1 = 0; okj2 = 0; okj3 = 0;
+                    for ( unsigned nj = 0 ; nj < jetList.size() ; nj++ ) {
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetMinDr->leadJet.eta(), vbfmvaresThirdJetMinDr->leadJet.phi() ) < 0.4 ) okj1 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(),
+                                      vbfmvaresThirdJetMinDr->subleadJet.eta(), vbfmvaresThirdJetMinDr->subleadJet.phi() ) < 0.4 ) okj2 = 1;
+                        if ( deltaR ( jetList[nj].eta(), jetList[nj].phi(), vbfmvaresThirdJetMinDr->subsubleadJet.eta(),
+                                      vbfmvaresThirdJetMinDr->subsubleadJet.phi() ) < 0.4 ) okj3 = 1;
+                    }
+                    correctThirdJetMinDr.push_back(okj1&&okj2&&okj3);
                 }
             }
         }
@@ -347,10 +503,11 @@ namespace flashgg {
             std::cout << "   With >=1 photon having phoIdMVA > " << photonIdCut_ << ": " << nipass1 << std::endl;
             std::cout << "   With 2 photons having phoIdMVA > " << photonIdCut_ << ": " << nipass2 << std::endl;
         }
-        if ( nipass1 && nipass2 ) { 
+        if ( nipass1 && nipass2 && requireAcceptance_) { 
             if ( jetList.size() >= 2 && pass_acceptance_leadjet ) {
                 nevt_jet_acc++;
-                std::cout << "  Passed parton jet acceptance!  Count:" << jetList.size() << std::endl;
+                if (useGenJets_) std::cout << "  Passed gen jet acceptance!  Count: " << jetList.size() << std::endl;
+                if (!useGenJets_) std::cout << "  Passed parton jet acceptance!  Count: " << jetList.size() << std::endl;
                 if ( jetList.size() == 2) nevt_j2++;
                 if ( jetList.size() == 3) nevt_j3++;
             }
@@ -382,6 +539,42 @@ namespace flashgg {
                 if ( jetList.size() == 2) nevt_j2_dijetallsame++;
                 if ( jetList.size() == 3) nevt_j3_dijetallsame++;
             }
+            if (correct[0]) {
+                nevt_dijet_correct++;
+                if ( jetList.size() == 2) nevt_j2_dijet_correct++;
+                if ( jetList.size() == 3) nevt_j3_dijet_correct++;
+            }
+            if (correctOpposite.size() > 0 && correctOpposite[0]) {
+                nevt_dijet_correctOpposite++;
+                if ( jetList.size() == 2) nevt_j2_dijet_correctOpposite++;
+                if ( jetList.size() == 3) nevt_j3_dijet_correctOpposite++;
+            }
+            if (correctHighest.size() > 0 && correctHighest[0]) {
+                nevt_dijet_correctHighest++;
+                if ( jetList.size() == 2) nevt_j2_dijet_correctHighest++;
+                if ( jetList.size() == 3) nevt_j3_dijet_correctHighest++;
+            }
+            if (correctThirdJetHighPt.size() > 0 && correctThirdJetHighPt[0]) {
+                nevt_dijet_correctThirdJetHighPt++;
+                if ( jetList.size() == 2) nevt_j2_dijet_correctThirdJetHighPt++;
+                if ( jetList.size() == 3) nevt_j3_dijet_correctThirdJetHighPt++;
+            }
+            if (correctThirdJetMinDr.size() > 0 && correctThirdJetMinDr[0]) {
+                nevt_dijet_correctThirdJetMinDr++;
+                if ( jetList.size() == 2) nevt_j2_dijet_correctThirdJetMinDr++;
+                if ( jetList.size() == 3) nevt_j3_dijet_correctThirdJetMinDr++;
+            }
+            if (correctThirdJetMinMjjj.size() > 0 && correctThirdJetMinMjjj[0]) {
+                nevt_dijet_correctThirdJetMinMjjj++;
+                if ( jetList.size() == 2) nevt_j2_dijet_correctThirdJetMinMjjj++;
+                if ( jetList.size() == 3) nevt_j3_dijet_correctThirdJetMinMjjj++;
+            }
+            if (correctThirdJetMaxMjjj.size() > 0 && correctThirdJetMaxMjjj[0]) {
+                nevt_dijet_correctThirdJetMaxMjjj++;
+                if ( jetList.size() == 2) nevt_j2_dijet_correctThirdJetMaxMjjj++;
+                if ( jetList.size() == 3) nevt_j3_dijet_correctThirdJetMaxMjjj++;
+            }
+
             std::cout << std::endl << "     pT(H) list: ";
             for (unsigned int i = 0 ; i < pths.size() ; i++) {
                 std::cout << pths[i] << " ";
@@ -531,11 +724,14 @@ namespace flashgg {
 
     void VBFWorkflowAnalyzer::endJob() {
         
+        char genString[20] = "parton";
+        if (useGenJets_) strcpy(genString,"jet");
+
         std::cout << std::endl << std::endl << "  FINAL VBFWORKFLOWANALYZER NUMBERS" << std::endl << std::endl;
         
         std::cout << std::setprecision(3);
         unsigned nevt_denom = nevt_total;
-        if (requirePhotonAcceptance_) nevt_denom = nevt_photon_acc;
+        if (requireAcceptance_) nevt_denom = nevt_photon_acc;
         std::cout << "Events: " << nevt_total << std::endl;
         std::cout << "Events passing truth-level diphoton acceptance (|eta| < 2.5, pt > 30, 20): " << nevt_photon_acc << " (" << (float(nevt_photon_acc)/nevt_total) << ") " << std::endl;
         std::cout << "Denominator for next fractions is: " << nevt_denom << std::endl;
@@ -550,7 +746,10 @@ namespace flashgg {
         std::cout << "   and mva1 > " << loosePhotonIdCut_ <<": " << nevt_bothlooseMVA << " (" << (float(nevt_bothlooseMVA)/nevt_denom) << ") " << std::endl;
         std::cout << "   and mva0 > " << photonIdCut_ <<": " << nevt_leadMVA << " (" << (float(nevt_leadMVA)/nevt_denom) << ") " << std::endl;
         std::cout << "   and mva1 > " << photonIdCut_ <<": " << nevt_bothMVA << " (" << (float(nevt_bothMVA)/nevt_denom) << ") " << std::endl;
-        std::cout << "   and >= 2 gen-level partons (pt > 30, pt > 20): " << nevt_jet_acc << " (" << (float(nevt_jet_acc)/nevt_denom) << " ) " << std::endl;
+        if (requireAcceptance_) {
+            std::cout << "   and >= 2 gen-level " << genString << "s (pt > 30, pt > 20): " 
+                                          << nevt_jet_acc << " (" << (float(nevt_jet_acc)/nevt_denom) << " ) " << std::endl;
+        }
         std::cout << "   and a dijet (pt0 > 30, pt1 > 20): " << nevt_dijet << " (" << (float(nevt_dijet)/nevt_denom) << ") " << std::endl;
         std::cout << "   and photon pt0 > mgg/2: " << nevt_tightenpho << " (" << (float(nevt_tightenpho)/nevt_denom) << ") " << std::endl;
         std::cout << "   and mgg > 250 (dijet presel): " << nevt_dijetpresel << " (" << (float(nevt_dijetpresel)/nevt_denom) << ") " << std::endl;
@@ -560,30 +759,77 @@ namespace flashgg {
                   << nevt_dijetmultiple << " (" << (float(nevt_dijetmultiple)/nevt_dijetpresel) << ") " << std::endl;
         std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: " 
                   << nevt_dijetallsame << " (" << (float(nevt_dijetallsame)/nevt_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with Default method giving jets that match gen-level " << genString << "s: " << nevt_dijet_correct 
+                  << " (" << (float(nevt_dijet_correct)/nevt_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with Opposite method giving jets that match gen-level " << genString << "s: " << nevt_dijet_correctOpposite
+                  << " (" << (float(nevt_dijet_correctOpposite)/nevt_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with Highest method giving jets that match gen-level " << genString << "s: " << nevt_dijet_correctHighest
+                  << " (" << (float(nevt_dijet_correctHighest)/nevt_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet Highest Pt method giving jets that match gen-level " << genString << "s: " << nevt_dijet_correctThirdJetHighPt
+                  << " (" << (float(nevt_dijet_correctThirdJetHighPt)/nevt_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet min(mjjj) method giving jets that match gen-level " << genString << "s: " << nevt_dijet_correctThirdJetMinMjjj
+                  << " (" << (float(nevt_dijet_correctThirdJetMinMjjj)/nevt_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet max(mjjj) method giving jets that match gen-level " << genString << "s: " << nevt_dijet_correctThirdJetMaxMjjj
+                  << " (" << (float(nevt_dijet_correctThirdJetMaxMjjj)/nevt_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet min(dr) method giving jets that match gen-level " << genString << "s: " << nevt_dijet_correctThirdJetMinDr
+                  << " (" << (float(nevt_dijet_correctThirdJetMinDr)/nevt_dijetpresel) << ") " << std::endl;
+
+
 
         std::cout << std::endl;
-        std::cout << " Number of events passing parton acceptance with exactly 2 partons: " << nevt_j2 << " (" << (float(nevt_j2)/nevt_denom) << " ) " << std::endl;
+        std::cout << " Number of events passing gen " << genString << " acceptance with exactly 2 " << genString << "s: " 
+                  << nevt_j2 << " (" << (float(nevt_j2)/nevt_denom) << " ) " << std::endl;
         std::cout << "                 (Using this as the denominator for next fractions)" << std::endl;
         std::cout << "   and a dijet (pt0 > 30, pt1 > 20): " << nevt_j2_dijet << " (" << (float(nevt_j2_dijet)/nevt_j2) << ") " << std::endl;
         std::cout << "   and photon pt0 > mgg/2: " << nevt_j2_tightenpho << " (" << (float(nevt_j2_tightenpho)/nevt_j2) << ") " << std::endl;
         std::cout << "   and mgg > 250 (dijet presel): " << nevt_j2_dijetpresel << " (" << (float(nevt_j2_dijetpresel)/nevt_j2) << ") " << std::endl;
-        std::cout << " And the two further questions, with exactly 2 partons + presel as denominator:" << std::endl;
+        std::cout << " And the two further questions, with exactly 2 gen " << genString << "s + presel as denominator:" << std::endl;
         std::cout << "    Fraction with multiple dipho/dijets to consider: " << nevt_j2_dijetmultiple
                   << nevt_j2_dijetmultiple << " (" << (float(nevt_j2_dijetmultiple)/nevt_j2_dijetpresel) << ") " << std::endl;
         std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: "
                   << nevt_j2_dijetallsame << " (" << (float(nevt_j2_dijetallsame)/nevt_j2_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with Default method giving jets that match gen " << genString << "s: " << nevt_j2_dijet_correct
+                  << " (" << (float(nevt_j2_dijet_correct)/nevt_j2_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with Opposite method giving jets that match gen " << genString << "s: " << nevt_j2_dijet_correctOpposite
+                  << " (" << (float(nevt_j2_dijet_correctOpposite)/nevt_j2_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with Highest method giving jets that match gen " << genString << "s: " << nevt_j2_dijet_correctHighest
+                  << " (" << (float(nevt_j2_dijet_correctHighest)/nevt_j2_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet Highest Pt method giving jets that match gen-level " << genString << "s: " << nevt_j2_dijet_correctThirdJetHighPt
+                  << " (" << (float(nevt_j2_dijet_correctThirdJetHighPt)/nevt_j2_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet min(mjjj) method giving jets that match gen-level " << genString << "s: " << nevt_j2_dijet_correctThirdJetMinMjjj
+                  << " (" << (float(nevt_j2_dijet_correctThirdJetMinMjjj)/nevt_j2_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet max(mjjj) method giving jets that match gen-level " << genString << "s: " << nevt_j2_dijet_correctThirdJetMaxMjjj
+                  << " (" << (float(nevt_j2_dijet_correctThirdJetMaxMjjj)/nevt_j2_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet min(dr) method giving jets that match gen-level " << genString << "s: " << nevt_j2_dijet_correctThirdJetMinDr
+                  << " (" << (float(nevt_j2_dijet_correctThirdJetMinDr)/nevt_j2_dijetpresel) << ") " << std::endl;
+
 
         std::cout << std::endl;
-        std::cout << " Number of events passing parton acceptance with exactly 3 partons: " << nevt_j3 << " (" << (float(nevt_j3)/nevt_denom) << " ) " << std::endl;
+        std::cout << " Number of events passing gen " << genString << " acceptance with exactly 3 " << genString << "s: " << nevt_j3 << " (" << (float(nevt_j3)/nevt_denom) << " ) " << std::endl;
         std::cout << "                 (Using this as the denominator for next fractions)" << std::endl;
         std::cout << "   and a dijet (pt0 > 30, pt1 > 20): " << nevt_j3_dijet << " (" << (float(nevt_j3_dijet)/nevt_j3) << ") " << std::endl;
         std::cout << "   and photon pt0 > mgg/2: " << nevt_j3_tightenpho << " (" << (float(nevt_j3_tightenpho)/nevt_j3) << ") " << std::endl;
         std::cout << "   and mgg > 250 (dijet presel): " << nevt_j3_dijetpresel << " (" << (float(nevt_j3_dijetpresel)/nevt_j3) << ") " << std::endl;
-        std::cout << " And the two further questions, with exactly 3 partons + presel as denominator:" << std::endl;
+        std::cout << " And the two further questions, with exactly 3 gen " << genString << "s + presel as denominator:" << std::endl;
         std::cout << "    Fraction with multiple dipho/dijets to consider: " << nevt_j3_dijetmultiple
                   << nevt_j3_dijetmultiple << " (" << (float(nevt_j3_dijetmultiple)/nevt_j3_dijetpresel) << ") " << std::endl;
         std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: "
                   << nevt_j3_dijetallsame << " (" << (float(nevt_j3_dijetallsame)/nevt_j3_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with Default method giving jets that match gen " << genString << "s: " << nevt_j3_dijet_correct
+                  << " (" << (float(nevt_j3_dijet_correct)/nevt_j3_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with Opposite method giving jets that match gen " << genString << "s: " << nevt_j3_dijet_correctOpposite
+                  << " (" << (float(nevt_j3_dijet_correctOpposite)/nevt_j3_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with Highest method giving jets that match gen " << genString << "s: " << nevt_j3_dijet_correctHighest
+                  << " (" << (float(nevt_j3_dijet_correctHighest)/nevt_j3_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet Highest Pt method giving jets that match gen-level " << genString << "s: " << nevt_j3_dijet_correctThirdJetHighPt
+                  << " (" << (float(nevt_j3_dijet_correctThirdJetHighPt)/nevt_j3_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet min(mjjj) method giving jets that match gen-level " << genString << "s: " << nevt_j3_dijet_correctThirdJetMinMjjj
+                  << " (" << (float(nevt_j3_dijet_correctThirdJetMinMjjj)/nevt_j3_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet max(mjjj) method giving jets that match gen-level " << genString << "s: " << nevt_j3_dijet_correctThirdJetMaxMjjj
+                  << " (" << (float(nevt_j3_dijet_correctThirdJetMaxMjjj)/nevt_j3_dijetpresel) << ") " << std::endl;
+        std::cout << "    Fraction with 3-jet min(dr) method giving jets that match gen-level " << genString << "s: " << nevt_j3_dijet_correctThirdJetMinDr
+                  << " (" << (float(nevt_j3_dijet_correctThirdJetMinDr)/nevt_j3_dijetpresel) << ") " << std::endl;
+
         
         std::cout << std::endl << std::endl;
     }

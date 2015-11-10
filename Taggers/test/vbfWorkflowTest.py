@@ -36,6 +36,11 @@ massSearchReplaceAnyInputTag(process.flashggTagSequence,cms.InputTag("flashggDiP
 
 process.flashggVBFMVAOpposite = process.flashggVBFMVA.clone(RequireOppositeEta=cms.untracked.bool(True))
 process.flashggVBFMVAHighest = process.flashggVBFMVA.clone(UseHighestDijetMinv=cms.untracked.bool(True),MinJetPt=cms.untracked.double(20.))
+process.flashggVBFMVAThirdJetHighPt = process.flashggVBFMVA.clone(ThirdJetMode=cms.untracked.uint32(0))
+process.flashggVBFMVAThirdJetMinDr = process.flashggVBFMVA.clone(ThirdJetMode=cms.untracked.uint32(1))
+process.flashggVBFMVAThirdJetMaxMjjj = process.flashggVBFMVA.clone(ThirdJetMode=cms.untracked.uint32(2))
+process.flashggVBFMVAThirdJetMinMjjj = process.flashggVBFMVA.clone(ThirdJetMode=cms.untracked.uint32(3))
+
 
 #        _requireOppositeEta( iConfig.getUntrackedParameter<bool>( "RequireOppositeEta", false ) ),
 #        _useHighestDijetMinv( iConfig.getUntrackedParameter<bool>( "UseHighestDijetMinv", false ) ),
@@ -51,18 +56,39 @@ process.flashggVBFWorkflowTest = cms.EDProducer("FlashggVBFWorkflowAnalyzer",
                                                 MVAResultTag=cms.InputTag('flashggDiPhotonMVA'),
                                                 VBFMVAResultTagOpposite=cms.InputTag('flashggVBFMVAOpposite'),
                                                 VBFMVAResultTagHighest = cms.InputTag('flashggVBFMVAHighest'),
+                                                VBFMVAResultTagThirdJetHighPt = cms.InputTag('flashggVBFMVAThirdJetHighPt'),
+                                                VBFMVAResultTagThirdJetMinMjjj = cms.InputTag('flashggVBFMVAThirdJetMinMjjj'),
+                                                VBFMVAResultTagThirdJetMaxMjjj = cms.InputTag('flashggVBFMVAThirdJetMaxMjjj'),
+                                                VBFMVAResultTagThirdJetMinDr = cms.InputTag('flashggVBFMVAThirdJetMinDr'),
 #                                             VBFDiPhoDiJetMVAResultTag=cms.InputTag('flashggVBFDiPhoDiJetMVA'),
                                                 VBFMVAResultTag=cms.InputTag('flashggVBFMVA'),
                                                 GenParticleTag=cms.InputTag( "flashggPrunedGenParticles" ),
                                                 GenJetTag = cms.InputTag("slimmedGenJets"),
+                                                UseGenJets = cms.untracked.bool(True) # if false, use partons instead
                                                 )
 
-if process.source.fileNames[0].count("GJet"):
-    process.flashggVBFWorkflowTest.RequirePhotonAcceptance = cms.untracked.bool(False)
+print "what"
+
+if process.source.fileNames[0].count("VBF"):
+    process.flashggVBFWorkflowTest.RequireAcceptance = cms.untracked.bool(True)
+elif process.source.fileNames[0].count("GJet"):
+    process.flashggVBFWorkflowTest.RequireAcceptance = cms.untracked.bool(False) # no gen photons
+else:
+    if process.flashggVBFWorkflowTest.UseGenJets:
+        process.flashggVBFWorkflowTest.RequireAcceptance = cms.untracked.bool(True) # no gen partons, but can use gen jets
+    else:
+        process.flashggVBFWorkflowTest.RequireAcceptance = cms.untracked.bool(False)
+
+if process.source.fileNames[0].count("DiPhotonJetsBox"):
+    process.maxEvents.input = 100000    
 
 process.p = cms.Path(process.flashggUnpackedJets
                      * process.flashggVBFMVA
                      * process.flashggVBFMVAOpposite
                      * process.flashggVBFMVAHighest
+                     * process.flashggVBFMVAThirdJetHighPt
+                     * process.flashggVBFMVAThirdJetMinMjjj
+                     * process.flashggVBFMVAThirdJetMaxMjjj
+                     * process.flashggVBFMVAThirdJetMinDr
                      * process.flashggVBFWorkflowTest)
 
