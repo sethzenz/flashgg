@@ -34,6 +34,10 @@ namespace flashgg {
         float betaStar( const edm::Ptr<DiPhotonCandidate> dipho ) const;
         
         bool passesJetID( JetIDLevel level = Loose ) const; 
+
+        bool operator <( const Jet &b ) const { return ( pt() < b.pt() ); }
+        bool operator >( const Jet &b ) const { return ( pt() > b.pt() ); }
+
     private:
         std::map<edm::Ptr<reco::Vertex>, MinimalPileupJetIdentifier> puJetId_;
     };

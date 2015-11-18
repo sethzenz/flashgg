@@ -122,6 +122,9 @@ namespace flashgg {
             jetColl->push_back( fjet );
         }
 
+        // Confirm the collection is sorted as it should be
+        assert ( std::is_sorted( jetColl->begin(), jetColl->end(), greater<Jet>() ) );
+
         evt.put( jetColl );
     }
 }

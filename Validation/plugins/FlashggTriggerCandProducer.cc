@@ -95,3 +95,11 @@ bool MiniAODTriggerCandProducer<flashgg::Photon>::onlineOfflineMatching(const ed
 typedef MiniAODTriggerCandProducer<flashgg::Photon> FlashggPhotonTriggerCandProducer;
 DEFINE_FWK_MODULE(FlashggPhotonTriggerCandProducer);
 
+
+// Local Variables:
+// mode:c++
+// indent-tabs-mode:nil
+// tab-width:4
+// c-basic-offset:4
+// End:
+// vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
