@@ -29,6 +29,9 @@ for fn in listdir("."):
 for fnr in filelist.keys():
     result = sorted(filelist[fnr])
     print fnr,result
+#    if fnr.count("DY"):
+#        print "SKIPPING ASSERT"
+#    else:    
     assert(result[-1]+1 == len(result))
     bigfile = fnr.replace("_%i","")
     bigfiles.append(bigfile)

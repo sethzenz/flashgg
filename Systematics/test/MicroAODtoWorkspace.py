@@ -15,7 +15,7 @@ process.load("Configuration.StandardSequences.MagneticField_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 process.GlobalTag.globaltag = 'POSTLS170_V5::All'
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
-process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 10 )
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1000 )
 
 process.RandomNumberGeneratorService = cms.Service("RandomNumberGeneratorService",
                                                    flashggDiPhotonSystematics = cms.PSet(initialSeed = cms.untracked.uint32(664)),
@@ -140,8 +140,10 @@ for tag in tagList:
           currentVariables = systematicVariables
       
       isBinnedOnly = (systlabel !=  "")
-      dumpPdfWeights = (systlabel ==  "")
-      nPdfWeights = 102
+#      dumpPdfWeights = (systlabel ==  "")
+#      nPdfWeights = 102
+      dumpPdfWeights = False
+      nPdfWeights = 0
       
       cfgTools.addCategory(process.tagsDumper,
                            systlabel,

@@ -8,17 +8,17 @@ flashggTagSequence = cms.Sequence(flashggDiPhotonMVA
 				  * flashggDiPhotonMVANew
                                   * flashggUnpackedJets
                                   * flashggVBFMVA
-                                  * flashggVBFMVANew
+#                                  * flashggVBFMVANew
                                   * flashggVBFDiPhoDiJetMVA
-                                  * flashggVBFDiPhoDiJetMVANew
+#                                  * flashggVBFDiPhoDiJetMVANew
                                   * ( flashggUntagged
                                       + flashggVBFTag
-                                     + flashggTTHLeptonicTag
-                                     + flashggVHEtTag
-                                     + flashggTTHHadronicTag
-                                     + flashggVHLooseTag
-                                     + flashggVHTightTag
-                                     + flashggVHHadronicTag
+#                                     + flashggTTHLeptonicTag
+#                                     + flashggVHEtTag
+#                                     + flashggTTHHadronicTag
+#                                     + flashggVHLooseTag
+#                                     + flashggVHTightTag
+#                                     + flashggVHHadronicTag
 					)
                                  * flashggTagSorter
                                   )

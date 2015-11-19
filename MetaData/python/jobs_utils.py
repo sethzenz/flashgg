@@ -296,6 +296,7 @@ class JobsManager(object):
                     dnjobs = 0
                     dargs = jobargs+shell_args("nJobs=%d" % (njobs)) 
                     ret,out = parallel.run("python %s" % pyjob,dargs+shell_args("dryRun=1 getMaxJobs=1 dumpPython=%s.py" % os.path.join(options.outputDir,dsetName) ),interactive=True)[2]
+                    print out
                     maxJobs = self.getMaxJobs(out)
                     print maxJobs
                     if maxJobs < 0:

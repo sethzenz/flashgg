@@ -145,6 +145,7 @@ class JobConfig(object):
             import sys
             if self.dataset and self.dataset != "":
                 name,xsec,totEvents,files,maxEvents = self.dataset
+                print "dryRun totEvents=%i, maxEvents=%i" % (totEvents,maxEvents)
                 if self.getMaxJobs:
                     print "maxJobs:%d" % ( min(len(files),self.nJobs) )                    
                 if len(files) != 0:
@@ -163,6 +164,7 @@ class JobConfig(object):
         files = self.inputFiles
         if self.dataset and self.dataset != "":
             dsetname,xsec,totEvents,files,maxEvents = self.dataset
+            print "totEvents=%i,maxEvents=%i" % (totEvents,maxEvents)
             self.maxEvents = int(maxEvents)
             
             putarget = None
@@ -185,6 +187,7 @@ class JobConfig(object):
                             wei = xsec["xs"]/float(totEvents)*self.targetLumi
                             wei *= xsec.get("br",1.)
                             wei *= xsec.get("kf",1.)
+                            print "wei=%i" % wei
                             obj.lumiWeight = wei
 
                     if hasattr(obj,"intLumi"):
