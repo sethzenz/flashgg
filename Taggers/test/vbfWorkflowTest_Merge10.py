@@ -51,10 +51,10 @@ process.flashggVBFWorkflowTest = cms.EDProducer("FlashggVBFWorkflowAnalyzer",
                                                 DiPhotonTag=cms.InputTag('flashggDiPhotons'),
                                                 PreselectedDiPhotonTag=cms.InputTag('flashggPreselectedDiPhotons'),
                                                 MVAResultTag=cms.InputTag('flashggDiPhotonMVA'),
-                                                VBFMVAResultTagOpposite=cms.InputTag('flashggVBFMVAMerge10'), # ignored
+                                                VBFMVAResultTagOpposite=cms.InputTag('flashggVBFMVA'), # ignored
                                                 VBFMVAResultTagHighest = cms.InputTag('flashggVBFMVAMerge15'), # ignored
 #                                             VBFDiPhoDiJetMVAResultTag=cms.InputTag('flashggVBFDiPhoDiJetMVA'),
-                                                VBFMVAResultTag=cms.InputTag('flashggVBFMVA'),
+                                                VBFMVAResultTag=cms.InputTag('flashggVBFMVAMerge10'),
                                                 GenParticleTag=cms.InputTag( "flashggPrunedGenParticles" ),
                                                 GenJetTag = cms.InputTag("slimmedGenJets"),
                                                 )

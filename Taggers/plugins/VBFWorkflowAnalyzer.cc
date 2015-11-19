@@ -152,8 +152,17 @@ namespace flashgg {
         unsigned passptpho1 = 0;
         unsigned passptpho2 = 0;
         unsigned passmgg = 0;
+        unsigned prompt0 = 0;
+        unsigned prompt1 = 0;
+        unsigned prompt2 = 0;
         for( unsigned int candIndex = 0; candIndex < diPhotons->size() ; candIndex++ ) {
             edm::Ptr<flashgg::DiPhotonCandidate> dipho = diPhotons->ptrAt(candIndex);
+            unsigned np = 0;
+            if ( dipho->leadingPhoton()->genMatchType() == flashgg::Photon::kPrompt ) np++;
+            if ( dipho->subLeadingPhoton()->genMatchType() == flashgg::Photon::kPrompt ) np++;
+            if ( np == 2 ) prompt2++;
+            if ( np == 1 ) prompt1++;
+            if ( np == 0 ) prompt0++;
             if ( dipho->leadingPhoton()->pt() > dipho->mass()/3 ) {
                 passptpho1++;
                 if ( dipho->subLeadingPhoton()->pt() >dipho->mass()/4) {
@@ -167,6 +176,9 @@ namespace flashgg {
         std::cout << " (unpresel) number of diphotons with lead photon passing pt cut: " << passptpho1 << std::endl;
         std::cout << " (unpresel) number of diphotons with both photons passing pt cut: " << passptpho2 << std::endl;
         std::cout << " (unpresel) number of diphotons with mgg in mass range also: " << passmgg << std::endl;
+        std::cout << " (unpresel, not in cutflow) number diphotons with 2 prompt photons: " << prompt2 << std::endl;
+        std::cout << " (unpresel, not in cutflow) number diphotons with 1 prompt photons: " << prompt1 << std::endl;
+        std::cout << " (unpresel, not in cutflow) number diphotons with 0 prompt photons: " << prompt0 << std::endl;
         std::cout << " Number of preselected diphotons: " << preselectedDiPhotons->size() << std::endl;
 
         nevt_total++;
@@ -450,7 +462,7 @@ namespace flashgg {
         std::cout << std::endl << "END OF CUTFLOW, TWO FURTHER SEPARATEQUESTIONS, with full list of cuts (i.e. dijet presel) as denominator:" << std::endl << std::endl;
         std::cout << "    Fraction with multiple dipho/dijets to consider: " << nevt_dijetmultiple 
                   << nevt_dijetmultiple << " (" << (float(nevt_dijetmultiple)/nevt_dijetpresel) << ") " << std::endl;
-        std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: " << nevt_dijetallsame << " (" << (float(nevt_dijetallsame)/nevt_dijetpresel) << ") " << std::endl;
+        //        std::cout << "    Fraction with all 3 sublead jet methods giving same answer [highest pT(H) dijet only]: " << nevt_dijetallsame << " (" << (float(nevt_dijetallsame)/nevt_dijetpresel) << ") " << std::endl;
         
         std::cout << std::endl << std::endl;
     }

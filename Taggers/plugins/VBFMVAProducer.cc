@@ -122,6 +122,8 @@ namespace flashgg {
     
     void VBFMVAProducer::produce( Event &evt, const EventSetup & )
     {
+        std::cout << " In VBFMVAProducer::produce, _thirdJetDRCut=" << _thirdJetDRCut << " _merge3rdJet=" << _merge3rdJet << std::endl;
+
         Handle<View<flashgg::DiPhotonCandidate> > diPhotons;
         evt.getByToken( diPhotonToken_, diPhotons );
         
@@ -262,8 +264,8 @@ namespace flashgg {
                     hasValidVBFTriJet = 0;
                 }
                 
-                //std::cout << "Third jet merge info:" << std::endl;
-                //std::cout << setw(12) << dR_13 << setw(12) << dR_23 << setw(12) << indexToMergeWithJ3 << std::endl;
+                std::cout << "Third jet merge info:" << std::endl;
+                std::cout << "  DR_13=" << setw(12) << dR_13 << setw(12) << " DR_23=" << dR_23 <<  " imerge=" << setw(12) << indexToMergeWithJ3 << std::endl;
             }
            
             if( hasValidVBFDiJet ) {
@@ -271,7 +273,7 @@ namespace flashgg {
                 std::pair<reco::Candidate::LorentzVector,reco::Candidate::LorentzVector> dijetP4s;
                 
                 if (indexToMergeWithJ3 != -1 && _merge3rdJet ) {
-                    //std::cout << "Merging jet " << indexToMergeWithJ3+1 << " with jet 3" << std::endl;    
+                    std::cout << "Merging jet " << indexToMergeWithJ3+1 << " with jet 3" << std::endl;    
                     dijetP4s.first  = jetP4s[ indexToMergeWithJ3 == 0 ? 1 : 0 ];
                     dijetP4s.second = jetP4s[ indexToMergeWithJ3 ] + jetP4s[2];                 
                     if (dijetP4s.second.pt() > dijetP4s.first.pt()) {std::swap(dijetP4s.first, dijetP4s.second);}
@@ -354,6 +356,8 @@ namespace flashgg {
             mvares.dijet_leady      = dijet_leady_   ;
             mvares.dijet_subleady   = dijet_subleady_;
             
+            std::cout << " final Mjj: " << dijet_Mjj_ << std::endl;
+
             vbf_results->push_back( mvares );
         }
         evt.put( vbf_results );
