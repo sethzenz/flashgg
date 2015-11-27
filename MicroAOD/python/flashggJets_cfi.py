@@ -89,6 +89,7 @@ def addFlashggPFCHSJets(process, vertexIndex = 0, doQGTagging = True, label ='',
                                VertexTag   = cms.InputTag('offlineSlimmedPrimaryVertices'),
                                JetTag      = cms.InputTag('patJetsAK4PFCHSLeg' + label),
                                VertexCandidateMapTag = cms.InputTag("flashggVertexMapForCHS"),
+                               ComputeSimpleRMS = cms.bool(True)
 #                               PileupJetIdParameters = cms.PSet(pu_jetid)
                              )
   setattr( process, 'flashggPFCHSJets'+ label, flashggJets)
@@ -168,6 +169,7 @@ def addFlashggPuppiJets(process,
                           JetTag                = cms.InputTag('patJetsAK4PUPPI' + label),
                           VertexCandidateMapTag = cms.InputTag("flashggVertexMapForPUPPI"),
                           UsePuppi              = cms.untracked.bool(True),
+                          ComputeSimpleRMS= cms.bool(True)
 #                          PileupJetIdParameters = cms.PSet(pu_jetid)
                         ))
   setattr( process, 'selectedFlashggPUPPIJets'+ label,

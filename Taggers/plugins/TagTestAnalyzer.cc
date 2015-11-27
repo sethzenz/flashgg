@@ -107,9 +107,10 @@ namespace flashgg {
 
             const	VBFTag *vbftag = dynamic_cast<const VBFTag *>( chosenTag );
             if( vbftag != NULL ) {
-                std::cout << "[VBF] Category " << vbftag->categoryNumber() << " with lead jet pt eta "
-                          << vbftag->leadingJet().pt() << " " << vbftag->leadingJet().eta()
-                          << " and sublead jet eta " << vbftag->subLeadingJet().pt() << " " << vbftag->subLeadingJet().eta() << " mass=" << vbftag->diPhoton()->mass()
+                std::cout << "[VBF] Category " << vbftag->categoryNumber() << " with lead jet pt eta rms "
+                          << vbftag->leadingJet().pt() << " " << vbftag->leadingJet().eta() << " " << vbftag->leadingJet().rms()
+                          << " and sublead jet eta rms " << vbftag->subLeadingJet().pt() << " " << vbftag->subLeadingJet().eta() << " " << vbftag->subLeadingJet().rms()
+                          << " mass=" << vbftag->diPhoton()->mass()
                           << ", systLabel " << vbftag->systLabel() << std::endl;
                 if( vbftag->tagTruth().isNonnull() ) {
                     const VBFTagTruth *truth = dynamic_cast<const VBFTagTruth *>( &*vbftag->tagTruth() );
