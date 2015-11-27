@@ -97,10 +97,12 @@ https://twiki.cern.ch/twiki/bin/viewauth/CMS/FLASHggFramework#Instructions_for_u
 
 #### Spring15BetaV7J1 test of updated jet features
 
+```
 cd $CMSSW_BASE/src/flashgg/MetaData/work
 ./prepareCrabJobs.py -C RunIISpring15-JetUpdate-BetaV7J1 -U 5 -L 25 -s campaigns/RunIISpring15-JetUpdate-BetaV7J1.json -V Spring15BetaV7J1 -p ${CMSSW_BASE}/src/flashgg/MicroAOD/test/microAODstd.py --lumiMask jsons/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON.txt
 cd RunIISpring15-JetUpdate-BetaV7J1
 echo crabConfig_*.py | xargs -n 1 crab sub
+```
 
 #### Spring15BetaV7 extension of Gold prompt to end of run
 
