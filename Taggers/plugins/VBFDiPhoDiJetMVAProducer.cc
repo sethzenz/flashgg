@@ -68,8 +68,8 @@ namespace flashgg {
             vbfDiPhoDiJetMva_->AddVariable( "dipho_mva", &dipho_mva_ );
             vbfDiPhoDiJetMva_->AddVariable( "dijet_mva", &dijet_mva_ );
             vbfDiPhoDiJetMva_->AddVariable( "dipho_PToM", &dipho_PToM_ );
-            vbfDiPhoDiJetMva_->BookMVA( "BDT", vbfDiPhoDiJetMVAweightfile_.fullPath() );
-            //	vbfDiPhoDiJetMva_->BookMVA("BDTG",vbfDiPhoDiJetMVAweightfile_.fullPath());
+            //            vbfDiPhoDiJetMva_->BookMVA( "BDT", vbfDiPhoDiJetMVAweightfile_.fullPath() );
+            vbfDiPhoDiJetMva_->BookMVA("BDTG",vbfDiPhoDiJetMVAweightfile_.fullPath());
         }
 
 
@@ -113,8 +113,8 @@ namespace flashgg {
                 mvares.vbfDiPhoDiJetMvaResult = vbfDiPhoDiJetMva_->EvaluateMVA( "BDTG" );
             } else {
 
-                //mvares.vbfDiPhoDiJetMvaResult = vbfDiPhoDiJetMva_->EvaluateMVA("BDTG");
-                mvares.vbfDiPhoDiJetMvaResult = vbfDiPhoDiJetMva_->EvaluateMVA( "BDT" );
+                mvares.vbfDiPhoDiJetMvaResult = vbfDiPhoDiJetMva_->EvaluateMVA("BDTG");
+                //                mvares.vbfDiPhoDiJetMvaResult = vbfDiPhoDiJetMva_->EvaluateMVA( "BDT" );
             }
 
             mvares.dijet_mva =   dijet_mva_ ;
