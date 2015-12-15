@@ -130,6 +130,10 @@ namespace flashgg {
                 // Obviously the last selection has to be for this diphoton or this is wrong
                 vertexSelector_->writeInfoFromLastSelectionTo( dipho );
 
+                if (dipho.mass() > 730. && dipho.mass() < 790.) {
+                    continue;
+                }
+
                 // store the diphoton into the collection
                 diPhotonColl->push_back( dipho );
             }
