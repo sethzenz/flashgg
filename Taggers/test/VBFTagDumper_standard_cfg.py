@@ -82,7 +82,7 @@ if doSystematics:
         for direction in ["Up","Down"]:
             jetsystlabels.append("JEC%s01sigma" % direction)
             jetsystlabels.append("JER%s01sigma" % direction)
-            systlabels += jetsystlabels
+        systlabels += jetsystlabels
 
     for systlabel in systlabels:
         if systlabel == "":
@@ -96,7 +96,7 @@ if doSystematics:
             if hasattr(module,"SystLabel"):
                 module.SystLabel = systlabel
         process.systematicsTagSequences += newseq
-    process.flashggVBFTagMerger.src.append(cms.InputTag("flashggVBFTag" + systlabel))
+        process.flashggVBFTagMerger.src.append(cms.InputTag("flashggVBFTag" + systlabel))
         
         
 # set the VBF dumper
