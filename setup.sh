@@ -96,14 +96,9 @@ git cms-addpkg CommonTools/PileupAlgos
 git cms-merge-topic sethzenz:topic-puppi-7_4_12 
 echo
 
-echo "Modifying FastjetJetProducer to avoid wasting time on empty collections..."
-git cms-addpkg RecoJets/JetProducers
-git cms-merge-topic sethzenz:topic-jetprod-skipempty
-echo
-
 echo "Setting up Conversion tools for pat electron..."
 git cms-addpkg RecoEgamma/EgammaTools
-git cms-merge-topic -u sethzenz:topic-conversion-tools-for-pat-ele-74X
+git cms-merge-topic -u sethzenz:topic-conversion-tools-for-pat-ele-76X
 
 echo "Setting up TnP tools..."
 git cms-addpkg DataFormats/RecoCandidate
@@ -111,7 +106,7 @@ git cms-addpkg PhysiscsTools/TagAndProbe
 git cms-merge-topic -u matteosan1:egm_tnp
 
 echo "Setting up PDF weight tool..."
-git-cms-merge-topic bendavid:pdfweights_74x
+git-cms-merge-topic bendavid:pdfweights_76x
 
 echo "adding hook for indentation"
 ln -s $CMSSW_BASE/src/flashgg/Validation/scripts/flashgg_indent_check.sh $CMSSW_BASE/src/flashgg/.git/hooks/pre-commit
