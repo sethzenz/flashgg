@@ -88,13 +88,14 @@ cd $CMSSW_BASE/src
 echo "Setting up weight counter..."
 git cms-addpkg CommonTools/UtilAlgos 
 git cms-addpkg DataFormats/Common
-git cms-merge-topic sethzenz:topic-weights-count-74X
+git cms-merge-topic sethzenz:topic-weights-count-76X
 
 # PUPPI is automagically in the release since 7_4_11 and 7_5_2, but we still need Multi-PUPPI
-echo "Setting up PUPPI..."
-git cms-addpkg CommonTools/PileupAlgos
-git cms-merge-topic sethzenz:topic-puppi-7_4_12 
-echo
+# Not for Moriond we don't!  Removed to update for 76X faster
+echo "SKIPPING setting up PUPPI..."
+#git cms-addpkg CommonTools/PileupAlgos
+#git cms-merge-topic sethzenz:topic-puppi-7_4_12 
+#echo
 
 echo "Setting up Conversion tools for pat electron..."
 git cms-addpkg RecoEgamma/EgammaTools
@@ -103,7 +104,7 @@ git cms-merge-topic -u sethzenz:topic-conversion-tools-for-pat-ele-76X
 echo "Setting up TnP tools..."
 git cms-addpkg DataFormats/RecoCandidate
 git cms-addpkg PhysiscsTools/TagAndProbe
-git cms-merge-topic -u matteosan1:egm_tnp
+git cms-merge-topic -u matteosan1:egm_tnp_76X
 
 echo "Setting up PDF weight tool..."
 git-cms-merge-topic bendavid:pdfweights_76x

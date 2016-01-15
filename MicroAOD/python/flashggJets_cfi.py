@@ -139,6 +139,7 @@ def addFlashggPuppiJets(process,
                         useLocalJEC = True,
                         dbfile      = 'flashgg/MetaData/data/PuppiJEC/PY8_RunIISpring15DR74_bx50_MC.db',
                         debug       = False):
+  raise Exception,"Temporarily disabled for 76X update; will be restored when time permits (post-Moriond?)"
     
   from CommonTools.PileupAlgos.flashggPuppi_cff          import flashggPuppi 
   from RecoJets.JetProducers.ak4PFJets_cfi               import ak4PFJets
