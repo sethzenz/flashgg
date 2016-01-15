@@ -88,7 +88,8 @@ cd $CMSSW_BASE/src
 echo "Setting up weight counter..."
 git cms-addpkg CommonTools/UtilAlgos 
 git cms-addpkg DataFormats/Common
-git cms-merge-topic sethzenz:topic-weights-count-76X
+#git cms-merge-topic sethzenz:topic-weights-count-76X
+git cherry-pick 2517b13a2720844c13af8d8ba6bdeeb55a827b5b
 
 # PUPPI is automagically in the release since 7_4_11 and 7_5_2, but we still need Multi-PUPPI
 # Not for Moriond we don't!  Removed to update for 76X faster
