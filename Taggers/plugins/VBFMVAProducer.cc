@@ -139,7 +139,7 @@ namespace flashgg {
         }
         
         std::auto_ptr<vector<VBFMVAResult> > vbf_results( new vector<VBFMVAResult> );
-        std::cout << "diPhotons->size() =="<< diPhotons->size() << std::endl;
+        //        std::cout << "diPhotons->size() =="<< diPhotons->size() << std::endl;
         for( unsigned int candIndex = 0; candIndex < diPhotons->size() ; candIndex++ ) {
             
             flashgg::VBFMVAResult mvares;
@@ -183,7 +183,7 @@ namespace flashgg {
             // take the jets corresponding to the diphoton candidate
             unsigned int jetCollectionIndex = diPhotons->ptrAt( candIndex )->jetCollectionIndex();
             
-            std::cout << "\t jets["<< jetCollectionIndex <<"]->size() =="<< Jets[jetCollectionIndex]->size() << std::endl;
+            //            std::cout << "\t jets["<< jetCollectionIndex <<"]->size() =="<< Jets[jetCollectionIndex]->size() << std::endl;
             for( UInt_t jetLoop = 0; jetLoop < Jets[jetCollectionIndex]->size() ; jetLoop++ ) {
                 Ptr<flashgg::Jet> jet  = Jets[jetCollectionIndex]->ptrAt( jetLoop );
                 //if (jet->puJetId(diPhotons[candIndex]) <  PuIDCutoff) {continue;}
@@ -194,10 +194,10 @@ namespace flashgg {
                 }
                 // rms cuts over 2.5 
                 if( fabs( jet->eta() ) > 2.5 && jet->rms() > _rmsforwardCut ){ 
-                    std::cout << "("<< jet->eta()<< ")("<< jet->rms() <<").. jet rejected ::" << std::endl;
+                    //                    std::cout << "("<< jet->eta()<< ")("<< jet->rms() <<").. jet rejected ::" << std::endl;
                     continue; 
                 }
-                std::cout << "("<< jet->eta()<< ")("<< jet->pt() <<").. jet rejected ::" << std::endl;
+                //                std::cout << "("<< jet->eta()<< ")("<< jet->pt() <<").. jet rejected ::" << std::endl;
                 // within eta 4.7?
                 if( fabs( jet->eta() ) > 4.7 ) { continue; }
 

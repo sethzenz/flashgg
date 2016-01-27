@@ -1,0 +1,6 @@
+{
+    "processes" : {
+	"DYjet" : [ "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8" ]
+     },	
+        "cmdLine" : "campaign=RunIIFall15DR76-1_3_0-25ns_ext1"
+}

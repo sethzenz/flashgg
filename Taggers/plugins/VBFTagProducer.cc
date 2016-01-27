@@ -137,7 +137,7 @@ namespace flashgg {
         assert( diPhotons->size() == vbfDiPhoDiJetMvaResults->size() ); 
         assert( diPhotons->size() == mvaResults->size() ); // We are relying on corresponding sets - update this to give an error/exception
         //std::cout << "-----------------------------------------------------" << std::endl;
-        std::cout << "VBFTagProducer::diPhotons->size()=="<< diPhotons->size() << std::endl;
+        //        std::cout << "VBFTagProducer::diPhotons->size()=="<< diPhotons->size() << std::endl;
         for( unsigned int candIndex = 0; candIndex < diPhotons->size() ; candIndex++ ) {
             edm::Ptr<flashgg::VBFDiPhoDiJetMVAResult> vbfdipho_mvares = vbfDiPhoDiJetMvaResults->ptrAt( candIndex );
             edm::Ptr<flashgg::DiPhotonMVAResult>      mvares          = mvaResults->ptrAt( candIndex );

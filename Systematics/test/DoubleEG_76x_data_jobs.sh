@@ -1,0 +1,2 @@
+# NB this command is specific to the configuration at IC and is not gaurenteed elsewhere
+fggRunJobs.py --load DoubleEG_76x_data_jobs.json -d /vols/cms04/szenz/DoubleEG_76x_data_jobs_21 -x cmsRun VBFTagDumper_standard_zee_76x_cfg.py maxEvents=-1 -n 500 -q hepmedium.q -D -P useAAA=1 --no-use-tarball 

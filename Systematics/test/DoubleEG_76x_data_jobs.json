@@ -1,0 +1,9 @@
+{
+    "processes" : {
+        "Data" : [ 
+	       	 "/DoubleEG/sethzenz-RunIIFall15DR76-1_3_0-25ns-1_3_0-v0-Run2015D-16Dec2015-v2-b7e5c192bb12d549953ce69d2b654ac8/USER",
+		 "/DoubleEG/sethzenz-RunIIFall15DR76-1_3_0-25ns-1_3_0-v0-Run2015C_25ns-16Dec2015-v1-b7e5c192bb12d549953ce69d2b654ac8/USER"
+]		 
+     },	
+        "cmdLine" : "campaign=RunIIFall15DR76-1_3_0-25ns"
+}

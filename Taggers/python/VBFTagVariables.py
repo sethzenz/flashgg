@@ -58,8 +58,11 @@ dijet_variables=[
     "jet1_eta            := leadingJet.eta",
     "jet2_eta            := subLeadingJet.eta",
     "jet3_eta            := subSubLeadingJet.eta",
-    "Mjj := sqrt((leadingJet.energy+subLeadingJet.energy)^2-(leadingJet.px+subLeadingJet.px)^2-(leadingJet.py+subLeadingJet.py)^2-(leadingJet.pz+subLeadingJet.pz)^2)"
+    "Mjj := sqrt((leadingJet.energy+subLeadingJet.energy)^2-(leadingJet.px+subLeadingJet.px)^2-(leadingJet.py+subLeadingJet.py)^2-(leadingJet.pz+subLeadingJet.pz)^2)",
+    "jet1_rawPt          := leading_rawPt",
+    "jet2_rawPt          := subLeading_rawPt"
 ]
+
 truth_variables=[
     "J1J2_mjj            := tagTruth().mjj_J1J2_FggJet()",
     "J1J3_mjj            := tagTruth().mjj_J1J3_FggJet()",
