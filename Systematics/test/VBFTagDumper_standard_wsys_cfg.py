@@ -17,8 +17,9 @@ if doSystematics:
     process.load("Configuration.StandardSequences.MagneticField_cff")
     process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff")
     from Configuration.AlCa.GlobalTag import GlobalTag
-    process.GlobalTag.globaltag = '74X_mcRun2_asymptotic_v4' # keep updated for JEC
+#    process.GlobalTag.globaltag = '74X_mcRun2_asymptotic_v4' # keep updated for JEC
 #    process.GlobalTag.globaltag = '74X_dataRun2_reMiniAOD_v0' # Original for checks against MiniAOD
+    process.GlobalTag.globaltag = '76X_mcRun2_asymptotic_v13'
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1))
@@ -26,8 +27,11 @@ process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 1000 )
 process.source = cms.Source ("PoolSource",
                              fileNames = cms.untracked.vstring(
 #        "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISpring15-ReMiniAOD-1_1_0-25ns/1_1_0/VBFHToGG_M-125_13TeV_powheg_pythia8/RunIISpring15-ReMiniAOD-1_1_0-25ns-1_1_0-v0-RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/160105_224017/0000/myMicroAODOutputFile_1.root"
-        "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISpring15-ReMiniAOD-1_1_0-25ns/1_1_0/DoubleEG/RunIISpring15-ReMiniAOD-1_1_0-25ns-1_1_0-v0-Run2015C_25ns-05Oct2015-v1/160105_222657/0000/myMicroAODOutputFile_41.root"
+#        "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISpring15-ReMiniAOD-1_1_0-25ns/1_1_0/DoubleEG/RunIISpring15-ReMiniAOD-1_1_0-25ns-1_1_0-v0-Run2015C_25ns-05Oct2015-v1/160105_222657/0000/myMicroAODOutputFile_41.root"
 #        "file:myMicroAODOutputFile.root"
+#        "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall15DR76-1_3_0-25ns/1_3_0/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIIFall15DR76-1_3_0-25ns-1_3_0-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12_ext1-v1/160126_090235/0000/myMicroAODOutputFile_4.root" # This sample has a bad problem and will not go to space today
+#        "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall15DR76-1_3_0-25ns/1_3_0/DoubleEG/RunIIFall15DR76-1_3_0-25ns-1_3_0-v0-Run2015D-16Dec2015-v2/160116_222234/0000/myMicroAODOutputFile_1.root"
+"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/ferriff/flashgg/RunIIFall15DR76-1_3_0-25ns_ext1/1_3_1/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIIFall15DR76-1_3_0-25ns_ext1-1_3_1-v0-RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/160127_112132/0000/myMicroAODOutputFile_6.root"
                              ))
 
 process.TFileService = cms.Service("TFileService",
@@ -95,9 +99,11 @@ if doSystematics:
                     pset.Debug = False
                     newvpset += [pset]
             systprod.SystMethods = newvpset        
-            systprod.DoCentralJEC = True
-            systprod.JECLabel = "ak4PFCHSL1FastL2L3Residual"
-            process.load("JetMETCorrections/Configuration/JetCorrectionServices_cff")
+            import os
+            if os.environ["CMSSW_VERSION"].count("CMSSW_7_4"):
+                systprod.DoCentralJEC = True
+                systprod.JECLabel = "ak4PFCHSL1FastL2L3Residual"
+                process.load("JetMETCorrections/Configuration/JetCorrectionServices_cff")
         newvpset = cms.VPSet()
         for pset in process.flashggDiPhotonSystematics.SystMethods:
             if pset.Label.value().count("Scale"):
@@ -193,6 +199,9 @@ customize(process)
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
 process.hltHighLevel = hltHighLevel.clone(HLTPaths = cms.vstring("HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95_v1") )
 process.options      = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
+
+# Switch electron veto
+process.flashggPreselectedDiPhotons.variables[-1] = "1-passElectronVeto"
 
 process.hltRequirement = cms.Sequence()
 if customize.processId == "Data" and requireTriggerOnData:
