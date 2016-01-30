@@ -1,0 +1,6 @@
+{
+    "processes" : {
+	"DYjet" : [ "/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8" ]
+     },	
+        "cmdLine" : "campaign=RunIISpring15-AllSilverIncludingGold-1_1_0-25ns"
+}
