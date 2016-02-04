@@ -11,10 +11,11 @@ flashggTagSorter = cms.EDProducer('FlashggTagSorter',
                                                                  #cms.PSet(TagName = cms.InputTag('flashggVBFTag')),
 #                                                                cms.PSet(TagName = cms.InputTag('flashggVHEtTag')),
                                                                  #cms.PSet(TagName = cms.InputTag('flashggTTHHadronicTag')),   
-                                                                 cms.PSet(TagName = cms.InputTag('flashggVBFTag')),     
+#                                                                 cms.PSet(TagName = cms.InputTag('flashggVBFTag')),     
 #                                                                
 #                                                                cms.PSet(TagName = cms.InputTag('flashggVHHadronicTag')),
-                                                                 cms.PSet(TagName = cms.InputTag('flashggUntagged'))
+#                                                                 cms.PSet(TagName = cms.InputTag('flashggUntagged'))
+        cms.PSet(TagName = cms.InputTag('flashggZPlusJetTag'))
                                                                 ),
                                   massCutUpper=cms.double(180.),
                                   massCutLower=cms.double(100)

@@ -10,6 +10,16 @@ UnpackedJetCollectionVInputTag = cms.VInputTag()
 for i in range(0,maxJetCollections):
     UnpackedJetCollectionVInputTag.append(cms.InputTag('flashggUnpackedJets',str(i)))
 
+flashggZPlusJetTag = cms.EDProducer("FlashggZPlusJetTagProducer",
+                                    DiPhotonTag    = cms.InputTag('flashggPreselectedDiPhotons'),
+                                    SystLabel      = cms.string(""),
+                                    MVAResultTag   = cms.InputTag('flashggDiPhotonMVA'),
+                                    inputTagJets= UnpackedJetCollectionVInputTag,
+                                    GenParticleTag=cms.InputTag( "flashggPrunedGenParticles" ),
+                                    GenJetTag = cms.InputTag("slimmedGenJets")
+                                    )
+                                 
+
 flashggUntagged = cms.EDProducer("FlashggUntaggedTagProducer",
 #                                 DiPhotonTag=cms.InputTag('flashggDiPhotons'),
                                  DiPhotonTag    = cms.InputTag('flashggPreselectedDiPhotons'),
