@@ -228,7 +228,7 @@ namespace flashgg {
             // IMPORTANT: All future Tags must be added in the way of untagged and vbftag.
 
             if( untagged == NULL && vbftag == NULL && tthhadronictag == NULL && tthleptonictag == NULL && vhtighttag == NULL && vhloosetag == NULL &&
-                    vhhadronictag == NULL && vhettag == NULL ) {
+                    vhhadronictag == NULL && vhettag == NULL && zplusjet==NULL ) {
                 std::cout << "[FAILED TO CONVERT TAG] with SumPt " << chosenTag->sumPt() << std::endl;
             }
 

@@ -24,7 +24,8 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source ("PoolSource",fileNames = cms.untracked.vstring(
 #        "file:myMicroAODOutputFile.root"
-        "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISpring15-ReMiniAOD-1_1_0-25ns/1_1_0/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15-ReMiniAOD-1_1_0-25ns-1_1_0-v0-RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/160105_222534/0000/myMicroAODOutputFile_137.root"
+#        "root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISpring15-ReMiniAOD-1_1_0-25ns/1_1_0/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISpring15-ReMiniAOD-1_1_0-25ns-1_1_0-v0-RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/160105_222534/0000/myMicroAODOutputFile_137.root"
+        "file:myMicroAODOutputFile_137.root"
         ))
 
 process.load("flashgg/Taggers/flashggTagSequence_cfi")
@@ -35,6 +36,8 @@ process.flashggPreselectedDiPhotons.variables =  cms.vstring('pfPhoIso03',
                                                              'full5x5_sigmaIetaIeta',
                                                              'full5x5_r9',
                                                              '1-passElectronVeto')
+
+process.flashggTagSorter.massCutLower = 70.
 
 # For debugging
 switchToUnPreselected = False
