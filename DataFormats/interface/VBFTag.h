@@ -38,16 +38,16 @@ namespace flashgg {
         
         const float leading_HFHadronEnergyFraction() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.leadJet_ptr->HFHadronEnergyFraction() : -9999.;}
         const float leading_HFHadronEnergy() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.leadJet_ptr->HFHadronEnergy() : -9999.;  }
-        const float leading_HFHadronMultiplicity() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.leadJet_ptr->HFHadronEnergy() : -9999.;  }
+        const unsigned leading_HFHadronMultiplicity() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.leadJet_ptr->HFHadronMultiplicity() : -9999.;  }
         const float leading_HFEMEnergyFraction() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.leadJet_ptr->HFEMEnergyFraction() : -9999.;}
         const float leading_HFEMEnergy() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.leadJet_ptr->HFEMEnergy() : -9999.;  }
-        const float leading_HFEMMultiplicity() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.leadJet_ptr->HFEMEnergy() : -9999.;  }
+        const unsigned leading_HFEMMultiplicity() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.leadJet_ptr->HFEMMultiplicity() : -9999.;  }
         const float subleading_HFHadronEnergyFraction() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.subleadJet_ptr->HFHadronEnergyFraction() : -9999.;}
         const float subleading_HFHadronEnergy() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.subleadJet_ptr->HFHadronEnergy() : -9999.;  }
-        const float subleading_HFHadronMultiplicity() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.subleadJet_ptr->HFHadronEnergy() : -9999.;  }
+        const unsigned subleading_HFHadronMultiplicity() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.subleadJet_ptr->HFHadronMultiplicity() : -9999.;  }
         const float subleading_HFEMEnergyFraction() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.subleadJet_ptr->HFEMEnergyFraction() : -9999.;}
         const float subleading_HFEMEnergy() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.subleadJet_ptr->HFEMEnergy() : -9999.;  }
-        const float subleading_HFEMMultiplicity() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.subleadJet_ptr->HFEMEnergy() : -9999.;  }
+        const unsigned subleading_HFEMMultiplicity() const { return  hasValidVBFDiJet() ? vbfDiPhoDiJet_mva_result_.vbfMvaResult.subleadJet_ptr->HFEMMultiplicity() : -9999.;  }
 
         const bool hasValidVBFDiJet() const {
             return (vbfDiPhoDiJet_mva_result_.vbfMvaResult.leadJet_ptr.isNonnull() && vbfDiPhoDiJet_mva_result_.vbfMvaResult.subleadJet_ptr.isNonnull()); 
