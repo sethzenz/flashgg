@@ -111,7 +111,7 @@ if doSystematics:
             if pset.Label.value().count("Scale"):
                 pset.NoCentralShift = cms.bool(False) # Turn on central shift for data (it is off for MC)
                 pset.NSigmas = cms.vint32() # Do not perform shift
-            newvpset += [pset]
+                newvpset += [pset]
         process.flashggDiPhotonSystematics.SystMethods = newvpset
     else:
         if not skipShifted:
