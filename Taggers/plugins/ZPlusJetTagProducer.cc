@@ -135,7 +135,19 @@ namespace flashgg {
 
                 if ( njets == 0 ) {
                     leadingJet = jet;
+                    /* // ensuring separation of Z and leading jet, cut taken frmo Julia's email
+                    dPhi = deltaPhi( leadingJet->phi(), dipho->leadingPhoton()->phi() );
+                    dEta = leadingJet->eta() - dipho->leadingPhoton()->eta();
+                    if( sqrt( dPhi * dPhi + dEta * dEta ) < 2.8 ) { continue; }
+                    */
                 }
+
+                /* wouldn't currently do anything...
+                if ( njets == 1 ) {
+                    if( jet->pt() / dipho->leadingPhoton()->pt > 0.3 ) { continue; }
+                }
+                */
+
                 njets++;
             }
 
@@ -147,6 +159,9 @@ namespace flashgg {
                     tag_obj.includeWeights( *dipho );
                     
                     //truth_obj.setGenPV( higgsVtx );
+
+                    std::cout << "Inside the tag producer with njets > 0. The Z pt is " << tag_obj.zPt() << endl;
+                    std::cout << "And the jet's eta, HF hadronic energy fraction values are " << tag_obj.jetEta() << ", " << tag_obj.jet_HFHadronEnergyFraction() << endl << endl;
                     
                     // saving the collection
                     tags->push_back( tag_obj );

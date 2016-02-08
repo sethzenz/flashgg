@@ -21,9 +21,31 @@ namespace flashgg {
         edm::Ptr<Jet> jet() const { return theJet_; }
         unsigned nJets() const { return njets_; }
 
+        const float jetPt() const { return theJet_->pt(); }
+        const float jetEta() const { return theJet_->eta(); }
+
+        const float jet_HFHadronEnergyFraction() const { return theJet_->HFHadronEnergyFraction(); }
+        const float jet_HFHadronEnergy() const { return theJet_->HFHadronEnergy(); }
+        const float jet_HFHadronMultiplicity() const { return theJet_->HFHadronMultiplicity(); }
+        const float jet_HFEMEnergyFraction() const { return theJet_->HFEMEnergyFraction(); }
+        const float jet_HFEMEnergy() const { return theJet_->HFEMEnergy(); }
+        const float jet_HFEMMultiplicity() const { return theJet_->HFEMMultiplicity(); }
+ 
+        const float jet_rms() const { return theJet_->rms(); }
+        const float jet_QGL() const { return theJet_->QGL(); }
+        const float jet_rawPt() const { return theJet_->correctedJet("Uncorrected").pt(); }
+
+        // const float z_Pt() const { return dipho_->leadingPhoton()->pt(); } // can't access dipho_, private member of DiPhotonTagBase
+        const Photon * theZ() const { return theZ_; }
+        const float zPt() const { return theZ_->pt(); } 
+        const float zEta() const { return theZ_->eta(); } 
+        const float zPhi() const { return theZ_->phi(); } 
+
     private:
         edm::Ptr<Jet> theJet_;
         unsigned njets_;
+
+        const Photon * theZ_;
     };
 
 }
