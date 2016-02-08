@@ -99,6 +99,37 @@ namespace flashgg {
             Ptr<pat::Jet> pjet = jets->ptrAt( i );
             flashgg::Jet fjet = flashgg::Jet( *pjet );
             
+            bool hfmultdebug = true;
+
+            if (hfmultdebug && fabs(pjet->eta()) > 3.0 && pjet->pt() > 20.) {
+
+                unsigned calc_HFEMMultiplicity = 0;
+                unsigned calc_HFHadronMultiplicity = 0;
+
+                std::cout << "Jet energy=" << pjet->energy() << " eta=" << pjet->eta() << " phi=" << pjet->phi() 
+                          << " (pat) HFEMMultiplicity=" << pjet->HFEMMultiplicity()
+                          << " HFHadronMultiplicity=" << pjet->HFHadronMultiplicity() << std::endl;
+                for ( unsigned k = 0; k < fjet.numberOfSourceCandidatePtrs(); ++k ) {
+                    reco::CandidatePtr pfJetConstituent = fjet.sourceCandidatePtr(k);
+                    const reco::Candidate* kcand = pfJetConstituent.get();
+                    const pat::PackedCandidate* lPack = dynamic_cast<const pat::PackedCandidate *>( kcand );
+                    if ( !lPack ) throw cms::Exception( "NoPackedConstituent" ) << " For jet " << i << " failed to get constituent " << k << std::endl;
+                    
+                    if (lPack->pdgId() == 2) {
+                        std::cout << "    Packed EM candidate in jet has energy=" << lPack->energy()<< " eta=" << lPack->eta() << " phi=" << lPack->phi() << std::endl;
+                        calc_HFEMMultiplicity++;
+                    }
+                    if (lPack->pdgId() == 1) {
+                        std::cout << "    Packed Hadron candidate in jet has energy=" << lPack->energy()<< " eta=" << lPack->eta() << " phi=" << lPack->phi() << std::endl;
+                        calc_HFHadronMultiplicity++;
+                    }
+                }
+                std::cout << "  (recalculated) HFEMMultiplicity=" << calc_HFEMMultiplicity << " HFHadronMultiplicity=" << calc_HFHadronMultiplicity << std::endl;
+                if (calc_HFEMMultiplicity > 30 || calc_HFHadronMultiplicity > 30) {
+                    std::cout << "HIGH Multiplicity! run=" << evt.run() << " event=" << evt.id().event() << std::endl;
+                }
+            }                
+
             if (computeSimpleRMS) {
                 float sumPtDrSq = 0.;
                 float sumPtSq = 0.;

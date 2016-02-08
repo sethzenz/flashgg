@@ -13,8 +13,11 @@ for fn in listdir("."):
                     print "  ... has length %i characters!" % len(theName)
                     shortName = theName.replace("_RunIISpring15MiniAODv2","")
                     shortName = shortName.replace("_RunIIFall15DR76","")
+                    shortName = shortName.replace("_RunIIFall15MiniAODv2","")
                     if len(shortName) >= 100:
                         shortName = shortName.replace("_TuneCUETP8M1_13TeV_Pythia8","").replace("_TuneCUETP8M1","")
+                    if len(shortName) >= 100:
+                        shortName = shortName.replace("_asymptotic","")
                     print "  ... so we switch to %s (length %i)" % (shortName,len(shortName))
                     if len(shortName)>= 100:
                         raise Exception

@@ -315,6 +315,8 @@ private:
     EDGetTokenT< View<reco::Vertex> >                    vertexToken_;
     //EDGetTokenT< VertexCandidateMap > vertexCandidateMapToken_;
 
+    EDGetTokenT<View<pat::PackedCandidate> > pfcandidateToken_;
+
     edm::InputTag 					qgVariablesInputTag;
     //edm::EDGetTokenT<edm::ValueMap<float>> 		qgToken;
 
@@ -353,6 +355,7 @@ JetValidationTreeMaker::JetValidationTreeMaker( const edm::ParameterSet &iConfig
     //vertexCandidateMapToken_( consumes<VertexCandidateMap>( iConfig.getParameter<InputTag>( "VertexCandidateMapTag" ) ) ),
 
     //qgVariablesInputTag( iConfig.getParameter<edm::InputTag>( "qgVariablesInputTag" ) ),
+    pfcandidateToken_( consumes<View<pat::PackedCandidate> >( iConfig.getParameter<InputTag> ( "PFCandidatesTag" ) ) ),
 
     usePUJetID( iConfig.getUntrackedParameter<bool>( "UsePUJetID"   , false ) ),
     photonJetVeto( iConfig.getUntrackedParameter<bool>( "PhotonJetVeto", true ) ),
@@ -398,7 +401,15 @@ JetValidationTreeMaker::analyze( const edm::Event &iEvent, const edm::EventSetup
     iEvent.getByToken( genPartToken_, gens );
     //const PtrVector<reco::GenParticle>& gens = genParticles->ptrVector();
 
+    Handle<View<pat::PackedCandidate> > pfCandidates;
+    iEvent.getByToken( pfcandidateToken_, pfCandidates );
 
+    for( unsigned int i = 0 ; i < pfCandidates->size() ; i++ ) {
+        Ptr<pat::PackedCandidate> cand = pfCandidates->ptrAt( i );
+        if (cand->pdgId() == 1 || cand->pdgId() == 2) {
+            std::cout << " Candidate energy eta pdgId " << cand->energy() << " " << cand->eta() << " " << cand->pdgId() << std::endl;
+        }
+    }
 
     Handle<View<reco::GenJet> > genJets;
     iEvent.getByToken( genJetToken_, genJets );
