@@ -14,7 +14,7 @@ ZPlusJetTag::ZPlusJetTag( edm::Ptr<DiPhotonCandidate> diPho, edm::Ptr<DiPhotonMV
     theJet_ = theJet;
     njets_ = njets;
     
-    theZ_ = diPho->leadingPhoton();
+    //    theZ_ = diPho->leadingPhoton();
 }
 
 // Local Variables:

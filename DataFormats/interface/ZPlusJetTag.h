@@ -36,16 +36,14 @@ namespace flashgg {
         const float jet_rawPt() const { return theJet_->correctedJet("Uncorrected").pt(); }
 
         // const float z_Pt() const { return dipho_->leadingPhoton()->pt(); } // can't access dipho_, private member of DiPhotonTagBase
-        const Photon * theZ() const { return theZ_; }
-        const float zPt() const { return theZ_->pt(); } 
-        const float zEta() const { return theZ_->eta(); } 
-        const float zPhi() const { return theZ_->phi(); } 
+        //        const Photon * theZ() const { return theZ_; }
+        const float zPt() const { return diPhoton()->pt(); } 
+        const float zEta() const { return diPhoton()->eta(); } 
+        const float zPhi() const { return diPhoton()->phi(); } 
 
     private:
         edm::Ptr<Jet> theJet_;
         unsigned njets_;
-
-        const Photon * theZ_;
     };
 
 }
