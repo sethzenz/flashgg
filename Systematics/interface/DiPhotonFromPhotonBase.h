@@ -43,7 +43,7 @@ namespace flashgg {
         debug_( conf.getUntrackedParameter<bool>( "Debug", false ) )
     {
         std::string photonMethodName = conf.getParameter<std::string>( "PhotonMethodName" );
-        photon_corr_.reset( FlashggSystematicMethodsFactory<flashgg::Photon, param_var>::get()->create( photonMethodName, conf, std::forward<edm::ConsumesCollector>(iC), const GlobalVariablesComputer * gv ) );
+        photon_corr_.reset( FlashggSystematicMethodsFactory<flashgg::Photon, param_var>::get()->create( photonMethodName, conf, std::forward<edm::ConsumesCollector>(iC), gv ) );
         if(conf.exists("BinList2"))  //if defined, BinList2 gives bins for sublead, lead uses BinList
             {
                 edm::ParameterSet conf2;// =  conf.clone();
@@ -59,11 +59,11 @@ namespace flashgg {
                 conf2.addParameter<edm::ParameterSet>("BinList", pset);
                 std::string binListName = "BinList";
                 conf2.insertParameterSet(true,binListName, *(conf.retrieveUnknownParameterSet("BinList2")));
-                photon_corr2_.reset( FlashggSystematicMethodsFactory<flashgg::Photon, param_var>::get()->create( photonMethodName, conf2, std::forward<edm::ConsumesCollector>(iC), const GlobalVariablesComputer * gv ) );
+                photon_corr2_.reset( FlashggSystematicMethodsFactory<flashgg::Photon, param_var>::get()->create( photonMethodName, conf2, std::forward<edm::ConsumesCollector>(iC),  gv ) );
                 
             }
         else { //if BinList2 is not defined, use BinList for both lead and sublead photons
-            photon_corr2_.reset( FlashggSystematicMethodsFactory<flashgg::Photon, param_var>::get()->create( photonMethodName, conf, std::forward<edm::ConsumesCollector>(iC), const GlobalVariablesComputer * gv ) );
+            photon_corr2_.reset( FlashggSystematicMethodsFactory<flashgg::Photon, param_var>::get()->create( photonMethodName, conf, std::forward<edm::ConsumesCollector>(iC),  gv ) );
         }
         this->setMakesWeight( photon_corr_->makesWeight() );
     }

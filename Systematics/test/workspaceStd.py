@@ -38,7 +38,7 @@ customize.parse()
 print "customize.processId:",customize.processId
 # load appropriate scale and smearing bins here
 # systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
-process.load("flashgg.Systematics.escales.76X_16DecRereco_2015")
+process.load("flashgg.Systematics.escales.escale76X_16DecRereco_2015")
 # Only run systematics for signal events
 if customize.processId.count("h_") or customize.processId.count("vbf_"): # convention: ggh vbf wzh (wh zh) tth
     print "Signal MC, so adding systematics and dZ"

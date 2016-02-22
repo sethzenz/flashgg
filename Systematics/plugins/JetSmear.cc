@@ -40,7 +40,7 @@ namespace flashgg {
     }
 
     JetSmear::JetSmear( const edm::ParameterSet &conf, edm::ConsumesCollector && iC, const GlobalVariablesComputer * gv ) :
-        BaseSystMethod( conf, std::forward<edm::ConsumesCollector>(iC), gv ), 
+        BaseSystMethod( conf, std::forward<edm::ConsumesCollector>(iC) ), 
         overall_range_( conf.getParameter<std::string>( "OverallRange" ) ),
         random_label_( conf.getParameter<std::string>("RandomLabel")),
         m_rho_token(iC.consumes<double>( conf.getParameter<edm::InputTag>("rho"))),
