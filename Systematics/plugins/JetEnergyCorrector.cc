@@ -19,7 +19,7 @@ namespace flashgg {
     public:
         typedef StringCutObjectSelector<Jet, true> selector_type;
 
-        JetEnergyCorrector( const edm::ParameterSet &conf, edm::ConsumesCollector && iC );
+        JetEnergyCorrector( const edm::ParameterSet &conf, edm::ConsumesCollector && iC, const GlobalVariablesComputer * gv );
         void applyCorrection( flashgg::Jet &y, int syst_shift ) override;
         std::string shiftLabel( int ) const override;
         void eventInitialize( const edm::Event &iEvent, const edm::EventSetup & iSetup ) override;
@@ -34,7 +34,8 @@ namespace flashgg {
         edm::EDGetTokenT<reco::JetCorrector> mJetCorrector;
     };
 
-    JetEnergyCorrector::JetEnergyCorrector( const edm::ParameterSet &conf, edm::ConsumesCollector && iC ) :
+
+    JetEnergyCorrector::JetEnergyCorrector( const edm::ParameterSet &conf, edm::ConsumesCollector && iC, const GlobalVariablesComputer * gv ) :
         BaseSystMethod( conf, std::forward<edm::ConsumesCollector>(iC)  ),
         overall_range_( conf.getParameter<std::string>( "OverallRange" ) ),
         debug_( conf.getUntrackedParameter<bool>( "Debug", false ) ),

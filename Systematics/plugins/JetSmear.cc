@@ -14,7 +14,7 @@ namespace flashgg {
     public:
         typedef StringCutObjectSelector<Jet, true> selector_type;
 
-        JetSmear( const edm::ParameterSet &conf, edm::ConsumesCollector && iC );
+        JetSmear( const edm::ParameterSet &conf, edm::ConsumesCollector && iC, const GlobalVariablesComputer * gv );
         void applyCorrection( flashgg::Jet &y, int syst_shift ) override;
         std::string shiftLabel( int ) const override;
         void eventInitialize( const edm::Event &iEvent, const edm::EventSetup & iSetup ) override;
@@ -39,8 +39,8 @@ namespace flashgg {
         current_rho_ = *rho;
     }
 
-    JetSmear::JetSmear( const edm::ParameterSet &conf, edm::ConsumesCollector && iC ) :
-        BaseSystMethod( conf, std::forward<edm::ConsumesCollector>(iC) ), 
+    JetSmear::JetSmear( const edm::ParameterSet &conf, edm::ConsumesCollector && iC, const GlobalVariablesComputer * gv ) :
+        BaseSystMethod( conf, std::forward<edm::ConsumesCollector>(iC), gv ), 
         overall_range_( conf.getParameter<std::string>( "OverallRange" ) ),
         random_label_( conf.getParameter<std::string>("RandomLabel")),
         m_rho_token(iC.consumes<double>( conf.getParameter<edm::InputTag>("rho"))),

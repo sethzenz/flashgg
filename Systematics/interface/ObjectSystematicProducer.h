@@ -12,6 +12,8 @@
 
 #include "flashgg/Systematics/interface/BaseSystMethod.h"
 
+#include "flashgg/MicroAOD/interface/GlobalVariablesComputer.h"
+
 //#include <type_traits>
 //#include <typeinfo>
 //#include "FWCore/Utilities/interface/EDMException.h"
@@ -31,6 +33,7 @@ namespace flashgg {
         ObjectSystematicProducer( const edm::ParameterSet & );
 
     protected:
+        GlobalVariablesComputer globalVars_;
         std::vector<shared_ptr<BaseSystMethod<flashgg_object, param_var> > > Corrections_;
         std::vector<shared_ptr<BaseSystMethod<flashgg_object, pair<param_var, param_var> > > > Corrections2D_;
         void produce( edm::Event &, const edm::EventSetup & ) override;
@@ -52,6 +55,7 @@ namespace flashgg {
 
     template <typename flashgg_object, typename param_var, template <typename...> class output_container>
     ObjectSystematicProducer<flashgg_object, param_var, output_container>::ObjectSystematicProducer( const ParameterSet &iConfig ) :
+        globalVars_(iConfig),
         ObjectToken_( consumes<View<flashgg_object> >( iConfig.getParameter<InputTag>( "src" ) ) )
     {
         //        edm::Service<edm::RandomNumberGenerator> rng;
@@ -86,7 +90,7 @@ namespace flashgg {
                 string photonMethodName = pset.getParameter<string>( "PhotonMethodName" );
                 //                std::cout << "    PhotonMethodName = " << photonMethodName << std::endl;
             }
-            Corrections_.at( ipset ).reset( FlashggSystematicMethodsFactory<flashgg_object, param_var>::get()->create( methodName, pset, consumesCollector()  ) );
+            Corrections_.at( ipset ).reset( FlashggSystematicMethodsFactory<flashgg_object, param_var>::get()->create( methodName, pset, consumesCollector(), &globalVars_  ) );
             if( !Corrections_.at( ipset )->makesWeight() ) {
                 for( const auto &sig : sigmas_.at( ipset ) ) {
                     std::string collection_label = Corrections_.at( ipset )->shiftLabel( sig );
@@ -122,7 +126,7 @@ namespace flashgg {
                 string photonMethodName = pset.getParameter<string>( "PhotonMethodName" );
                 //                std::cout << "    PhotonMethodName = " << photonMethodName << std::endl;
             }
-            Corrections2D_.at( ipset2D ).reset( FlashggSystematicMethodsFactory<flashgg_object, pair<param_var, param_var> >::get()->create( methodName, pset, consumesCollector() ) );
+            Corrections2D_.at( ipset2D ).reset( FlashggSystematicMethodsFactory<flashgg_object, pair<param_var, param_var> >::get()->create( methodName, pset, consumesCollector(), &globalVars_ ) );
             if( !Corrections_.at( ipset2D )->makesWeight() ) {
                 for( const auto &sig : sigmas2D_.at( ipset2D ) ) {
                     std::string collection_label = Corrections2D_.at( ipset2D )->shiftLabel( sig );
@@ -246,6 +250,8 @@ namespace flashgg {
             Corrections2D_.at( ncorr )->eventInitialize(evt, setup );
         }
 
+        globalVars_.update(evt);
+        
         // Build central collection
         std::vector<float> centralWeights;
         auto_ptr<output_container<flashgg_object> > centralObjectColl( new output_container<flashgg_object> );
