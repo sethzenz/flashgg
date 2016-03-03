@@ -43,6 +43,7 @@ print "customize.processId:",customize.processId
 # load appropriate scale and smearing bins here
 # systematics customization scripts will take care of adjusting flashggDiPhotonSystematics
 process.load("flashgg.Systematics.escales.escale76X_16DecRereco_2015")
+useEGMTools(process)
 # Only run systematics for signal events
 if customize.processId.count("h_") or customize.processId.count("vbf_"): # convention: ggh vbf wzh (wh zh) tth
     print "Signal MC, so adding systematics and dZ"
@@ -67,8 +68,9 @@ if customize.processId.count("h_") or customize.processId.count("vbf_"): # conve
         variablesToUse.append("JetBTagWeight%s01sigma[1,-999999.,999999.] := weight(\"JetBTagWeight%s01sigma\")" % (direction,direction))
         for r9 in ["HighR9","LowR9"]:
             for region in ["EB","EE"]:
-                phosystlabels.append("MCSmear%s%s%s01sigma" % (r9,region,direction))
                 phosystlabels.append("MCScale%s%s%s01sigma" % (r9,region,direction))
+                for var in ["Rho","Phi"]:
+                    phosystlabels.append("MCSmear%s%s%s%s01sigma" % (r9,region,var,direction))
     systlabels += phosystlabels
     systlabels += jetsystlabels
     customizeSystematicsForSignal(process)
