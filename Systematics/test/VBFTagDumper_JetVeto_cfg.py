@@ -7,7 +7,8 @@ from flashgg.Systematics.SystematicDumperDefaultVariables import minimalVariable
 
 # SYSTEMATICS SECTION
 
-doJetSystTrees = False # Set to 2 instead of True
+doJetSystTrees = 2 # Set to 2 instead of True
+doDY = True
 
 process = cms.Process("FLASHggSyst")
 
@@ -161,9 +162,20 @@ customize.setDefault("targetLumi",  1.00e+3  ) # define integrated lumi
 customize(process)
 
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
-process.hltHighLevel = hltHighLevel.clone(HLTPaths = cms.vstring("HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95_v*") )
+if doDY:
+    process.hltHighLevel = hltHighLevel.clone(HLTPaths = cms.vstring("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*") )
+else:
+    process.hltHighLevel = hltHighLevel.clone(HLTPaths = cms.vstring("HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95_v*") )
 #process.hltHighLevel = hltHighLevel.clone(HLTPaths = cms.vstring("HLT_Ele17_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v*") )
 process.options      = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
+
+if doDY:
+    process.flashggPreselectedDiPhotons.variables =  cms.vstring('pfPhoIso03',
+                                                                 'trkSumPtHollowConeDR03',
+                                                                 'full5x5_sigmaIetaIeta',
+                                                                 'full5x5_r9',
+                                                                 '1-passElectronVeto')
+
 
 # ee bad supercluster filter on data
 process.load('RecoMET.METFilters.eeBadScFilter_cfi')
@@ -235,7 +247,3 @@ printSystematicInfo(process)
 #print >> processDumpFile, process.dumpPython()
 
 # set default options if needed
-customize.setDefault("maxEvents",1000000)
-customize.setDefault("targetLumi",2.61e+3)
-# call the customization
-customize(process)

@@ -2,7 +2,7 @@ from os import listdir,popen,access,F_OK
 
 dobig = False
 dobigsig = False
-dobigdata = True # LOL
+dobigdata = False # LOL
 
 filelist = {}
 bigfiles = []

@@ -338,7 +338,7 @@ RVBins = cms.PSet(
         cms.PSet(lowBounds = cms.vdouble(140), upBounds = cms.vdouble(200), values = cms.vdouble(0.998821,1.06351), uncertainties = cms.vdouble(0.00176983,0.00176983,0.0953629,0.0953629)),
         cms.PSet(lowBounds = cms.vdouble(200), upBounds = cms.vdouble(400), values = cms.vdouble(1,1), uncertainties = cms.vdouble(0.00212644,0.00212644,0.240175,0.240175)),
         # maximum energy beyond 7000 because of wonky DiPhotons in data
-        cms.PSet(lowBounds = cms.vdouble(400 ) , upBounds = cms.vdouble(999999999 ) , values = cms.vdouble(1,1              ) , uncertainties = cms.vdouble(0.,0.,0.,0.)) 
+        cms.PSet(lowBounds = cms.vdouble(400 ) , upBounds = cms.vdouble(10000 ) , values = cms.vdouble(1,1              ) , uncertainties = cms.vdouble(0.,0.,0.,0.)) 
         
         )
     )       
@@ -548,7 +548,7 @@ TriggerWeight = cms.PSet( PhotonMethodName = cms.string("FlashggPhotonWeight"),
           MethodName = cms.string("FlashggDiPhotonFromPhoton"),
           Label = cms.string("TriggerWeight"),
           NSigmas = cms.vint32(-1,1),
-          OverallRange = cms.string("1"),
+          OverallRange = cms.string("pt<9999"),
           BinList = leadTriggerScaleBins,
           BinList2 = subleadTriggerScaleBins,
           Debug = cms.untracked.bool(False),
@@ -603,7 +603,7 @@ SigmaEOverESmearing_EGM = cms.PSet( PhotonMethodName = cms.string("FlashggPhoton
 FracRVWeight = cms.PSet( MethodName = cms.string("FlashggDiPhotonWeightFromFracRV"),
           Label = cms.string("FracRVWeight"),
           NSigmas = cms.vint32(-1,1),
-          OverallRange = cms.string("1"),
+          OverallRange = cms.string("pt<9999"),
           BinList = RVBins,
           Debug = cms.untracked.bool(False),
           ApplyCentralValue = cms.bool(True)
