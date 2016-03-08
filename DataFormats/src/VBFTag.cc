@@ -74,6 +74,80 @@ const float VBFTag::jetEtaCorrectionWeight() const
     float eta2 = subLeadingJet_ptr()->eta();
 
     float weight = 1.;
+
+    if (pt1 > 20.0 && pt1 < 25.0 && fabs(eta1) > 0.0 && fabs(eta1) < 2.5) weight *= 1.00;
+    if (pt1 > 20.0 && pt1 < 25.0 && fabs(eta1) > 2.5 && fabs(eta1) < 2.8) weight *= 0.87;
+    if (pt1 > 20.0 && pt1 < 25.0 && fabs(eta1) > 2.8 && fabs(eta1) < 3.1) weight *= 0.73;
+    if (pt1 > 20.0 && pt1 < 25.0 && fabs(eta1) > 3.1 && fabs(eta1) < 3.4) weight *= 0.66;
+    if (pt1 > 20.0 && pt1 < 25.0 && fabs(eta1) > 3.4 && fabs(eta1) < 3.7) weight *= 0.79;
+    if (pt1 > 20.0 && pt1 < 25.0 && fabs(eta1) > 3.7 && fabs(eta1) < 4.0) weight *= 0.76;
+    if (pt1 > 20.0 && pt1 < 25.0 && fabs(eta1) > 4.0 && fabs(eta1) < 4.7) weight *= 0.56;
+    if (pt1 > 25.0 && pt1 < 30.0 && fabs(eta1) > 0.0 && fabs(eta1) < 2.5) weight *= 1.00;
+    if (pt1 > 25.0 && pt1 < 30.0 && fabs(eta1) > 2.5 && fabs(eta1) < 2.8) weight *= 0.88;
+    if (pt1 > 25.0 && pt1 < 30.0 && fabs(eta1) > 2.8 && fabs(eta1) < 3.1) weight *= 0.69;
+    if (pt1 > 25.0 && pt1 < 30.0 && fabs(eta1) > 3.1 && fabs(eta1) < 3.4) weight *= 0.72;
+    if (pt1 > 25.0 && pt1 < 30.0 && fabs(eta1) > 3.4 && fabs(eta1) < 3.7) weight *= 0.80;
+    if (pt1 > 25.0 && pt1 < 30.0 && fabs(eta1) > 3.7 && fabs(eta1) < 4.0) weight *= 0.78;
+    if (pt1 > 25.0 && pt1 < 30.0 && fabs(eta1) > 4.0 && fabs(eta1) < 4.7) weight *= 0.60;
+    if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 0.0 && fabs(eta1) < 2.5) weight *= 1.00;
+    if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 2.5 && fabs(eta1) < 2.8) weight *= 0.99;
+    if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 2.8 && fabs(eta1) < 3.1) weight *= 0.80;
+    if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 3.1 && fabs(eta1) < 3.4) weight *= 0.85;
+    if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 3.4 && fabs(eta1) < 3.7) weight *= 0.89;
+    if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 3.7 && fabs(eta1) < 4.0) weight *= 0.83;
+    if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 4.0 && fabs(eta1) < 4.7) weight *= 0.70;
+    if (pt1 > 40.0 && pt1 < 50.0 && fabs(eta1) > 0.0 && fabs(eta1) < 2.5) weight *= 1.00;
+    if (pt1 > 40.0 && pt1 < 50.0 && fabs(eta1) > 2.5 && fabs(eta1) < 2.8) weight *= 0.92;
+    if (pt1 > 40.0 && pt1 < 50.0 && fabs(eta1) > 2.8 && fabs(eta1) < 3.1) weight *= 0.83;
+    if (pt1 > 40.0 && pt1 < 50.0 && fabs(eta1) > 3.1 && fabs(eta1) < 3.4) weight *= 0.89;
+    if (pt1 > 40.0 && pt1 < 50.0 && fabs(eta1) > 3.4 && fabs(eta1) < 3.7) weight *= 0.94;
+    if (pt1 > 40.0 && pt1 < 50.0 && fabs(eta1) > 3.7 && fabs(eta1) < 4.0) weight *= 0.92;
+    if (pt1 > 40.0 && pt1 < 50.0 && fabs(eta1) > 4.0 && fabs(eta1) < 4.7) weight *= 0.66;
+    if (pt1 > 50.0 && pt1 < 999999.0 && fabs(eta1) > 0.0 && fabs(eta1) < 2.5) weight *= 1.00;
+    if (pt1 > 50.0 && pt1 < 999999.0 && fabs(eta1) > 2.5 && fabs(eta1) < 2.8) weight *= 0.84;
+    if (pt1 > 50.0 && pt1 < 999999.0 && fabs(eta1) > 2.8 && fabs(eta1) < 3.1) weight *= 0.63;
+    if (pt1 > 50.0 && pt1 < 999999.0 && fabs(eta1) > 3.1 && fabs(eta1) < 3.4) weight *= 0.91;
+    if (pt1 > 50.0 && pt1 < 999999.0 && fabs(eta1) > 3.4 && fabs(eta1) < 3.7) weight *= 0.85;
+    if (pt1 > 50.0 && pt1 < 999999.0 && fabs(eta1) > 3.7 && fabs(eta1) < 4.0) weight *= 0.75;
+    if (pt1 > 50.0 && pt1 < 999999.0 && fabs(eta1) > 4.0 && fabs(eta1) < 4.7) weight *= 0.81;
+
+    if (pt2 > 20.0 && pt2 < 25.0 && fabs(eta2) > 0.0 && fabs(eta2) < 2.5) weight *= 1.00;
+    if (pt2 > 20.0 && pt2 < 25.0 && fabs(eta2) > 2.5 && fabs(eta2) < 2.8) weight *= 0.87;
+    if (pt2 > 20.0 && pt2 < 25.0 && fabs(eta2) > 2.8 && fabs(eta2) < 3.1) weight *= 0.73;
+    if (pt2 > 20.0 && pt2 < 25.0 && fabs(eta2) > 3.1 && fabs(eta2) < 3.4) weight *= 0.66;
+    if (pt2 > 20.0 && pt2 < 25.0 && fabs(eta2) > 3.4 && fabs(eta2) < 3.7) weight *= 0.79;
+    if (pt2 > 20.0 && pt2 < 25.0 && fabs(eta2) > 3.7 && fabs(eta2) < 4.0) weight *= 0.76;
+    if (pt2 > 20.0 && pt2 < 25.0 && fabs(eta2) > 4.0 && fabs(eta2) < 4.7) weight *= 0.56;
+    if (pt2 > 25.0 && pt2 < 30.0 && fabs(eta2) > 0.0 && fabs(eta2) < 2.5) weight *= 1.00;
+    if (pt2 > 25.0 && pt2 < 30.0 && fabs(eta2) > 2.5 && fabs(eta2) < 2.8) weight *= 0.88;
+    if (pt2 > 25.0 && pt2 < 30.0 && fabs(eta2) > 2.8 && fabs(eta2) < 3.1) weight *= 0.69;
+    if (pt2 > 25.0 && pt2 < 30.0 && fabs(eta2) > 3.1 && fabs(eta2) < 3.4) weight *= 0.72;
+    if (pt2 > 25.0 && pt2 < 30.0 && fabs(eta2) > 3.4 && fabs(eta2) < 3.7) weight *= 0.80;
+    if (pt2 > 25.0 && pt2 < 30.0 && fabs(eta2) > 3.7 && fabs(eta2) < 4.0) weight *= 0.78;
+    if (pt2 > 25.0 && pt2 < 30.0 && fabs(eta2) > 4.0 && fabs(eta2) < 4.7) weight *= 0.60;
+    if (pt2 > 30.0 && pt2 < 40.0 && fabs(eta2) > 0.0 && fabs(eta2) < 2.5) weight *= 1.00;
+    if (pt2 > 30.0 && pt2 < 40.0 && fabs(eta2) > 2.5 && fabs(eta2) < 2.8) weight *= 0.99;
+    if (pt2 > 30.0 && pt2 < 40.0 && fabs(eta2) > 2.8 && fabs(eta2) < 3.1) weight *= 0.80;
+    if (pt2 > 30.0 && pt2 < 40.0 && fabs(eta2) > 3.1 && fabs(eta2) < 3.4) weight *= 0.85;
+    if (pt2 > 30.0 && pt2 < 40.0 && fabs(eta2) > 3.4 && fabs(eta2) < 3.7) weight *= 0.89;
+    if (pt2 > 30.0 && pt2 < 40.0 && fabs(eta2) > 3.7 && fabs(eta2) < 4.0) weight *= 0.83;
+    if (pt2 > 30.0 && pt2 < 40.0 && fabs(eta2) > 4.0 && fabs(eta2) < 4.7) weight *= 0.70;
+    if (pt2 > 40.0 && pt2 < 50.0 && fabs(eta2) > 0.0 && fabs(eta2) < 2.5) weight *= 1.00;
+    if (pt2 > 40.0 && pt2 < 50.0 && fabs(eta2) > 2.5 && fabs(eta2) < 2.8) weight *= 0.92;
+    if (pt2 > 40.0 && pt2 < 50.0 && fabs(eta2) > 2.8 && fabs(eta2) < 3.1) weight *= 0.83;
+    if (pt2 > 40.0 && pt2 < 50.0 && fabs(eta2) > 3.1 && fabs(eta2) < 3.4) weight *= 0.89;
+    if (pt2 > 40.0 && pt2 < 50.0 && fabs(eta2) > 3.4 && fabs(eta2) < 3.7) weight *= 0.94;
+    if (pt2 > 40.0 && pt2 < 50.0 && fabs(eta2) > 3.7 && fabs(eta2) < 4.0) weight *= 0.92;
+    if (pt2 > 40.0 && pt2 < 50.0 && fabs(eta2) > 4.0 && fabs(eta2) < 4.7) weight *= 0.66;
+    if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 0.0 && fabs(eta2) < 2.5) weight *= 1.00;
+    if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 2.5 && fabs(eta2) < 2.8) weight *= 0.84;
+    if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 2.8 && fabs(eta2) < 3.1) weight *= 0.63;
+    if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 3.1 && fabs(eta2) < 3.4) weight *= 0.91;
+    if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 3.4 && fabs(eta2) < 3.7) weight *= 0.85;
+    if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 3.7 && fabs(eta2) < 4.0) weight *= 0.75;
+    if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 4.0 && fabs(eta2) < 4.7) weight *= 0.81;
+
+ /*
     if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 0.0 && fabs(eta1) < 2.5) weight *= 1.00;
     if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 2.5 && fabs(eta1) < 2.8) weight *= 0.85;
     if (pt1 > 30.0 && pt1 < 40.0 && fabs(eta1) > 2.8 && fabs(eta1) < 3.1) weight *= 0.54;
@@ -131,7 +205,7 @@ const float VBFTag::jetEtaCorrectionWeight() const
     if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 3.4 && fabs(eta2) < 3.7) weight *= 1.05;
     if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 3.7 && fabs(eta2) < 4.0) weight *= 0.85;
     if (pt2 > 50.0 && pt2 < 999999.0 && fabs(eta2) > 4.0 && fabs(eta2) < 4.7) weight *= 0.68;
-
+ */
     return weight;
 }
 

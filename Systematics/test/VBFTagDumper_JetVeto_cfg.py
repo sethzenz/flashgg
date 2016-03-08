@@ -239,7 +239,7 @@ printSystematicInfo(process)
 #print >> processDumpFile, process.dumpPython()
 
 # set default options if needed
-customize.setDefault("maxEvents",1000000)
+customize.setDefault("maxEvents",200000)
 customize.setDefault("targetLumi",2.61e+3)
 # call the customization
 customize(process)
