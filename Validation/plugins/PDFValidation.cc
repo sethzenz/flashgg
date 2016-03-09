@@ -36,13 +36,17 @@ class PDFWeight : public edm::EDAnalyzer
 		edm::EDGetTokenT<GenEventInfoProduct> genParticleToken_;
 		edm::EDGetTokenT<LHEEventProduct> LHEEventToken_;
 		edm::EDGetTokenT<LHERunInfoProduct> LHERunToken_;
-		edm::EDGetTokenT<vector<flashgg::PDFWeightObject> > WeightToken_;
+        edm::EDGetTokenT<vector<flashgg::PDFWeightObject> > WeightToken_;
+
+        vector<float> pdfWeightSum;
+        vector<float> scaleSum;
+        vector<float> alphaSum;
 };
 
 PDFWeight::PDFWeight( const edm::ParameterSet &iConfig ):
-	genParticleToken_( consumes<GenEventInfoProduct>( iConfig.getUntrackedParameter<InputTag> ( "GenEventInfoProductTag", InputTag( "generator" ) ) ) ),
-	LHEEventToken_( consumes<LHEEventProduct>( iConfig.getUntrackedParameter<InputTag> ( "LHETag", InputTag( "LHEEventProduct" ) ) ) ),
-	LHERunToken_( consumes<LHERunInfoProduct>( iConfig.getUntrackedParameter<InputTag> ( "LHERunTag", InputTag( "LHERunInfoProduct" ) ) ) ),
+    //	genParticleToken_( consumes<GenEventInfoProduct>( iConfig.getUntrackedParameter<InputTag> ( "GenEventInfoProductTag", InputTag( "generator" ) ) ) ),
+    //	LHEEventToken_( consumes<LHEEventProduct>( iConfig.getUntrackedParameter<InputTag> ( "LHETag", InputTag( "LHEEventProduct" ) ) ) ),
+    //	LHERunToken_( consumes<LHERunInfoProduct>( iConfig.getUntrackedParameter<InputTag> ( "LHERunTag", InputTag( "LHERunInfoProduct" ) ) ) ),
 	WeightToken_( consumes<vector<flashgg::PDFWeightObject> >( iConfig.getUntrackedParameter<InputTag>( "WeightTag", InputTag( "flashggPDFWeightObject" ) ) ) )
 {
 
@@ -71,7 +75,10 @@ PDFWeight::analyze( const edm::Event &evt, const edm::EventSetup &iSetup )
 
 	//cout << "XS  " << LHEHandle->originalXWGTUP() << endl;
 
+        assert ((*WeightHandle).size() == 1);
+
 	        for( unsigned int weight_index = 0; weight_index < (*WeightHandle).size(); weight_index++ ){
+                //                std::cout << " Hello my weight_index is " << weight_index << std::endl;
 	            vector<uint16_t> compressed_weights = (*WeightHandle)[weight_index].pdf_weight_container; 
                 std::vector<float> uncompressed = (*WeightHandle)[weight_index].uncompress( compressed_weights );
                 vector<uint16_t> compressed_alpha = (*WeightHandle)[weight_index].alpha_s_container;
@@ -79,17 +86,26 @@ PDFWeight::analyze( const edm::Event &evt, const edm::EventSetup &iSetup )
                 vector<uint16_t> compressed_scale = (*WeightHandle)[weight_index].qcd_scale_container;
                 std::vector<float> uncompressed_scale = (*WeightHandle)[weight_index].uncompress( compressed_scale );
 
+                if (pdfWeightSum.size() == 0) {
+                    pdfWeightSum.resize((*WeightHandle)[weight_index].pdf_weight_container.size(),0.);
+                    alphaSum.resize((*WeightHandle)[weight_index].alpha_s_container.size(),0.);
+                    scaleSum.resize((*WeightHandle)[weight_index].qcd_scale_container.size(),0.);
+                }
+
 	            for( unsigned int j=0; j<(*WeightHandle)[weight_index].pdf_weight_container.size();j++ ) {
-	                    cout << "compresed weight " << (*WeightHandle)[weight_index].pdf_weight_container[j] << endl;
-	                    cout << "uncompressed weight " << uncompressed[j] << endl;
+                    //	                    cout << "compresed weight " << (*WeightHandle)[weight_index].pdf_weight_container[j] << endl;
+                    //                    cout << "PDF weight " << j << " " << uncompressed[j] << endl;
+                    pdfWeightSum[j] += uncompressed[j];
 	       }
                 for( unsigned int j=0; j<(*WeightHandle)[weight_index].alpha_s_container.size();j++ ) {
-                        cout << "compressed variation " << (*WeightHandle)[weight_index].alpha_s_container[j] << endl;
-                        cout << "uncompressed variation " << uncompressed_alpha[j] << endl;
+                    //                        cout << "compressed variation " << (*WeightHandle)[weight_index].alpha_s_container[j] << endl;
+                    //                    cout << "alpha_S weight " << j << " " << uncompressed_alpha[j] << endl;
+                    alphaSum[j] += uncompressed_alpha[j];
            }
                 for( unsigned int j=0; j<(*WeightHandle)[weight_index].qcd_scale_container.size();j++ ) {
-                        cout << "compressed scale " << (*WeightHandle)[weight_index].qcd_scale_container[j] << endl;
-                        cout << "uncompressed scale " << uncompressed_scale[j] << endl;
+                    //                        cout << "compressed scale " << (*WeightHandle)[weight_index].qcd_scale_container[j] << endl;
+                    //                    cout << "Scale weight " << j << " " << uncompressed_scale[j] << endl;
+                    scaleSum[j] += uncompressed_scale[j];
            }
 	    
     }
@@ -104,6 +120,42 @@ PDFWeight::beginJob()
 	void
 PDFWeight::endJob()
 {
+    std::cout << "---- PDFWeight::endJob ----" << std::endl;
+
+    for (unsigned j = 0 ; j < alphaSum.size() ; j++) {
+        std::cout << " Raw alphaSum " << j << " " << alphaSum[j] << std::endl;
+    }
+
+    for(unsigned j = 0; j < scaleSum.size() ; j++) {
+        std::cout << " Raw scaleSum " << j << " " << scaleSum[j] << std::endl;
+    }
+
+    for(unsigned j = 0; j < pdfWeightSum.size() ; j++) {
+        std::cout << " Raw pdfWeightSum " << j << " " << pdfWeightSum[j] << std::endl;
+    }
+
+    std::cout << "---------------------------" << std::endl;
+
+    for (unsigned j = 0 ; j < alphaSum.size() ; j++) {
+        std::cout << " alpha norm ratio " << j << " " << (alphaSum[j]/scaleSum[0]) << std::endl;
+    }
+
+    std::cout << "---------------------------" << std::endl;
+
+
+    for (unsigned j = 0 ; j < scaleSum.size() ; j++) {
+        std::cout << " scale norm ratio " << j << " " << (scaleSum[j]/scaleSum[0]) << std::endl;
+    }
+
+    std::cout << "---------------------------" << std::endl;
+
+
+    for (unsigned j = 0 ; j < pdfWeightSum.size() ; j++) {
+        std::cout << " pdfWeight norm ratio " << j << " " << (pdfWeightSum[j]/scaleSum[0]) << std::endl;
+    }
+
+    std::cout << "---------------------------" << std::endl;
+
 }
 
 
