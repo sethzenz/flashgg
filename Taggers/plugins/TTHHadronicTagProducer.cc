@@ -279,6 +279,23 @@ namespace flashgg {
                 }
                 tthhtags_obj.includeWeights( *dipho );
                 tthhtags->push_back( tthhtags_obj );
+
+                if (tthhtags_obj.centralWeight() < 0.1 && systLabel_ == "") {
+                    std::cout << "DEBUGGING WEIGHTS   - FOR TTHHADRONIC TAG:" << std::endl;
+                    for (auto it = tthhtags_obj.weightListBegin() ; it != tthhtags_obj.weightListEnd(); it++) {
+                        std::cout << "  DIPHO " << (*it) << " " << dipho->weight(*it) << std::endl;
+                        for( unsigned num = 0; num < JetVect.size(); num++ ) {
+                            std::cout << " JET " << num << " " << (*it) << " " << JetVect[num]->weight(*it) << std::endl;
+                        }
+                        std::cout << "  TAG " << (*it) << " " << tthhtags_obj.weight(*it) << std::endl;
+                    }
+                    std::cout << " PT1 PT2 ETA1 ETA2 Weight1 Weight2 M " << dipho->leadingPhoton()->pt() << " " << dipho->subLeadingPhoton()->pt() << " "
+                              << dipho->leadingPhoton()->eta() << " " << dipho->subLeadingPhoton()->eta() << " " 
+                              << dipho->leadingPhoton()->centralWeight() << " " << dipho->subLeadingPhoton()->centralWeight() << " "
+                              << dipho->mass() << std::endl;
+                }
+
+
                 if( ! evt.isRealData() ) {
                     TagTruthBase truth_obj;
                     truth_obj.setGenPV( higgsVtx );

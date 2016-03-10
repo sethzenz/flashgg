@@ -128,19 +128,19 @@ namespace flashgg {
                 float mass = TagVectorEntry->ptrAt( TagPointerLoop )->diPhoton()->mass();
                 int category = TagVectorEntry->ptrAt( TagPointerLoop )->categoryNumber();
 
-                // std::cout << "[DEBUG]" << tpr->name << " " << tpr->minCat << " " << tpr->maxCat << " "
-                //           << mass << " " << category << " " << TagPointerLoop << std::endl;
-
                 // ignore candidate tags with category number outside the present range we're looking at
                 if( category < tpr->minCat || category > tpr->maxCat ) { continue ; }
 
                 // ignore candidate tags with diphoton outside of the allowed mass range.
                 if( ( mass < massCutLower ) || ( mass > massCutUpper ) ) {continue ;}
 
+                std::cout << "[DEBUG]" << tpr->name << " " << tpr->minCat << " " << tpr->maxCat << " "
+                          << mass << " " << category << " " << TagPointerLoop << std::endl;
+
                 // All the real work for prioritizing inside a tag type is done inside DiPhotonTagBase::operator<
                 if( chosenIndex == -1 || ( TagVectorEntry->ptrAt( chosenIndex ).get() < TagVectorEntry->ptrAt( TagPointerLoop ).get() ) );
                 chosenIndex = TagPointerLoop;
-
+                
                 float centralObjectWeight = TagVectorEntry->ptrAt( TagPointerLoop )->centralWeight();
                 if (centralObjectWeight < minAcceptableObjectWeight || centralObjectWeight > maxAcceptableObjectWeight) {
                     throw cms::Exception( "TagObjectWeight" ) << " Tag centralWeight=" << centralObjectWeight << " outside of bound [" 

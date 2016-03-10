@@ -75,7 +75,7 @@ namespace flashgg {
 	      theWeight = weight + ( error * syst_shift * sign);
 	      
 	      if( this->debug_ ) {
-                std::cout << "  " << shiftLabel( syst_shift ) << ": Diphoton has pt " << obj.pt() 
+                std::cout << " DiPhotonWeightFromFracRV::makeWeight  " << shiftLabel( syst_shift ) << ": Diphoton has pt " << obj.pt() 
                           << " and we apply a weight of " << theWeight << std::endl;
 	      }
 	    }

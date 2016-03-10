@@ -79,9 +79,10 @@ namespace flashgg {
     float DiPhotonFromPhotonBase<param_var>::makeWeight( const DiPhotonCandidate &y, param_var syst_shift )
     {
         if( debug_ ) {
-            std::cout << "START OF DiPhotonFromPhoton::makeWeight M PT E1 E2 ETA1 ETA2 "
+            std::cout << "START OF DiPhotonFromPhoton::makeWeight M PT E1 E2 ETA1 ETA2 PT1 PT2 "
                       << y.mass() << " " << y.pt() << " " << y.leadingPhoton()->energy() << " " << y.subLeadingPhoton()->energy() << " "
-                      << y.leadingPhoton()->eta() << " " << y.subLeadingPhoton()->eta() << std::endl;
+                      << y.leadingPhoton()->eta() << " " << y.subLeadingPhoton()->eta()  << " "
+                      << y.leadingPhoton()->pt() << " " << y.subLeadingPhoton()->pt() << std::endl;
         }
         float weight1 = photon_corr_->makeWeight( *(y.leadingPhoton()), syst_shift );
         float weight2 = photon_corr2_->makeWeight( *(y.subLeadingPhoton()), syst_shift );
