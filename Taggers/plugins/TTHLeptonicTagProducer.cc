@@ -429,6 +429,10 @@ namespace flashgg {
                         }                            
                         std::cout << "  TAG " << (*it) << " " << tthltags_obj.weight(*it) << " CHECKOLD: " << checkold << " CHECKNEW: " << checknew << std::endl;
                     }
+                } else {
+                    if (systLabel_ == "") {
+                        std::cout  << " TTHLEPTONICTAG OK WEIGHT: " << tthltags_obj.centralWeight() << std::endl;
+                    }
                 }
 
                 tthltags_obj.setJets( tagJets );
