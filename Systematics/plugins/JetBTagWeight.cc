@@ -195,7 +195,8 @@ namespace flashgg {
                 errdown = p_data_down / p_mc ;
                 errup = p_data_up / p_mc ;
             }
-         
+            if ( this->debug_ ) std::cout << " In JetBTagWeight : " << shiftLabel( syst_shift ) << ": Object has pt= " << obj.pt() << " eta=" << obj.eta() << " fl\
+avour=" << obj.hadronFlavour() << " JetBTagStatus=" << JetBTagStatus << " p_data=" << p_data << " p_mc=" << p_mc << " central=" << central << std::endl;
 
             theWeight = central;
             if ( syst_shift < 0 ) theWeight = errdown;

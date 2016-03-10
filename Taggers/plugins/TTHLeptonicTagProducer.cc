@@ -406,7 +406,7 @@ namespace flashgg {
 
                 // This code illustrates why usecentralifnotfound had to be added to DataFormats/src/WeightedObject.cc
                 // See the comment there for what's going on, once read the lines below should help understand
-                if (false && systLabel_ == "") {
+                if ((tthltags_obj.centralWeight() > 5 || tthltags_obj.centralWeight() < 0.2) && systLabel_ == "") {
                     std::cout << "DEBUGGING WEIGHTS   - FOR TTHLEPTONIC TAG:" << std::endl;
                     for (auto it = tthltags_obj.weightListBegin() ; it != tthltags_obj.weightListEnd(); it++) {
                         float checkold = dipho->weight(*it);
