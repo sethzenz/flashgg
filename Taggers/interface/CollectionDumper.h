@@ -254,6 +254,7 @@ namespace flashgg {
             }
             
             KeyT key = classname;
+
             if( ! label.empty() ) {
                 if( ! key.empty() ) { key += ":"; } // FIXME: define ad-hoc method with dedicated + operator
                 key += label;
@@ -421,7 +422,7 @@ namespace flashgg {
             }
             const auto & collection = *collectionH;
 
-            if( globalVarsDumper_ ) { globalVarsDumper_->fill( event ); }
+            if( globalVarsDumper_ ) { std::cout << " globalVarsDumper_" << std::endl; globalVarsDumper_->fill( event ); }
 
             weight_ = eventWeight( event );
             if( dumpPdfWeights_){
@@ -439,18 +440,26 @@ namespace flashgg {
 
             int nfilled = maxCandPerEvent_;
 
+            std::cout << " DUMPING DUMPERS "<< std::endl;
+            for (auto &dumper: dumpers_){
+                std::cout << "     " << dumper.first << std::endl;
+            }
+
             for( auto &cand : collection ) {
                 auto cat = classifier_( cand );
                 auto which = dumpers_.find( cat.first );
+                std::cout << " cat " << cat.first << std::endl;
 
                 if( which != dumpers_.end() ) {
                     int isub = ( hasSubcat_[cat.first] ? cat.second : 0 );
                    double fillWeight =weight_;
+                   cout << isub << " " << fillWeight << std::endl;
                    const  WeightedObject* tag = dynamic_cast<const WeightedObject* >( &cand );
                     if ( tag != NULL ){
 
                     fillWeight =fillWeight*(tag->centralWeight());
                     }
+                    std::cout << "Gonna call fill" << std::endl;
                     which->second[isub].fill( cand, fillWeight, pdfWeights_, maxCandPerEvent_ - nfilled );
                     --nfilled;
                 } else if( throwOnUnclassified_ ) {

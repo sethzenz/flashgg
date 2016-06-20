@@ -408,6 +408,7 @@ bool CategoryDumper<F, O>::isBinnedOnly( )
     template<class F, class O>
 void CategoryDumper<F, O>::fill( const object_type &obj, double weight, vector<double> pdfWeights, int n_cand)
 {  
+    std::cout << " in CategoryDumper::fill" << std::endl;
     n_cand_ = n_cand;
     weight_ = weight;
     if( dataset_ && (!binnedOnly_) ) {
