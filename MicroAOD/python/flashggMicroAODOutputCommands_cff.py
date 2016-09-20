@@ -22,7 +22,6 @@ microAODDefaultOutputCommand = cms.untracked.vstring("drop *",
                                                      "keep *_weightsCount_*_*",
                                                      "keep *_generator_*_*",
                                                      "keep *_slimmedGenJets_*_*",
-                                                     "keep *_flashggDiPhotons_*_*", # STILL NEEDED
                                                      "keep *_slimmedAddPileupInfo_*_*", # Was huge in old MiniAod - hopefully better now
                                                      "keep *GsfElectronCore*_*_*_*", # needed by at least one Tag
 
@@ -31,6 +30,7 @@ microAODDefaultOutputCommand = cms.untracked.vstring("drop *",
                                                      "drop *_flashgg*Jet*_*_*",
                                                      "drop *_flashggMuons_*_*",
                                                      "drop *_flashggElectrons_*_*",
+                                                     "drop *_flashggDiPhotons_*_*",
 
                                                      "keep *_flashggFinalJets_*_*",
                                                      "keep *_flashggFinalPuppiJets_*_*",

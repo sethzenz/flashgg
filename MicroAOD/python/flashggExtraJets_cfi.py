@@ -37,7 +37,7 @@ def addFlashggPF(process, doQGTagging =  True, label ='', debug = False):
   print ' --> patJetCorrFactorsAK4PF == ',  getattr(process, 'patJetCorrFactorsAK4PF' + label)
   print ' --> patJetsAK4PF           == ',  getattr(process, 'patJetsAK4PF' + label)
   flashggJetsPF = cms.EDProducer('FlashggJetProducer',
-                                 DiPhotonTag=cms.InputTag('flashggDiPhotons'),
+                                 DiPhotonTag=cms.InputTag('flashggSelectedDiPhotons'),
                                  VertexTag=cms.InputTag('offlineSlimmedPrimaryVertices'),
                                  JetTag=cms.InputTag('patJetsAK4PF' + label ),
                                  VertexCandidateMapTag = cms.InputTag("flashggVertexMapForCHS"),
@@ -105,7 +105,7 @@ def addStandardPuppiJets(process,
   getattr(process, 'patJetCorrFactorsAK4PUPPIstd' + label).primaryVertices = "offlineSlimmedPrimaryVertices"
   setattr(process, 'flashggStdPUPPIJets',
           cms.EDProducer('FlashggJetProducer',
-                         DiPhotonTag           = cms.InputTag('flashggDiPhotons'),
+                         DiPhotonTag           = cms.InputTag('flashggSelectedDiPhotons'),
                          VertexTag             = cms.InputTag('offlineSlimmedPrimaryVertices'),
                          JetTag                = cms.InputTag('patJetsAK4PUPPIstd' + label),
                          VertexCandidateMapTag = cms.InputTag("flashggVertexMapForPUPPI"),
