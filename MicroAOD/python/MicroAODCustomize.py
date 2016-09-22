@@ -39,6 +39,11 @@ class MicroAODCustomize(object):
                               VarParsing.VarParsing.multiplicity.singleton, # singleton or list
                               VarParsing.VarParsing.varType.int,          # string, int, or float
                               "muMuGamma")
+        self.options.register('triggerTest',
+                              0, 
+                              VarParsing.VarParsing.multiplicity.singleton, # singleton or list 
+                              VarParsing.VarParsing.varType.int,          # string, int, or float
+                              "triggerTest")
         self.options.register ('globalTag',
                                "", # default value
                                VarParsing.VarParsing.multiplicity.singleton, # singleton or list
@@ -113,6 +118,8 @@ class MicroAODCustomize(object):
             self.customizeMuMuGamma(process)
         elif self.muMuGamma == 2 and ("DY" in customize.datasetName or "DoubleMuon" in customize.datasetName):
             self.customizeMuMuGamma(process)
+        if self.triggerTest == 1:
+            self.customizeTriggerTest(process)
         if "ttH" in customize.datasetName:
             self.customizeTTH(process)
         if len(self.globalTag) >0:
@@ -320,6 +327,11 @@ class MicroAODCustomize(object):
     def customize80X(self,process):
         pass
 #        delattr(process,"QGPoolDBESSource")
+
+    def customizeTriggerTest(self,process):
+        process.load("flashgg/MicroAOD/flashggTriggerTester_cfi")
+        process.p *= process.flashggTriggerTester
+
 
 # customization object
 customize = MicroAODCustomize()
