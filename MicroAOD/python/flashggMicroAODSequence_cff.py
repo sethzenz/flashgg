@@ -12,6 +12,7 @@ from flashgg.MicroAOD.flashggMets_cfi import flashggMets
 
 from flashgg.MicroAOD.flashggLeptonSelectors_cff import flashggSelectedMuons,flashggSelectedElectrons
 from flashgg.MicroAOD.flashggSelectedDiPhotons_cfi import flashggSelectedDiPhotons
+from flashgg.MicroAOD.flashggFinalEGamma_cfi import flashggFinalEGamma
 from flashgg.MicroAOD.flashggMicroAODGenSequence_cff import *
 
 from PhysicsTools.SelectorUtils.centralIDRegistry import central_id_registry
@@ -41,6 +42,7 @@ flashggMicroAODSequence = cms.Sequence(eventCount+weightsCount
                                        +flashggMuons*flashggSelectedMuons
                                        +flashggMicroAODGenSequence
                                        +flashggPhotons * flashggRandomizedPhotons * flashggDiPhotons * flashggSelectedDiPhotons
+                                       +flashggFinalEGamma
                                        +flashggVertexMapForCHS*flashggFinalJets
                                        +flashggVertexMapForPUPPI*flashggFinalPuppiJets
                                        +flashggMets

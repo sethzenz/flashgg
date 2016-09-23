@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 flashggUpdatedIdMVADiPhotons = cms.EDProducer("FlashggDiPhotonWithUpdatedPhoIdMVAProducer",
-                                              src                      = cms.InputTag("flashggDiPhotons"),
+                                              src                      = cms.InputTag("flashggFinalEGamma","finalDiPhotons"),
                                               rhoFixedGridCollection   = cms.InputTag('fixedGridRhoAll'),
                                               #photonIdMVAweightfile_EB = cms.FileInPath("flashgg/MicroAOD/data/MVAweights_76X_25ns_r9shift_barrel.xml"),
                                               #photonIdMVAweightfile_EB = cms.FileInPath("flashgg/MicroAOD/data/MVAweights_76X_25ns_barrel.xml"),
