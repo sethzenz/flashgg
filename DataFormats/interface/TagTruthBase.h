@@ -24,7 +24,7 @@ namespace flashgg {
         int HTXSnjets() const { return njets_; }
         float HTXSpTH() const { return pTH_; }
         float HTXSpTV() const { return pTV_; }
-        std::map<std::string,float> HTXSggHweights() const { return ggHweights_; }
+        float HTXSggHweight( std::string weightName ) const;
         void setHTXSInfo( int stage0cat, int stage1cat, int njets, float pTH, float pTV );
         void setggHweights( int njets, float pTH, int stage1cat );
         void copyBaseInfo( const TagTruthBase &b );
