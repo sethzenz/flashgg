@@ -13,7 +13,8 @@ for fn in listdir("."):
     rel = False
     for k,v in relevant.iteritems():
         for s in v:
-            if fn.count("output_%s" % k) and (fn.count("%s.root"%s) or fn.count("%s_FWDH.root"%s)):
+            #if fn.count("output_%s" % k) and (fn.count("%s.root"%s) or fn.count("%s_FWDH.root"%s)):
+            if fn.count("output_%s" % k) and fn.count(s):
                 rel = True
     if rel:
         print "KEEPING %s" % fn

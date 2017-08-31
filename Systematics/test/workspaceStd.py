@@ -401,7 +401,9 @@ for tag in tagList:
               currentVariables = systematicVariables
       if tagName == "NoTag":
           if customize.doHTXS:
-              currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat"]
+              #currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat"]
+              currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat",
+                                  "stage1cat[1000,-0.5,999.5] := tagTruth().HTXSstage1cat"]
           else:
               currentVariables = []
       isBinnedOnly = (systlabel !=  "")
