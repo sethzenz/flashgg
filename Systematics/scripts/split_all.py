@@ -2,7 +2,7 @@ from os import listdir,popen
 from sys import argv
 stage1 = False
 if len(argv) > 1:
-    if "tage1" in argv[1]: stage1 = True
+    if "tage1" in str(argv[1]): stage1 = True
 
 for fn in listdir("."):
     if fn.count("pythia8.root") or fn.count("Up.root") or fn.count("Down.root") or fn.count("UpPS.root") or fn.count("DownPS.root"):
