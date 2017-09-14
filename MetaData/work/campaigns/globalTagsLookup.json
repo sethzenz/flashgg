@@ -103,6 +103,7 @@
     "RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3" : ["80X_mcRun2_asymptotic_2016_v3"],
     "RunIISpring16MiniAODv1-PUSpring16RAWAODSIM_80X_mcRun2_asymptotic_2016_v3" : ["80X_mcRun2_asymptotic_2016_v3"],
     "Run2016B-PromptReco" : ["80X_dataRun2_Prompt_v8"],
+
     "Run2017A-PromptReco"											: ["92X_dataRun2_Prompt_v4"],
     "Run2017B-PromptReco"											: ["92X_dataRun2_Prompt_v5"],
     "Run2017C-PromptReco"											: ["92X_dataRun2_Prompt_v8"],
