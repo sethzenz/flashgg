@@ -34,6 +34,8 @@ void TagTruthBase::copyBaseInfo( const TagTruthBase &b ) {
 void TagTruthBase::setggHweights( int njets, float pTH, int stage1cat ) 
 {
     std::vector<float> theWeightsUp  = qcd_ggF_uncertSF_2017( njets, pTH, stage1cat, 1. );
+    //std::cout << "njets, pTH, stage1cat = " << njets << ", " << pTH << ", " << stage1cat << std::endl;
+    //std::cout << "THU_ggH_MuUp01sigma   = " << theWeightsUp[0] << std::endl;
     ggHweights_["THU_ggH_MuUp01sigma"]    = theWeightsUp[0];
     ggHweights_["THU_ggH_ResUp01sigma"]   = theWeightsUp[1];
     ggHweights_["THU_ggH_Mig01Up01sigma"] = theWeightsUp[2];
@@ -45,6 +47,7 @@ void TagTruthBase::setggHweights( int njets, float pTH, int stage1cat )
     ggHweights_["THU_ggH_qmtopUp01sigma"] = theWeightsUp[8];
 
     std::vector<float> theWeightsDown = qcd_ggF_uncertSF_2017( njets, pTH, stage1cat, -1. );
+    //std::cout << "THU_ggH_MuDown01sigma = " << theWeightsDown[0] << std::endl << std::endl;
     ggHweights_["THU_ggH_MuDown01sigma"]    = theWeightsDown[0];
     ggHweights_["THU_ggH_ResDown01sigma"]   = theWeightsDown[1];
     ggHweights_["THU_ggH_Mig01Down01sigma"] = theWeightsDown[2];
