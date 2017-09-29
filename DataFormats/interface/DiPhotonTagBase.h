@@ -61,6 +61,7 @@ namespace flashgg {
         DiPhotonTagBase::tag_t otherTagType( unsigned i ) const { return otherTagTypes_[i]; }
         int otherTagCategory( unsigned i ) const { return otherTagCategories_[i]; }
         int otherTagDiPhotonIndex ( unsigned i ) const { return otherTagIndices_[i]; }
+        float ggHweightCentralised( std::string weightName ) const;
     private:
         DiPhotonMVAResult mva_result_;
         int category_number_;
@@ -73,6 +74,10 @@ namespace flashgg {
         std::vector<DiPhotonTagBase::tag_t> otherTagTypes_;
         std::vector<int> otherTagCategories_;
         std::vector<int> otherTagIndices_;
+        // weights for 2017 ggH WG1 uncertainty scheme
+        // with central object weight applied, unlike TagTruthBase version
+        // order: THU_ggH_Mu, THU_ggH_Res, THU_ggH_Mig01, THU_ggH_Mig12, THU_ggH_VBF2j, THU_ggH_VBF3j, THU_ggH_PT60, THU_ggH_PT120, THU_ggH_qmtop
+        std::map<std::string,float> ggHweightsCentralised_;
     };
 
 }
