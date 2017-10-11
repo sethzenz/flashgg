@@ -121,6 +121,12 @@ b. Used PromptReco json, hence extra submission for 2016B above to catch the ext
 
 ./prepareCrabJobs.py -C ReMiniAOD-03Feb2017-2_5_0-test -U 1 -L 25 -s campaigns/ReMiniAOD-03Feb2017-2_5_0-test.json -V 2_5_0 -p ${CMSSW_BASE}/src/flashgg/MicroAOD/test/microAODstd.py --lumiMask /afs/cern.ch/work/s/sethzenz/fromscratch141/CMSSW_8_0_26_patch1/src/flashgg/MetaData/work/jsons/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt
 
+### vittorio
+
+./prepareCrabJobs.py -C RunIISummer16-2_4_3-25ns_Moriond17 -U 1 -L 25 -s campaigns/RunIISummer16-2_4_3-25ns_Moriond17.json -V 2_4_3 -p ${CMSSW_BASE}/src/flashgg/MicroAOD/test/microAODstd.py
+
+./prepareCrabJobs.py -C RunIISummer16-2_4_4-25ns_Moriond17 -U 1 -L 25 -s campaigns/RunIISummer16-2_4_4-25ns_Moriond17.json -V 2_4_4 -p ${CMSSW_BASE}/src/flashgg/MicroAOD/test/microAODstd.py
+
 ### SUMMER16 MC
 
 #### 15 Jan regression
