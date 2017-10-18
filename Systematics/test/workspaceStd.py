@@ -232,6 +232,15 @@ if customize.processId.count("h_") or customize.processId.count("vbf_") or custo
             variablesToUse.append("MuonMiniIsoWeight%s01sigma[1,-999999.,999999.] := weight(\"MuonMiniIsoWeight%s01sigma\")" % (direction,direction))
 	    variablesToUse.append("JetBTagCutWeight%s01sigma[1,-999999.,999999.] := weight(\"JetBTagCutWeight%s01sigma\")" % (direction,direction))
             variablesToUse.append("JetBTagReshapeWeight%s01sigma[1,-999999.,999999.] := weight(\"JetBTagReshapeWeight%s01sigma\")" % (direction,direction))
+            variablesToUse.append("THU_ggH_Mu%s01sigma[1,-999999.,999999.] := ggHweightCentralised(\"THU_ggH_Mu%s01sigma\")" % (direction,direction))
+            variablesToUse.append("THU_ggH_Res%s01sigma[1,-999999.,999999.] := ggHweightCentralised(\"THU_ggH_Res%s01sigma\")" % (direction,direction))
+            variablesToUse.append("THU_ggH_Mig01%s01sigma[1,-999999.,999999.] := ggHweightCentralised(\"THU_ggH_Mig01%s01sigma\")" % (direction,direction))
+            variablesToUse.append("THU_ggH_Mig12%s01sigma[1,-999999.,999999.] := ggHweightCentralised(\"THU_ggH_Mig12%s01sigma\")" % (direction,direction))
+            variablesToUse.append("THU_ggH_VBF2j%s01sigma[1,-999999.,999999.] := ggHweightCentralised(\"THU_ggH_VBF2j%s01sigma\")" % (direction,direction))
+            variablesToUse.append("THU_ggH_VBF3j%s01sigma[1,-999999.,999999.] := ggHweightCentralised(\"THU_ggH_VBF3j%s01sigma\")" % (direction,direction))
+            variablesToUse.append("THU_ggH_PT60%s01sigma[1,-999999.,999999.] := ggHweightCentralised(\"THU_ggH_PT60%s01sigma\")" % (direction,direction))
+            variablesToUse.append("THU_ggH_PT120%s01sigma[1,-999999.,999999.] := ggHweightCentralised(\"THU_ggH_PT120%s01sigma\")" % (direction,direction))
+            variablesToUse.append("THU_ggH_qmtop%s01sigma[1,-999999.,999999.] := ggHweightCentralised(\"THU_ggH_qmtop%s01sigma\")" % (direction,direction))
             for r9 in ["HighR9","LowR9"]:
                 for region in ["EB","EE"]:
                     phosystlabels.append("ShowerShape%s%s%s01sigma"%(r9,region,direction))
@@ -369,6 +378,7 @@ else:
         ]
 
 definedSysts=set()
+process.tagsDumper.NNLOPSWeightFile=cms.FileInPath("flashgg/Taggers/data/NNLOPS_reweight.root")
 process.tagsDumper.classifierCfg.remap=cms.untracked.VPSet()
 for tag in tagList: 
   tagName=tag[0]
@@ -391,7 +401,9 @@ for tag in tagList:
               currentVariables = systematicVariables
       if tagName == "NoTag":
           if customize.doHTXS:
-              currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat"]
+              #currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat"]
+              currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat",
+                                  "stage1cat[1000,-0.5,999.5] := tagTruth().HTXSstage1cat"]
           else:
               currentVariables = []
       isBinnedOnly = (systlabel !=  "")

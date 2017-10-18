@@ -76,6 +76,12 @@ void DiPhotonTagBase::setIsGold( int runNumber ) {
     if ( runNumber == 258443 ) { isGold_ = 0; }
 }
 
+float DiPhotonTagBase::ggHweightCentralised( std::string weightName ) const {
+    float weightCentral  = centralWeight();
+    float weightOriginal = tagTruth()->HTXSggHweight( weightName );
+    return weightCentral * weightOriginal;
+}
+
 // Local Variables:
 // mode:c++
 // indent-tabs-mode:nil
