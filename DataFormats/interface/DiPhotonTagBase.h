@@ -4,6 +4,7 @@
 #include "flashgg/DataFormats/interface/DiPhotonCandidate.h"
 #include "flashgg/DataFormats/interface/DiPhotonMVAResult.h"
 #include "flashgg/DataFormats/interface/TagTruthBase.h"
+#include "flashgg/DataFormats/interface/Jet.h"
 
 namespace flashgg {
 
@@ -62,6 +63,8 @@ namespace flashgg {
         int otherTagCategory( unsigned i ) const { return otherTagCategories_[i]; }
         int otherTagDiPhotonIndex ( unsigned i ) const { return otherTagIndices_[i]; }
         float ggHweightCentralised( std::string weightName ) const;
+
+        void computeStage1Kinematics( const edm::Handle<edm::View<flashgg::Jet> > & jets, float ptV = -1. );
     private:
         DiPhotonMVAResult mva_result_;
         int category_number_;
@@ -78,6 +81,9 @@ namespace flashgg {
         // with central object weight applied, unlike TagTruthBase version
         // order: THU_ggH_Mu, THU_ggH_Res, THU_ggH_Mig01, THU_ggH_Mig12, THU_ggH_VBF2j, THU_ggH_VBF3j, THU_ggH_PT60, THU_ggH_PT120, THU_ggH_qmtop
         std::map<std::string,float> ggHweightsCentralised_;
+
+        string stage1KinematicLabel_;
+
     };
 
 }

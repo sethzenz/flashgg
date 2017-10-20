@@ -19,6 +19,7 @@ DiPhotonTagBase::DiPhotonTagBase( edm::Ptr<flashgg::DiPhotonCandidate> diPho, Di
     category_number_ = -1;
     dipho_ = diPho;
     isGold_ = -1;
+    stage1KinematicLabel_ = "";
 }
 
 DiPhotonTagBase::~DiPhotonTagBase()
@@ -81,6 +82,67 @@ float DiPhotonTagBase::ggHweightCentralised( std::string weightName ) const {
     float weightOriginal = tagTruth()->HTXSggHweight( weightName );
     return weightCentral * weightOriginal;
 }
+
+void DiPhotonTagBase::computeStage1Kinematics( const edm::Handle<edm::View<flashgg::Jet> >& jets, float ptV ) {
+    stage1KinematicLabel_ = "LOGICERROR";
+    float ptH = this->diPhoton()->pt();
+    unsigned int nJ = 0;
+    float dEta = 0.;
+    float mjj = 0.;
+    float ptHjj = 0.;
+    for ( unsigned int i = 0 ; i < jets->size(); i++ ) {
+        if ( jets->ptrAt(i)->pt() > 30. ) nJ++;
+    }
+    if ( nJ >= 2 ) {
+        dEta = fabs( jets->ptrAt(0)->eta() - jets->ptrAt(1)->eta() );
+        mjj = ( jets->ptrAt(0)->p4() + jets->ptrAt(1)->p4() ).mass();
+        ptHjj = ( jets->ptrAt(0)->p4() + jets->ptrAt(1)->p4() + this->diPhoton()->p4() ).pt();
+    }
+    if ( ptV < -0.5 ) {
+        if (nJ == 0) {
+            stage1KinematicLabel_ = "RECO_0J";
+        } else if ( nJ == 1 ) {
+            if ( ptH > 200 ) {
+                stage1KinematicLabel_ = "RECO_1J_PTH_GT200";
+            } else if ( ptH > 120. ) {
+                stage1KinematicLabel_ = "RECO_1J_PTH_120_200";
+            } else if ( ptH > 60. ) {
+                stage1KinematicLabel_ = "RECO_1J_PTH_60_120";
+            } else {
+                stage1KinematicLabel_ = "RECO_1J_PTH_0_60";
+            }
+        } else { // 2 jets
+            if ( ptH > 200 ) {
+                stage1KinematicLabel_ ="RECO_1J_PTH_GT200";
+            } else if ( mjj > 400. && dEta > 2.8 ) {
+                if ( ptHjj < 25. ) {
+                    stage1KinematicLabel_ = "RECO_VBFTOPO_JET3VETO";
+                } else {
+                    stage1KinematicLabel_ = "RECO_VBFTOPO_JET3";
+                }
+            } else if ( ptH > 120. ) {
+                stage1KinematicLabel_ = "RECO_GE2J_PTH_120_200";
+            } else if ( ptH > 60. ) {
+                stage1KinematicLabel_ = "RECO_GE2J_PTH_60_120";
+            } else {
+                stage1KinematicLabel_ = "RECO_GE2J_PTH_0_60";
+            }
+        }
+    } else { // Leptonic vector boson assigned
+        if ( ptV <  150. ) {
+            stage1KinematicLabel_ = "RECOLEP_PTV_0_150";
+        } else if ( ptV < 250. ) {
+            if ( nJ >= 1 ) {
+                stage1KinematicLabel_ = "RECOLEP_PTV_150_250_GE1J";
+            } else {
+                stage1KinematicLabel_ = "RECOLEP_PTV_150_250_0J";
+            }
+        } else {
+            stage1KinematicLabel_ = "RECOLEP_PTV_GT250";
+        }
+    }
+}
+
 
 // Local Variables:
 // mode:c++
