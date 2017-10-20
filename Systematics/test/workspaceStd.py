@@ -337,6 +337,7 @@ process.tagsDumper.dumpHistos = False
 process.tagsDumper.quietRooFit = True
 process.tagsDumper.nameTemplate = cms.untracked.string("$PROCESS_$SQRTS_$CLASSNAME_$SUBCAT_$LABEL")
 process.tagsDumper.splitPdfByStage0Cat = cms.untracked.bool(customize.doHTXS)
+process.tagsDumper.reweighGGHforNNLOPS = cms.untracked.bool(bool(customize.processId.count("ggh")))
 
 if(customize.doFiducial):
 #    if customize.processId == "Data":
