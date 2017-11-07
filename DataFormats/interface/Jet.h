@@ -45,11 +45,16 @@ namespace flashgg {
 
         const bool hasGenMatch() const { return (genJet() != 0); }
 
+        bool hasConstituentInfo();
+        std::vector<float> getConstituentInfo();
+        void setConstituentInfo(const pat::Jet &jet);
+
     private:
         std::map<edm::Ptr<reco::Vertex>, MinimalPileupJetIdentifier> puJetId_;
         float qglikelihood_;
         float simpleRMS_; // simpler storage for PFCHS where this is not vertex-dependent
         float simpleMVA_;
+        std::vector<float> constituentInfo_; //Stores (eta,phi,charge,pt) of each jet constituent
     };
 }
 

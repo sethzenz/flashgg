@@ -45,6 +45,7 @@ namespace flashgg {
         EDGetTokenT<double> rhoToken_;
         EDGetTokenT<View<pat::Jet> > jetDebugToken_;
         bool debug_;
+        bool includeConstituentInfo_;
         unsigned pudebug_matched_badrms_, pudebug_matched_;
     };
 
@@ -62,7 +63,9 @@ namespace flashgg {
         //GluonTagSrc_  (iConfig.getParameter<edm::InputTag>("GluonTagSrc") )
         rhoToken_( consumes<double>(iConfig.getParameter<edm::InputTag>("rho") ) ),
         jetDebugToken_( consumes<View<pat::Jet> >( iConfig.getUntrackedParameter<InputTag> ( "JetDebugTag",edm::InputTag("slimmedJets") ) ) ),
-        debug_( iConfig.getUntrackedParameter<bool>( "Debug",false ) )
+        debug_( iConfig.getUntrackedParameter<bool>( "Debug",false ) ),
+        includeConstituentInfo_( iConfig.getUntrackedParameter<bool>( "IncludeConstituentInfo",false ) ),
+        doPuJetID_( iConfig.getParameter<bool>( "DoPuJetID") )
         //        usePuppi( iConfig.getUntrackedParameter<bool>( "UsePuppi", false ) )
     {
         pileupJetIdAlgo_.reset( new PileupJetIdAlgo( pileupJetIdParameters_, true ) );
@@ -137,6 +140,22 @@ namespace flashgg {
             Ptr<pat::Jet> pjet = jets->ptrAt( i );
             flashgg::Jet fjet = flashgg::Jet( *pjet );
 
+<<<<<<< HEAD
+=======
+            if (fjet.pt() < 15.) {
+                if (debug_) std::cout << "   .. skipping jet with pt < 15 to avoid rare bug" << std::endl;
+                continue;
+            }
+
+            if (debug_) {
+                std::cout << " Start of jet " << i << " pt=" << fjet.pt() << " eta=" << fjet.eta() << std::endl;
+            }
+
+            if (includeConstituentInfo_){
+                fjet.setConstituentInfo(*pjet);
+            }
+
+>>>>>>> 1a76403... Adds a vector of jet constituent info (eta,phi,Q,pt) to flashgg::Jet. Controlled by flag in JetProducer.cc
             //store btagging userfloats
             if (computeRegVars) {
 
