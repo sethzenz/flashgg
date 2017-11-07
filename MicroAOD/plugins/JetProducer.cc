@@ -45,6 +45,7 @@ namespace flashgg {
         EDGetTokenT<double> rhoToken_;
         EDGetTokenT<View<pat::Jet> > jetDebugToken_;
         bool debug_;
+        bool includeConstituentInfo_;
         unsigned pudebug_matched_badrms_, pudebug_matched_;
         bool doPuJetID_;
     };
@@ -64,6 +65,7 @@ namespace flashgg {
         rhoToken_( consumes<double>(iConfig.getParameter<edm::InputTag>("rho") ) ),
         jetDebugToken_( consumes<View<pat::Jet> >( iConfig.getUntrackedParameter<InputTag> ( "JetDebugTag",edm::InputTag("slimmedJets") ) ) ),
         debug_( iConfig.getUntrackedParameter<bool>( "Debug",false ) ),
+        includeConstituentInfo_( iConfig.getUntrackedParameter<bool>( "IncludeConstituentInfo",false ) ),
         doPuJetID_( iConfig.getParameter<bool>( "DoPuJetID") )
         //        usePuppi( iConfig.getUntrackedParameter<bool>( "UsePuppi", false ) )
     {
@@ -149,6 +151,9 @@ namespace flashgg {
                 std::cout << " Start of jet " << i << " pt=" << fjet.pt() << " eta=" << fjet.eta() << std::endl;
             }
 
+            if (includeConstituentInfo_){
+                fjet.setConstituentInfo(*pjet);
+            }
 
             //store btagging userfloats
             if (computeRegVars) {
