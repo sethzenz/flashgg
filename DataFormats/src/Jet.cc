@@ -44,8 +44,8 @@ void Jet::setConstituentInfo(const pat::Jet &jet)
         reco::CandidatePtr pfJetConstituent = jet.sourceCandidatePtr(i);
         const reco::Candidate* cand = pfJetConstituent.get();
 
-        constituentInfo_.push_back(cand->eta());
-        constituentInfo_.push_back(cand->phi());
+        constituentInfo_.push_back(cand->eta()-jet.eta());
+        constituentInfo_.push_back(deltaPhi(jet.phi(),cand->phi()));
         constituentInfo_.push_back(cand->charge());
         constituentInfo_.push_back(cand->pt());
 
