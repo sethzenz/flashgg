@@ -47,6 +47,7 @@ namespace flashgg {
         bool debug_;
         bool includeConstituentInfo_;
         unsigned pudebug_matched_badrms_, pudebug_matched_;
+        bool doPuJetID_;
     };
 
 
@@ -140,8 +141,6 @@ namespace flashgg {
             Ptr<pat::Jet> pjet = jets->ptrAt( i );
             flashgg::Jet fjet = flashgg::Jet( *pjet );
 
-<<<<<<< HEAD
-=======
             if (fjet.pt() < 15.) {
                 if (debug_) std::cout << "   .. skipping jet with pt < 15 to avoid rare bug" << std::endl;
                 continue;
@@ -155,7 +154,6 @@ namespace flashgg {
                 fjet.setConstituentInfo(*pjet);
             }
 
->>>>>>> 1a76403... Adds a vector of jet constituent info (eta,phi,Q,pt) to flashgg::Jet. Controlled by flag in JetProducer.cc
             //store btagging userfloats
             if (computeRegVars) {
 
