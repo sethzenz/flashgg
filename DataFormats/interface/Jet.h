@@ -45,8 +45,8 @@ namespace flashgg {
 
         const bool hasGenMatch() const { return (genJet() != 0); }
 
-        bool hasConstituentInfo();
-        std::vector<float> getConstituentInfo();
+        bool hasConstituentInfo() const;
+        std::vector<float> getConstituentInfo() const;
         void setConstituentInfo(const pat::Jet &jet);
 
     private:

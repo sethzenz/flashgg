@@ -25,12 +25,12 @@ void Jet::setPuJetId( const edm::Ptr<reco::Vertex> vtx, const PileupJetIdentifie
     puJetId_.insert( std::make_pair( vtx, min_id ) );
 }
 
-bool Jet::hasConstituentInfo()
+bool Jet::hasConstituentInfo() const
 {
     return constituentInfo_.size() > 0;
 }
 
-std::vector<float> Jet::getConstituentInfo()
+std::vector<float> Jet::getConstituentInfo() const
 {
     return constituentInfo_;
 }
