@@ -10,5 +10,9 @@ flashggDJINNTreeMaker = cms.EDAnalyzer('FlashggDJINNTreeMaker',
                                     DiPhotonTag = cms.InputTag('flashggPreselectedDiPhotons'),
                                     VBFMVAResultTag=cms.InputTag('flashggVBFMVA'),
                                     inputTagJets = UnpackedJetCollectionVInputTag, 
+                                    genInfoTag = cms.InputTag("generator"),
+                                    pileupInfo=cms.InputTag("slimmedAddPileupInfo"),
+                                    lumiWeight = cms.double(1.),
+                                    xs = cms.double(1.),
                                     TagSorter = cms.InputTag('flashggTagSorter')
                                   )
