@@ -13,6 +13,7 @@ flashggDJINNTreeMaker = cms.EDAnalyzer('FlashggDJINNTreeMaker',
                                     genInfoTag = cms.InputTag("generator"),
                                     pileupInfo=cms.InputTag("slimmedAddPileupInfo"),
                                     lumiWeight = cms.double(1.),
+                                    GenParticleTag=cms.InputTag( "flashggPrunedGenParticles" ),
                                     xs = cms.double(1.),
                                     TagSorter = cms.InputTag('flashggTagSorter')
                                   )

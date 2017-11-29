@@ -135,7 +135,25 @@ EventStruct make_dummy_event_struct(){
     return eventInfo;
 };
 
+vector<int> partonMatchPdgIds(edm::Ptr<flashgg::Jet> jet, Handle<View<reco::GenParticle>> genParticles){
 
+    vector<int> pdgIds;
+    for (unsigned i=0;i<genParticles->size();i++){
+        edm::Ptr<reco::GenParticle> particle = genParticles->ptrAt(i);
+        if (particle->isHardProcess() &&
+            (particle->pdgId() == 21 || abs(particle->pdgId()<7)) &&
+            particle->pt() > 0.0){
+
+            float dr = deltaR(jet->eta(),jet->phi(),particle->eta(),particle->phi());
+            if (dr <= 0.4){
+                pdgIds.push_back(particle->pdgId());
+            }
+
+        }
+    }
+
+    return pdgIds;
+};
 // **********************************************************************
 
 namespace flashgg {
@@ -167,6 +185,8 @@ namespace flashgg {
         std::vector<edm::EDGetTokenT<View<flashgg::Jet>>> tokenJets_;
         EDGetTokenT<GenEventInfoProduct> genInfoToken_;
         edm::EDGetTokenT<std::vector<PileupSummaryInfo>> puInfoToken_;
+        EDGetTokenT<View<reco::GenParticle>> genPartToken_;
+
         double lumiWeight_;
         double xs_;
 
@@ -177,6 +197,9 @@ namespace flashgg {
         EventStruct eventInfo_;
         JetStruct leadJetInfo_;
         JetStruct subleadJetInfo_;
+
+        vector<int> leadPdgIds_;
+        vector<int> subleadPdgIds_;
 
     };
 
@@ -202,6 +225,7 @@ namespace flashgg {
         inputTagJets_ ( iConfig.getParameter<std::vector<edm::InputTag> >( "inputTagJets" ) ),
         genInfoToken_( consumes<GenEventInfoProduct>( iConfig.getParameter<InputTag>( "genInfoTag" ) ) ),
         puInfoToken_(consumes<std::vector<PileupSummaryInfo> >( iConfig.getParameter<InputTag> ( "pileupInfo" ) ) ),
+        genPartToken_( consumes<View<reco::GenParticle>> ( iConfig.getParameter<InputTag>("GenParticleTag"))),
         lumiWeight_( iConfig.getParameter<double>( "lumiWeight" ) ),
         xs_( iConfig.getParameter<double>( "xs" ) ),
         expectMultiples_( iConfig.getUntrackedParameter<bool>( "ExpectMultiples", false) )
@@ -212,10 +236,12 @@ namespace flashgg {
         }
 
         tree_ = fs_->make<TTree>("JetData","Jet images and jet variables");
-        //tree_->Branch("eventVars",&eventInfo_.weight);
+
         tree_->Branch("eventVars",&eventInfo_.weight,eventInfo_.eventVariableString);
         tree_->Branch("leadConstituents",&leadJetInfo_.constituents);
         tree_->Branch("subleadConstituents",&subleadJetInfo_.constituents);
+        tree_->Branch("leadPdgIds",&leadPdgIds_);
+        tree_->Branch("subleadPdgIds",&subleadPdgIds_);
     }
 
     DJINNTreeMaker::~DJINNTreeMaker()
@@ -238,6 +264,9 @@ namespace flashgg {
 
         Handle<View<flashgg::DiPhotonCandidate> > diphotons;
         iEvent.getByToken( diphotonToken_, diphotons );
+
+        Handle<View<reco::GenParticle>> genParticles;
+        iEvent.getByToken(genPartToken_,genParticles);
 
         JetCollectionVector jetCollection( inputTagJets_.size() );
         for( size_t j = 0; j < inputTagJets_.size(); ++j ) {
@@ -353,9 +382,12 @@ namespace flashgg {
 
                 subleadJetInfo_.constituents = subleadJet->getConstituentInfo();
 
-                tree_->Fill();
 
-            //    std::cout << "Valid dijet!" << std::endl;
+                leadPdgIds_ = partonMatchPdgIds(leadJet,genParticles); 
+                subleadPdgIds_ = partonMatchPdgIds(subleadJet,genParticles); 
+
+            
+                tree_->Fill();
             }else{
             //    std::cout << "No valid dijet!" << std::endl;
             }
