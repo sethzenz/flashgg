@@ -83,20 +83,76 @@ float DiPhotonTagBase::ggHweightCentralised( std::string weightName ) const {
     return weightCentral * weightOriginal;
 }
 
-void DiPhotonTagBase::computeStage1Kinematics( const edm::Handle<edm::View<flashgg::Jet> >& jets, float ptV ) {
+void DiPhotonTagBase::computeStage1Kinematics( const edm::Handle<edm::View<flashgg::Jet> >& jets, float ptV, float lepeta1, float lepphi1, float lepeta2, float lepphi2 ) {
     stage1KinematicLabel_ = "LOGICERROR";
     float ptH = this->diPhoton()->pt();
     unsigned int nJ = 0;
     float dEta = 0.;
     float mjj = 0.;
     float ptHjj = 0.;
+    edm::Ptr<flashgg::Jet> j0;
+    edm::Ptr<flashgg::Jet> j1;
     for ( unsigned int i = 0 ; i < jets->size(); i++ ) {
-        if ( jets->ptrAt(i)->pt() > 30. ) nJ++;
+        edm::Ptr<flashgg::Jet> jet = jets->ptrAt(i);
+
+        //        std::cout << " Jet " << i << " pt=" << jet->pt() << " eta=" << jet->eta() << std::endl;
+
+        if ( jet->pt() < 30. ) continue;
+        if ( fabs(jet->eta()) > 4.7 ) continue;
+        bool _useJetID = true; // temporary
+        std::string _JetIDLevel = "Tight"; // temporary
+        float _drJetPhoton = 0.4; // Temporary
+        float _drJetLepton = 0.4; // Temporary
+        // Temporary: No PU JET ID
+        if( _useJetID ){
+            if( _JetIDLevel == "Loose" && !jet->passesJetID  ( flashgg::Loose ) ) continue;
+            if( _JetIDLevel == "Tight" && !jet->passesJetID  ( flashgg::Tight ) ) continue;
+        }
+
+        // close to lead photon?                                                                                                                                                                                                                          
+        float dPhi = deltaPhi( jet->phi(), this->diPhoton()->leadingPhoton()->phi() );
+        float dEta = jet->eta() - this->diPhoton()->leadingPhoton()->eta();
+        if( sqrt( dPhi * dPhi + dEta * dEta ) < _drJetPhoton ) { continue; }
+
+        // close to sublead photon?                                                                                                                                                                                                                       
+        dPhi = deltaPhi( jet->phi(), this->diPhoton()->subLeadingPhoton()->phi() );
+        dEta = jet->eta() - this->diPhoton()->subLeadingPhoton()->eta();
+        if( sqrt( dPhi * dPhi + dEta * dEta ) < _drJetPhoton ) { continue; }
+
+        // close to lepton1 (if any)
+        dPhi = deltaPhi( jet->phi(), lepphi1 );
+        dEta = jet->eta() - lepeta1;
+        if( sqrt( dPhi * dPhi + dEta * dEta ) < _drJetLepton ) { continue; }
+
+        // close to lepton2 (if any)
+        dPhi = deltaPhi( jet->phi(), lepphi2 );
+        dEta = jet->eta() - lepeta2;
+        if( sqrt( dPhi * dPhi + dEta * dEta ) < _drJetLepton ) { continue; }
+
+        nJ++;
+
+        if ( j0.isNull() ) {
+            //            std::cout << " Save jet " << i << " as j0" << std::endl;
+            j0 = jet;
+        } else if ( j1.isNull() ) {
+            //            std::cout << " Save jet " << i << " as j1" << std::endl;
+            j1 = jet;
+        } else { 
+            //            std::cout << " Not saving jet " << i << " - two jets already " << std::endl;
+        }
     }
+    //    std::cout << " nJ=" << nJ << " ptV=" << ptV << " ptH=" << ptH << std::endl;
+
+    unsigned nlep = 0;
+    if (lepphi1 > -998. ) nlep++;
+    if (lepphi2 > -998. ) nlep++;
+    string nlepstring = std::to_string(nlep)+"LEP";
+
     if ( nJ >= 2 ) {
-        dEta = fabs( jets->ptrAt(0)->eta() - jets->ptrAt(1)->eta() );
-        mjj = ( jets->ptrAt(0)->p4() + jets->ptrAt(1)->p4() ).mass();
-        ptHjj = ( jets->ptrAt(0)->p4() + jets->ptrAt(1)->p4() + this->diPhoton()->p4() ).pt();
+        dEta = fabs( j0->eta() - j1->eta() );
+        mjj = ( j0->p4() + j1->p4() ).mass();
+        ptHjj = ( j0->p4() + j1->p4() + this->diPhoton()->p4() ).pt();
+        //        std::cout << " dEta=" << dEta << " mjj=" << mjj << " ptHjj=" << ptHjj << std::endl;
     }
     if ( ptV < -0.5 ) {
         if (nJ == 0) {
@@ -113,13 +169,15 @@ void DiPhotonTagBase::computeStage1Kinematics( const edm::Handle<edm::View<flash
             }
         } else { // 2 jets
             if ( ptH > 200 ) {
-                stage1KinematicLabel_ ="RECO_1J_PTH_GT200";
+                stage1KinematicLabel_ ="RECO_GE2J_PTH_GT200";
             } else if ( mjj > 400. && dEta > 2.8 ) {
                 if ( ptHjj < 25. ) {
                     stage1KinematicLabel_ = "RECO_VBFTOPO_JET3VETO";
                 } else {
                     stage1KinematicLabel_ = "RECO_VBFTOPO_JET3";
                 }
+            } else if ( mjj > 60. && mjj < 120. ) {
+                stage1KinematicLabel_ = "RECO_VH2JET";
             } else if ( ptH > 120. ) {
                 stage1KinematicLabel_ = "RECO_GE2J_PTH_120_200";
             } else if ( ptH > 60. ) {
@@ -130,17 +188,18 @@ void DiPhotonTagBase::computeStage1Kinematics( const edm::Handle<edm::View<flash
         }
     } else { // Leptonic vector boson assigned
         if ( ptV <  150. ) {
-            stage1KinematicLabel_ = "RECOLEP_PTV_0_150";
+            stage1KinematicLabel_ = "RECO_" + nlepstring + "_PTV_0_150";
         } else if ( ptV < 250. ) {
             if ( nJ >= 1 ) {
-                stage1KinematicLabel_ = "RECOLEP_PTV_150_250_GE1J";
+                stage1KinematicLabel_ = "RECO_" + nlepstring + "_PTV_150_250_GE1J";
             } else {
-                stage1KinematicLabel_ = "RECOLEP_PTV_150_250_0J";
+                stage1KinematicLabel_ = "RECO_" + nlepstring + "_PTV_150_250_0J";
             }
         } else {
-            stage1KinematicLabel_ = "RECOLEP_PTV_GT250";
+            stage1KinematicLabel_ = "RECO_" + nlepstring + "_PTV_GT250";
         }
     }
+    //    std::cout << " Final label " << stage1KinematicLabel_ << std::endl;
 }
 
 

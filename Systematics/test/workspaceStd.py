@@ -44,6 +44,12 @@ elesystlabels = []
 musystlabels = []
 
 from flashgg.MetaData.JobConfig import customize
+customize.options.register('doStage1Ntuples',
+                           True,
+                           VarParsing.VarParsing.multiplicity.singleton,
+                           VarParsing.VarParsing.varType.bool,
+                           'doStage1Ntuples'
+                           )
 customize.options.register('tthTagsOnly',
                            False,
                            VarParsing.VarParsing.multiplicity.singleton,
@@ -331,8 +337,12 @@ process.tagsDumper.className = "DiPhotonTagDumper"
 process.tagsDumper.src = "flashggSystTagMerger"
 #process.tagsDumper.src = "flashggTagSystematics"
 process.tagsDumper.processId = "test"
-process.tagsDumper.dumpTrees = customize.dumpTrees
-process.tagsDumper.dumpWorkspace = customize.dumpWorkspace
+if customize.doStage1Ntuples:
+    process.tagsDumper.dumpTrees = True
+    process.tagsDumper.dumpWorkspace = False
+else:
+    process.tagsDumper.dumpTrees = customize.dumpTrees
+    process.tagsDumper.dumpWorkspace = customize.dumpWorkspace
 process.tagsDumper.dumpHistos = False
 process.tagsDumper.quietRooFit = True
 process.tagsDumper.nameTemplate = cms.untracked.string("$PROCESS_$SQRTS_$CLASSNAME_$SUBCAT_$LABEL")
@@ -420,21 +430,22 @@ for tag in tagList:
           nPdfWeights = -1
           nAlphaSWeights = -1
           nScaleWeights = -1
-      
-      cfgTools.addCategory(process.tagsDumper,
-                           systlabel,
-                           classname=tagName,
-                           cutbased=cutstring,
-                           subcats=tagCats, 
-                           variables=currentVariables,
-                           histograms=minimalHistograms,
-                           binnedOnly=isBinnedOnly,
-                           dumpPdfWeights=dumpPdfWeights,
-                           nPdfWeights=nPdfWeights,
-                           nAlphaSWeights=nAlphaSWeights,
-                           nScaleWeights=nScaleWeights,
-                           splitPdfByStage0Cat=customize.doHTXS
-                           )
+
+      if (not customize.doStage1Ntuples) or systlabel == "":
+          cfgTools.addCategory(process.tagsDumper,
+                               systlabel,
+                               classname=tagName,
+                               cutbased=cutstring,
+                               subcats=tagCats, 
+                               variables=currentVariables,
+                               histograms=minimalHistograms,
+                               binnedOnly=isBinnedOnly,
+                               dumpPdfWeights=dumpPdfWeights,
+                               nPdfWeights=nPdfWeights,
+                               nAlphaSWeights=nAlphaSWeights,
+                               nScaleWeights=nScaleWeights,
+                               splitPdfByStage0Cat=customize.doHTXS
+                               )
 
 # Require standard diphoton trigger
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel
@@ -593,3 +604,8 @@ customize.setDefault("maxEvents",1000)
 customize.setDefault("targetLumi",1.00e+3)
 # call the customization
 customize(process)
+
+if customize.doStage1Ntuples:
+    process.flashggTagSorter.Stage1Printout = True
+    
+    

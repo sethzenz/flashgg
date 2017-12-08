@@ -64,7 +64,8 @@ namespace flashgg {
         int otherTagDiPhotonIndex ( unsigned i ) const { return otherTagIndices_[i]; }
         float ggHweightCentralised( std::string weightName ) const;
 
-        void computeStage1Kinematics( const edm::Handle<edm::View<flashgg::Jet> > & jets, float ptV = -1. );
+        void computeStage1Kinematics( const edm::Handle<edm::View<flashgg::Jet> > & jets, float ptV = -1., float lepphi1 = -999., float lepeta1 = -999., float lepphi2 = -999., float lepeta2 = -999. );
+        string stage1KinematicLabel() const { return stage1KinematicLabel_; }
     private:
         DiPhotonMVAResult mva_result_;
         int category_number_;
