@@ -153,6 +153,14 @@ b. Used PromptReco json, hence extra submission for 2016B above to catch the ext
 
 ### SUMMER16 MC
 
+#### Jack
+
+cd $CMSSW_BASE/src/flashgg/MetaData/work
+./prepareCrabJobs.py -C RunIISummer16-2_4_5-25ns_Moriond17 -U 1 -L 25 -s campaigns/RunIISummer16-2_4_5-25ns_Moriond17.json -V 2_4_5 -p ${CMSSW_BASE}/src/flashgg/MicroAOD/test/microAODstd.py --outputSite=T2_UK_London_IC
+cd RunIISummer16-2_4_5-25ns_Moriond17
+echo crabConfig_*.py | xargs -n 1 crab sub
+
+
 #### 15 Jan regression
 
 cd $CMSSW_BASE/src/flashgg/MetaData/work

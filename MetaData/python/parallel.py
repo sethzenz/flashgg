@@ -248,7 +248,7 @@ class WorkNodeJob(object):
         self.stage_patterns  = kwargs.pop("stage_patterns")
         self.tarball         = kwargs.pop("tarball",None)
         self.job_outdir      = kwargs.pop("job_outdir",None)
-        self.copy_proxy      = kwargs.pop("copy_proxy",True)
+        self.copy_proxy      = kwargs.pop("copy_proxy",False)
 
         self.runner = self.runner(*args,**kwargs)
         
@@ -379,7 +379,7 @@ class WorkNodeJobFactory(object):
     
     # ------------------------------------------------------------------------------------------------
     def __init__(self,stage_dest,
-                 stage_cmd="cp -pv",stage_patterns=["'*.root'","'*.xml'"],job_outdir=None,runner=None,batchSystem="auto",copy_proxy=True):
+                 stage_cmd="cp -pv",stage_patterns=["'*.root'","'*.xml'"],job_outdir=None,runner=None,batchSystem="auto",copy_proxy=False):
         
         if not runner:
             self.runner = BatchRegistry.getRunner(batchSystem)

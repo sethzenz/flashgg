@@ -204,7 +204,8 @@ class MicroAODCustomize(object):
             process.p *= process.myGenerator
             process.p *= process.rivetProducerHTXS
             process.out.outputCommands.append("keep *_rivetProducerHTXS_*_*")
-        self.customizePDFs(process)
+        if not "NNLOPS" in self.datasetName:
+            self.customizePDFs(process)
 
     def customizePDFs(self,process):     
         process.load("flashgg/MicroAOD/flashggPDFWeightObject_cfi")
