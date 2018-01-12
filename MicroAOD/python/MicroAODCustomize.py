@@ -121,7 +121,8 @@ class MicroAODCustomize(object):
             if "Mu" in customize.datasetName:
                 self.customizeDataMuons(process)
         elif "sig" in self.processType.lower():
-            self.customizeSignal(process)
+            usePdfModule = not ("nnlops" in customize.datasetName.lower())
+            self.customizeSignal(process,usePdfModule)
             if "tth" in customize.datasetName.lower():
                 self.customizeTTH(process)
             elif "vh" in customize.datasetName.lower():
@@ -177,7 +178,7 @@ class MicroAODCustomize(object):
         print "Final customized process:",process.p
             
     # signal specific customization
-    def customizeSignal(self,process):
+    def customizeSignal(self,process,usePdfModule):
         process.flashggGenPhotonsExtra.defaultType = 1
         from flashgg.MicroAOD.flashggMet_RunCorrectionAndUncertainties_cff import runMETs,setMetCorr
         runMETs(process,True) #isMC
@@ -202,7 +203,8 @@ class MicroAODCustomize(object):
         process.p *= process.myGenerator
         process.p *= process.rivetProducerHTXS
         process.out.outputCommands.append("keep *_rivetProducerHTXS_*_*")
-        self.customizePDFs(process)
+        if usePdfModule:
+            self.customizePDFs(process)
 
     def customizePDFs(self,process):     
         process.load("flashgg/MicroAOD/flashggPDFWeightObject_cfi")
