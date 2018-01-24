@@ -11,7 +11,8 @@ minimalNonSignalVariables = ["CMS_hgg_mass[160,100,180]:=diPhoton().mass"]#,"cen
 
 #minimalVariablesHTXS = minimalVariables+["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat"]
 minimalVariablesHTXS = minimalVariables+["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat",
-                                         "stage1cat[1000,-0.5,999.5] := tagTruth().HTXSstage1cat"]
+                                         "stage1cat[1000,-0.5,999.5] := tagTruth().HTXSstage1cat",
+                                         "stage1recoEnum[30,-0.5,29.5] := stage1recoEnum"]
 
 defaultVariables=["CMS_hgg_mass[160,100,180]:=diPhoton().mass", 
                                     "leadPt                   :=diPhoton().leadingPhoton.pt",

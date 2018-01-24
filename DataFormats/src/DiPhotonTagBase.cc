@@ -85,6 +85,7 @@ float DiPhotonTagBase::ggHweightCentralised( std::string weightName ) const {
 
 void DiPhotonTagBase::computeStage1Kinematics( const edm::Handle<edm::View<flashgg::Jet> >& jets, float ptV, float lepeta1, float lepphi1, float lepeta2, float lepphi2 ) {
     stage1KinematicLabel_ = "LOGICERROR";
+    stage1recoTag_ = DiPhotonTagBase::LOGICERROR;
     float ptH = this->diPhoton()->pt();
     unsigned int nJ = 0;
     float dEta = 0.;
@@ -157,46 +158,70 @@ void DiPhotonTagBase::computeStage1Kinematics( const edm::Handle<edm::View<flash
     if ( ptV < -0.5 ) {
         if (nJ == 0) {
             stage1KinematicLabel_ = "RECO_0J";
+            stage1recoTag_ = DiPhotonTagBase::RECO_0J;
         } else if ( nJ == 1 ) {
             if ( ptH > 200 ) {
                 stage1KinematicLabel_ = "RECO_1J_PTH_GT200";
+                stage1recoTag_ = DiPhotonTagBase::RECO_1J_PTH_GT200;
             } else if ( ptH > 120. ) {
                 stage1KinematicLabel_ = "RECO_1J_PTH_120_200";
+                stage1recoTag_ = DiPhotonTagBase::RECO_1J_PTH_120_200;
             } else if ( ptH > 60. ) {
                 stage1KinematicLabel_ = "RECO_1J_PTH_60_120";
+                stage1recoTag_ = DiPhotonTagBase::RECO_1J_PTH_60_120;
             } else {
                 stage1KinematicLabel_ = "RECO_1J_PTH_0_60";
+                stage1recoTag_ = DiPhotonTagBase::RECO_1J_PTH_0_60;
             }
         } else { // 2 jets
             if ( ptH > 200 ) {
                 stage1KinematicLabel_ ="RECO_GE2J_PTH_GT200";
+                stage1recoTag_ = DiPhotonTagBase::RECO_GE2J_PTH_GT200;
             } else if ( mjj > 400. && dEta > 2.8 ) {
                 if ( ptHjj < 25. ) {
                     stage1KinematicLabel_ = "RECO_VBFTOPO_JET3VETO";
+                    stage1recoTag_ = DiPhotonTagBase::RECO_VBFTOPO_JET3VETO;
                 } else {
                     stage1KinematicLabel_ = "RECO_VBFTOPO_JET3";
+                    stage1recoTag_ = DiPhotonTagBase::RECO_VBFTOPO_JET3;
                 }
             } else if ( mjj > 60. && mjj < 120. ) {
                 stage1KinematicLabel_ = "RECO_VH2JET";
+                stage1recoTag_ = DiPhotonTagBase::RECO_VH2JET;
             } else if ( ptH > 120. ) {
                 stage1KinematicLabel_ = "RECO_GE2J_PTH_120_200";
+                stage1recoTag_ = DiPhotonTagBase::RECO_GE2J_PTH_120_200;
             } else if ( ptH > 60. ) {
                 stage1KinematicLabel_ = "RECO_GE2J_PTH_60_120";
+                stage1recoTag_ = DiPhotonTagBase::RECO_GE2J_PTH_60_120;
             } else {
                 stage1KinematicLabel_ = "RECO_GE2J_PTH_0_60";
+                stage1recoTag_ = DiPhotonTagBase::RECO_GE2J_PTH_0_60;
             }
         }
     } else { // Leptonic vector boson assigned
         if ( ptV <  150. ) {
             stage1KinematicLabel_ = "RECO_" + nlepstring + "_PTV_0_150";
+            if(nlep == 0) stage1recoTag_ = DiPhotonTagBase::RECO_0LEP_PTV_0_150;
+            else if(nlep == 1) stage1recoTag_ = DiPhotonTagBase::RECO_1LEP_PTV_0_150;
+            else if(nlep == 2) stage1recoTag_ = DiPhotonTagBase::RECO_2LEP_PTV_0_150;
         } else if ( ptV < 250. ) {
             if ( nJ >= 1 ) {
                 stage1KinematicLabel_ = "RECO_" + nlepstring + "_PTV_150_250_GE1J";
+                if(nlep == 0) stage1recoTag_ = DiPhotonTagBase::RECO_0LEP_PTV_150_250_GE1J;
+                else if(nlep == 1) stage1recoTag_ = DiPhotonTagBase::RECO_1LEP_PTV_150_250_GE1J;
+                else if(nlep == 2) stage1recoTag_ = DiPhotonTagBase::RECO_2LEP_PTV_150_250_GE1J;
             } else {
                 stage1KinematicLabel_ = "RECO_" + nlepstring + "_PTV_150_250_0J";
+                if(nlep == 0) stage1recoTag_ = DiPhotonTagBase::RECO_0LEP_PTV_150_250_0J;
+                else if(nlep == 1) stage1recoTag_ = DiPhotonTagBase::RECO_1LEP_PTV_150_250_0J;
+                else if(nlep == 2) stage1recoTag_ = DiPhotonTagBase::RECO_2LEP_PTV_150_250_0J;
             }
         } else {
             stage1KinematicLabel_ = "RECO_" + nlepstring + "_PTV_GT250";
+            if(nlep == 0) stage1recoTag_ = DiPhotonTagBase::RECO_0LEP_PTV_GT250;
+            else if(nlep == 1) stage1recoTag_ = DiPhotonTagBase::RECO_1LEP_PTV_GT250;
+            else if(nlep == 2) stage1recoTag_ = DiPhotonTagBase::RECO_2LEP_PTV_GT250;
         }
     }
     //    std::cout << " Final label " << stage1KinematicLabel_ << std::endl;

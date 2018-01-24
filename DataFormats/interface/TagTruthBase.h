@@ -21,6 +21,8 @@ namespace flashgg {
         void setGenPV( const Point genpv ) { genPV_ = genpv; }
         int HTXSstage0cat() const { return stage0cat_; }
         int HTXSstage1cat() const { return stage1cat_; }
+        int HTXSstage0orderedBin() const;
+        int HTXSstage1orderedBin() const;
         int HTXSnjets() const { return njets_; }
         float HTXSpTH() const { return pTH_; }
         float HTXSpTV() const { return pTV_; }
@@ -37,6 +39,8 @@ namespace flashgg {
         Point genPV_;
         int stage0cat_;
         int stage1cat_;
+        std::map<int,int> stage0map_;
+        std::map<int,int> stage1map_;
         int njets_;
         float pTH_;
         float pTV_;

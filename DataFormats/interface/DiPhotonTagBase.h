@@ -12,6 +12,11 @@ namespace flashgg {
     {
     public:
         enum tag_t { kUndefined = 0, kUntagged, kVBF, kTTHHadronic, kTTHLeptonic, kVHTight, kVHLoose, kVHHadronic, kVHEt,  kZHLeptonic, kWHLeptonic, kVHLeptonicLoose, kVHMet };
+        enum stage1recoTag { LOGICERROR = 0, RECO_0J, RECO_1J_PTH_0_60, RECO_1J_PTH_60_120, RECO_1J_PTH_120_200, RECO_1J_PTH_GT200, 
+                             RECO_GE2J_PTH_0_60, RECO_GE2J_PTH_60_120, RECO_GE2J_PTH_120_200, RECO_GE2J_PTH_GT200, RECO_VBFTOPO_JET3VETO, RECO_VBFTOPO_JET3, RECO_VH2JET,
+                             RECO_0LEP_PTV_0_150, RECO_0LEP_PTV_150_250_0J, RECO_0LEP_PTV_150_250_GE1J, RECO_0LEP_PTV_GT250, 
+                             RECO_1LEP_PTV_0_150, RECO_1LEP_PTV_150_250_0J, RECO_1LEP_PTV_150_250_GE1J, RECO_1LEP_PTV_GT250, 
+                             RECO_2LEP_PTV_0_150, RECO_2LEP_PTV_150_250_0J, RECO_2LEP_PTV_150_250_GE1J, RECO_2LEP_PTV_GT250 };
 
         DiPhotonTagBase();
         virtual ~DiPhotonTagBase(); 
@@ -42,6 +47,7 @@ namespace flashgg {
         void setIsGoldMC( bool isGold ) { isGold_ = isGold; }
         bool isGold() const { return isGold_; }
         virtual DiPhotonTagBase::tag_t tagEnum() const { return DiPhotonTagBase::kUndefined; }
+        int stage1recoEnum() const { return stage1recoTag_; }
         unsigned nOtherTags() const { 
             assert(otherTagTypes_.size() == otherTagCategories_.size());
             assert(otherTagTypes_.size() == otherTagIndices_.size());
@@ -84,6 +90,7 @@ namespace flashgg {
         std::map<std::string,float> ggHweightsCentralised_;
 
         string stage1KinematicLabel_;
+        int stage1recoTag_;
 
     };
 
