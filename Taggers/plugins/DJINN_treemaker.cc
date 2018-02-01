@@ -84,12 +84,20 @@ struct EventStruct {
     float subleadJetEta;
     float subleadJetPhi;
 
+    float leadJetRMS;
+    float subleadJetRMS;
+
+    float leadJetPUJID;
+    float subleadJetPUJID;
+
     const TString eventVariableString = TString("weight/F:lead_pt_m/F:sublead_pt_m/F:total_pt_m/F:mass_gg/F:"
                                                 "mass_jj/F:abs_dEta/F:centrality/F:dPhi_jj/F:dPhi_ggjj/F:minDR/F:"
                                                 "leadPhoton_eta/F:subleadPhoton_eta/F:cos_dPhi_gg/F:leadPhotonID/F:subleadPhotonID/F:"
                                                 "sigma_rv/F:sigma_wv/F:prob_vtx/F:diphoton_score/F:"
                                                 "leadJetPt/F:leadJetEta/F:leadJetPhi/F:"
-                                                "subleadJetPt/F:subleadJetEta/F:subleadJetPhi/F"
+                                                "subleadJetPt/F:subleadJetEta/F:subleadJetPhi/F:"
+                                                "leadJetRMS/F:subleadJetRMS/F:"
+                                                "leadJetPUJID/F:subleadJetPUJID/F"
                                                 );
 };
 
@@ -130,6 +138,12 @@ EventStruct make_dummy_event_struct(){
     eventInfo.prob_vtx = -999.;
 
     eventInfo.diphoton_score = -999.;
+
+    eventInfo.leadJetRMS = -999.;
+    eventInfo.subleadJetRMS = -999.;
+
+    eventInfo.leadJetPUJID = -999.;
+    eventInfo.subleadJetPUJID = -999.;
 
 
     return eventInfo;
@@ -194,7 +208,33 @@ namespace flashgg {
 
         typedef std::vector<edm::Handle<edm::View<flashgg::Jet>>> JetCollectionVector;
 
+        //Jet rejection parameters
+        double _rmsforwardCut;
+        string _JetIDLevel;
+        std::vector<double> _pujid_wp_pt_bin_1;
+        std::vector<double> _pujid_wp_pt_bin_2;
+        std::vector<double> _pujid_wp_pt_bin_3;
+
+        bool _useJetID;
+
+        //Pileup weight parameters
+        std::vector<double> _dataPu;
+        std::vector<double> _mcPu;
+        std::vector<double> _puBins;
+        edm::InputTag _puInfo;
+        bool _puReWeight;
+        edm::InputTag _rho;
+        bool _useTruePu;
+        edm::InputTag _vertexes;
+
+        bool _isData;
+        bool _getPu;
+
+        std::vector<double> _puWeights;
+
+        //Stuff for outuput
         EventStruct eventInfo_;
+
         JetStruct leadJetInfo_;
         JetStruct subleadJetInfo_;
 
@@ -228,13 +268,31 @@ namespace flashgg {
         genPartToken_( consumes<View<reco::GenParticle>> ( iConfig.getParameter<InputTag>("GenParticleTag"))),
         lumiWeight_( iConfig.getParameter<double>( "lumiWeight" ) ),
         xs_( iConfig.getParameter<double>( "xs" ) ),
-        expectMultiples_( iConfig.getUntrackedParameter<bool>( "ExpectMultiples", false) )
+        expectMultiples_( iConfig.getUntrackedParameter<bool>( "ExpectMultiples", false) ),
+        _rmsforwardCut( iConfig.getParameter<double> ( "rmsforwardCut") ),
+        _JetIDLevel   ( iConfig.getParameter<string> ( "JetIDLevel"   ) ),
+        _pujid_wp_pt_bin_1  ( iConfig.getParameter<std::vector<double> > ( "pujidWpPtBin1" ) ),
+        _pujid_wp_pt_bin_2  ( iConfig.getParameter<std::vector<double> > ( "pujidWpPtBin2" ) ),
+        _pujid_wp_pt_bin_3  ( iConfig.getParameter<std::vector<double> > ( "pujidWpPtBin3" ) ),
+        _useJetID( iConfig.getParameter<bool>( "useJetID" ) ),
+        _dataPu  ( iConfig.getParameter<std::vector<double> > ( "dataPu" ) ),
+        _mcPu    ( iConfig.getParameter<std::vector<double> > ( "mcPu" ) ),
+        _puBins  ( iConfig.getParameter<std::vector<double> > ( "puBins" ) ),
+        _puInfo  ( iConfig.getParameter<edm::InputTag > ( "puInfo" ) ),
+        _puReWeight( iConfig.getParameter<bool>( "puReWeight" ) ),
+        _rho     ( iConfig.getParameter<edm::InputTag > ( "rho" ) ),
+        _useTruePu( iConfig.getParameter<bool>( "useTruePu" ) ),
+        _vertexes( iConfig.getParameter<edm::InputTag > ( "vertexes" ) ),
+        _isData( iConfig.getParameter<bool>( "isData" ) ),
+        _getPu( iConfig.exists("puInfo") )
     {
+        //Prep jet collection
         for (unsigned i = 0 ; i < inputTagJets_.size() ; i++) {
             auto token = consumes<View<flashgg::Jet> >(inputTagJets_[i]);
             tokenJets_.push_back(token);
         }
 
+        //Prep tree
         tree_ = fs_->make<TTree>("JetData","Jet images and jet variables");
 
         tree_->Branch("eventVars",&eventInfo_.weight,eventInfo_.eventVariableString);
@@ -242,6 +300,13 @@ namespace flashgg {
         tree_->Branch("subleadConstituents",&subleadJetInfo_.constituents);
         tree_->Branch("leadPdgIds",&leadPdgIds_);
         tree_->Branch("subleadPdgIds",&subleadPdgIds_);
+
+        //Pileup weights
+        _puWeights = _dataPu;
+
+        auto scl  = std::accumulate(_mcPu.begin(),_mcPu.end(),0.) / std::accumulate(_puWeights.begin(),_puWeights.end(),0.); // rescale input distribs to unit ara
+        for( size_t ib = 0; ib<_puWeights.size(); ++ib ) { _puWeights[ib] *= scl / _mcPu[ib]; }
+
     }
 
     DJINNTreeMaker::~DJINNTreeMaker()
@@ -282,7 +347,32 @@ namespace flashgg {
         float genWeight;
         genWeight = genInfo->weight();
 
+        //Pileup weight
         float puWeight = 1.0;
+        if (!_isData && _getPu){
+            std::cout << "Calculating PU weighting" << std::endl;
+            double truePu = 0.0, obsPu = 0.0;
+            for (auto & frame : *puInfo){
+                if (frame.getBunchCrossing() == 0){
+                    truePu = frame.getTrueNumInteractions();
+                    obsPu = frame.getPU_NumInteractions();
+                    break;
+                }
+            }
+
+            float npu = (_useTruePu ? truePu : obsPu);
+            if (_puReWeight){
+                if (npu <= _puBins.front() || npu >= _puBins.back()){
+                    puWeight = 0.0;
+                }else{
+                    int ibin = (std::lower_bound(_puBins.begin(),
+                                                 _puBins.end(),
+                                                 npu) - _puBins.begin()) - 1;
+                    puWeight = _puWeights[ibin];
+                }
+            }
+            std::cout << puWeight << std::endl;
+        }
 
         edm::Ptr<flashgg::DiPhotonCandidate> diphoton;
         edm::Handle<edm::View<flashgg::Jet>> jets;
@@ -290,7 +380,9 @@ namespace flashgg {
 
         unsigned count = 0;
         for ( auto tag = TagSorter.product()->begin(); tag != TagSorter.product()->end(); tag++) {
+
             count++;
+
             // ********************************************************************************
             // get the objects
             diphoton = tag->diPhoton();
@@ -299,23 +391,72 @@ namespace flashgg {
 
             float event_weight = genWeight*lumiWeight_*xs_*puWeight;
 
+            //----Select jets
             std::pair<int,int> dijet_indices(-999,-999);
             std::pair<float,float> dijet_pts(0.0,0.0);
 
             for (unsigned i=0;i<jets->size();i++){
 
+                //The Jet
                 edm::Ptr<flashgg::Jet> jet = jets->ptrAt(i);
+
+                //Photon removal
                 float dr_leadPhoton = deltaR(jet->eta(),jet->phi(),
                                              diphoton->leadingPhoton()->eta(),
                                              diphoton->leadingPhoton()->phi());
                 float dr_subleadPhoton = deltaR(jet->eta(),jet->phi(),
                                                 diphoton->subLeadingPhoton()->eta(),
                                                 diphoton->subLeadingPhoton()->phi());
-                
                 if (dr_leadPhoton <= 0.4 || dr_subleadPhoton <= 0.4){
                     continue;
                 }
 
+                //----Jet ID/PUJID/RMS Cuts
+                //PUJID
+                std::vector<std::pair<double,double>> eta_cuts_(4);
+                eta_cuts_[0] = std::make_pair (0    ,2.50 );
+                eta_cuts_[1] = std::make_pair (2.50 ,2.75 );
+                eta_cuts_[2] = std::make_pair (2.75 ,3.00 );
+                eta_cuts_[3] = std::make_pair (3.00 ,10);
+
+                if ( (!_pujid_wp_pt_bin_1.empty())  &&
+                     (!_pujid_wp_pt_bin_2.empty())  &&
+                     (!_pujid_wp_pt_bin_3.empty())  ){
+                    bool pass=false;
+                    for (UInt_t eta_bin=0; eta_bin < _pujid_wp_pt_bin_1.size(); eta_bin++ ){
+                        if ( fabs( jet->eta() ) >  eta_cuts_[eta_bin].first &&
+                             fabs( jet->eta() ) <= eta_cuts_[eta_bin].second){
+                            if ( jet->pt() >  20 &&
+                                 jet->pt() <= 30 && jet->puJetIdMVA() > _pujid_wp_pt_bin_1[eta_bin] )
+                                pass=true;
+                            if ( jet->pt() >  30 &&
+                                 jet->pt() <= 50 && jet->puJetIdMVA() > _pujid_wp_pt_bin_2[eta_bin] )
+                                pass=true;
+                            if ( jet->pt() >  50 &&
+                                 jet->pt() <= 100&& jet->puJetIdMVA() > _pujid_wp_pt_bin_3[eta_bin] )
+                                pass=true;
+                            if (jet->pt() > 100) pass = true;
+                        }
+                    }
+                    if (!pass) continue;
+                }
+
+                //RMS
+                if( fabs( jet->eta() ) > 2.5 && jet->rms() > _rmsforwardCut ){ 
+                    continue; 
+                }
+
+                //JetID
+                if( _useJetID ){
+                    if( _JetIDLevel == "Loose" && !jet->passesJetID( flashgg::Loose ) ) continue;
+                    if( _JetIDLevel == "Tight" && !jet->passesJetID( flashgg::Tight ) ) continue;
+                }
+               
+                // Abs eta cut at 4.7
+                if( fabs( jet->eta() ) > 4.7 ) { continue; }
+
+                //----Selection
+                //Conditionals for dijet selection
                 if (jets->ptrAt(i)->pt() > dijet_pts.first){
                     dijet_indices.second = dijet_indices.first;
                     dijet_pts.second = dijet_pts.first;
@@ -329,7 +470,7 @@ namespace flashgg {
             }
 
             // ********************************************************************************
-            // do stuff with objects
+            // do stuff with selected objects
 
             //If there's no valid dijet we're not interested...
             if (dijet_indices.first >= 0 && dijet_indices.second >= 0){
@@ -377,17 +518,20 @@ namespace flashgg {
                 eventInfo_.subleadJetEta = j2.eta();
                 eventInfo_.subleadJetPhi = j2.phi();
 
-                //Jet Struct Info
+                eventInfo_.leadJetRMS = leadJet->rms();
+                eventInfo_.subleadJetRMS = subleadJet->rms();
+                eventInfo_.leadJetPUJID = leadJet->puJetIdMVA();
+                eventInfo_.subleadJetPUJID = subleadJet->puJetIdMVA();
+
+                //Jet structured Info
                 leadJetInfo_.constituents = leadJet->getConstituentInfo();
-
                 subleadJetInfo_.constituents = subleadJet->getConstituentInfo();
-
 
                 leadPdgIds_ = partonMatchPdgIds(leadJet,genParticles); 
                 subleadPdgIds_ = partonMatchPdgIds(subleadJet,genParticles); 
 
-            
                 tree_->Fill();
+
             }else{
             //    std::cout << "No valid dijet!" << std::endl;
             }
