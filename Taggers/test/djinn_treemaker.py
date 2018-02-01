@@ -3,7 +3,6 @@ import FWCore.Utilities.FileUtils as FileUtils
 from FWCore.ParameterSet.VarParsing import VarParsing
 import json
 import sys
-from flashgg.Taggers.globalVariables import global_vars
 
 
 
