@@ -344,8 +344,17 @@ namespace flashgg {
         edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
         iEvent.getByToken(puInfoToken_, puInfo);
 
-        float genWeight;
-        genWeight = genInfo->weight();
+        //Scale (XS weight * lumi weight)
+        float scale = 1.0;
+        if (!_isData){
+            scale = xs_*lumiWeight_;
+        }
+
+        //Generator weight
+        float genWeight = 1.0;
+        if (!_isData){
+            genWeight = genInfo->weight();
+        }
 
         //Pileup weight
         float puWeight = 1.0;
@@ -374,6 +383,16 @@ namespace flashgg {
             std::cout << puWeight << std::endl;
         }
 
+        //Systematics weights
+        float systWeight = 1.0;
+        /*
+            stuff...
+        */
+        
+        float event_weight = scale*genWeight*puWeight*systWeight;
+        std::cout << event_weight << std::endl;
+
+
         edm::Ptr<flashgg::DiPhotonCandidate> diphoton;
         edm::Handle<edm::View<flashgg::Jet>> jets;
         flashgg::DiPhotonMVAResult mvares;
@@ -389,7 +408,7 @@ namespace flashgg {
             jets = jetCollection[diphoton->jetCollectionIndex()];
             mvares = tag->diPhotonMVA();
 
-            float event_weight = genWeight*lumiWeight_*xs_*puWeight;
+//            float event_weight = genWeight*lumiWeight_*xs_*puWeight;
 
             //----Select jets
             std::pair<int,int> dijet_indices(-999,-999);
