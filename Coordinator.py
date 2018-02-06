@@ -68,6 +68,11 @@ for i,run_list in enumerate(jobs):
     with open('jobs/'+job_info['name']+'.json','w') as jf:
         jf.write(json.dumps(job_info))
 
+    total_events = 0
+    for run in run_list:
+        total_events += run['n_events']
+    print "%s: %d"%(job_info['name'],total_events)
+    
     script = ''
     script += '#!/bin/sh' + '\n'
     script += 'export X509_USER_PROXY=/home/hep/jw3914/x509up_u634344' + '\n'
@@ -87,7 +92,7 @@ for i,run_list in enumerate(jobs):
     script_paths.append(script_path)
 
 #for path in script_paths:
-#    qsub_string =  'qsub -q hep.q -l h_rt=6:0:0 -l h_vmem=6G ./%s'%path
+#    qsub_string =  'qsub -q hep.q -l h_rt=12:0:0 -l h_vmem=8G ./%s'%path
 #    print qsub_string 
 #    qsub_message = os.popen(qsub_string).read()
 #    print qsub_message

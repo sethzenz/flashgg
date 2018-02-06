@@ -3,6 +3,7 @@ import FWCore.Utilities.FileUtils as FileUtils
 from FWCore.ParameterSet.VarParsing import VarParsing
 import json
 import sys
+import os
 
 
 
@@ -18,8 +19,8 @@ process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc')
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
-process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 10 )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 500 )
 
 
 
@@ -88,9 +89,13 @@ process.flashggDJINNTreeMaker.xs = cms.double(xs*br*kf)
 process.flashggDJINNTreeMaker.rmsforwardCut = cms.double(3.0)
 
 #Pujid inputs
-process.flashggDJINNTreeMaker.pujidWpPtBin1 = cms.vdouble([0.69, -0.35, -0.26, -0.21])
-process.flashggDJINNTreeMaker.pujidWpPtBin2 = cms.vdouble([0.86, -0.1 , -0.05, -0.01])
-process.flashggDJINNTreeMaker.pujidWpPtBin3 = cms.vdouble([0.95,  0.28,  0.31,  0.28])
+#process.flashggDJINNTreeMaker.pujidWpPtBin1 = cms.vdouble([0.69, -0.35, -0.26, -0.21])
+#process.flashggDJINNTreeMaker.pujidWpPtBin2 = cms.vdouble([0.86, -0.1 , -0.05, -0.01])
+#process.flashggDJINNTreeMaker.pujidWpPtBin3 = cms.vdouble([0.95,  0.28,  0.31,  0.28])
+
+process.flashggDJINNTreeMaker.pujidWpPtBin1 = cms.vdouble([])
+process.flashggDJINNTreeMaker.pujidWpPtBin2 = cms.vdouble([])
+process.flashggDJINNTreeMaker.pujidWpPtBin3 = cms.vdouble([])
 
 #Jet ID inputs
 process.flashggDJINNTreeMaker.JetIDLevel = cms.string("Tight")
@@ -166,4 +171,7 @@ process.TFileService = cms.Service("TFileService",
 
 #Run
 process.p = cms.Path(process.flashggTagSequence*process.flashggDJINNTreeMaker)
+
+
+open(file_out+'.done', 'a').close()
 
