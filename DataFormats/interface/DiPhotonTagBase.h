@@ -16,7 +16,8 @@ namespace flashgg {
                              RECO_GE2J_PTH_0_60, RECO_GE2J_PTH_60_120, RECO_GE2J_PTH_120_200, RECO_GE2J_PTH_GT200, RECO_VBFTOPO_JET3VETO, RECO_VBFTOPO_JET3, RECO_VH2JET,
                              RECO_0LEP_PTV_0_150, RECO_0LEP_PTV_150_250_0J, RECO_0LEP_PTV_150_250_GE1J, RECO_0LEP_PTV_GT250, 
                              RECO_1LEP_PTV_0_150, RECO_1LEP_PTV_150_250_0J, RECO_1LEP_PTV_150_250_GE1J, RECO_1LEP_PTV_GT250, 
-                             RECO_2LEP_PTV_0_150, RECO_2LEP_PTV_150_250_0J, RECO_2LEP_PTV_150_250_GE1J, RECO_2LEP_PTV_GT250 };
+                             RECO_2LEP_PTV_0_150, RECO_2LEP_PTV_150_250_0J, RECO_2LEP_PTV_150_250_GE1J, RECO_2LEP_PTV_GT250, 
+                             RECO_TTH_LEP, RECO_TTH_HAD };
 
         DiPhotonTagBase();
         virtual ~DiPhotonTagBase(); 
@@ -72,6 +73,8 @@ namespace flashgg {
 
         void computeStage1Kinematics( const edm::Handle<edm::View<flashgg::Jet> > & jets, float ptV = -1., float lepphi1 = -999., float lepeta1 = -999., float lepphi2 = -999., float lepeta2 = -999. );
         string stage1KinematicLabel() const { return stage1KinematicLabel_; }
+        void setStage1KinematicLabel( const string label ) { stage1KinematicLabel_ = label; }
+        void setStage1recoTag( const int tag ) { stage1recoTag_ = tag; }
     private:
         DiPhotonMVAResult mva_result_;
         int category_number_;
