@@ -21,7 +21,7 @@ def addFlashggPFCHSJets(process,
                         vertexIndex = 0, 
                         #doQGTagging = True, 
                         label ='', 
-                        debug = False):
+                        debug = True):
   setattr(process, 'selectedMuons' + label, cms.EDFilter("CandPtrSelector", 
                                                          src = cms.InputTag("slimmedMuons"), 
                                                          cut = cms.string('''abs(eta)<2.5 && pt>10. &&
@@ -141,7 +141,7 @@ def addFlashggPFCHSJets(process,
                                JetCollectionIndex = cms.uint32(vertexIndex),
                                Debug = cms.untracked.bool(False),
                                IncludeConstituentInfo = cms.untracked.bool(True),
-                               DoPuJetID = cms.bool(False)
+                               DoPuJetID = cms.bool(True)
                                )
   setattr( process, 'flashggPFCHSJets'+ label, flashggJets)
 
