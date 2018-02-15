@@ -45,12 +45,6 @@ elesystlabels = []
 musystlabels = []
 
 from flashgg.MetaData.JobConfig import customize
-customize.options.register('doStage1Ntuples',
-                           True,
-                           VarParsing.VarParsing.multiplicity.singleton,
-                           VarParsing.VarParsing.varType.bool,
-                           'doStage1Ntuples'
-                           )
 customize.options.register('tthTagsOnly',
                            False,
                            VarParsing.VarParsing.multiplicity.singleton,
@@ -62,6 +56,12 @@ customize.options.register('doHTXS',
                            VarParsing.VarParsing.multiplicity.singleton,
                            VarParsing.VarParsing.varType.bool,
                            'doHTXS'
+                           )
+customize.options.register('doStage1',
+                           False,
+                           VarParsing.VarParsing.multiplicity.singleton,
+                           VarParsing.VarParsing.varType.bool,
+                           'doStage1'
                            )
 customize.options.register('doMuFilter',
                            True,
@@ -301,14 +301,14 @@ process.source = cms.Source ("PoolSource",
 #"root://eoscms.cern.ch//eos/cms//store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/bbHToGG_M-125_4FS_ybyt_13TeV_amcatnlo/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_095140/0000/myMicroAODOutputFile_9.root"
 #"root://eoscms.cern.ch//eos/cms//store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/bbHToGG_M-125_4FS_yb2_13TeV_amcatnlo/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_095013/0000/myMicroAODOutputFile_1.root"
 #FIXME
-#"root://eoscms.cern.ch//eos/cms//store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/GluGluHToGG_M125_13TeV_amcatnloFXFX_pythia8/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/170113_234241/0000/myMicroAODOutputFile_1.root"
+"root://eoscms.cern.ch//eos/cms//store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/GluGluHToGG_M125_13TeV_amcatnloFXFX_pythia8/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/170113_234241/0000/myMicroAODOutputFile_1.root"
 #"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/ReMiniAOD-03Feb2017-2_5_0-test/2_5_0/DoubleEG/ReMiniAOD-03Feb2017-2_5_0-test-2_5_0-v0-Run2016G-03Feb2017-v1/170210_054444/0000/myMicroAODOutputFile_264.root"
 #"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/VBFHToGG_M-125_13TeV_powheg_pythia8/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_092754/0000/myMicroAODOutputFile_10.root"
 #"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/ferriff/flashgg/RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2/2_3_0/DoubleEG/RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016B-23Sep2016-v2/161114_162452/0000/myMicroAODOutputFile_10.root"
 #"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/VHToGG_M120_13TeV_amcatnloFXFX_madspin_pythia8/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_094407/0000/myMicroAODOutputFile_19.root"
 #"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/ferriff/flashgg/RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2/2_3_0/DoubleEG/RunIISpring16DR80X-2_3_0-25ns_Moriond17_MiniAODv2-2_3_0-v0-Run2016B-23Sep2016-v2/161114_162452/0000/myMicroAODOutputFile_10.root"
 #"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/VHToGG_M120_13TeV_amcatnloFXFX_madspin_pythia8/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_094407/0000/myMicroAODOutputFile_19.root"
-"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/ttHToGG_M125_13TeV_powheg_pythia8_v2/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_093929/0000/myMicroAODOutputFile_1.root"
+#"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/ttHToGG_M125_13TeV_powheg_pythia8_v2/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_093929/0000/myMicroAODOutputFile_1.root"
 #"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/VHToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_094103/0000/myMicroAODOutputFile_1.root"
 #"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/ferriff/flashgg/RunIISpring16DR80X-2_2_0-25ns_ICHEP16_MiniAODv2/2_2_0/VBFHToGG_M125_13TeV_amcatnlo_pythia8/RunIISpring16DR80X-2_2_0-25ns_ICHEP16_MiniAODv2-2_2_0-v0-RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext2-v1/160707_150558/0000/myMicroAODOutputFile_25.root"
 #"file:/afs/cern.ch/work/s/sethzenz/fromscratch107/CMSSW_8_0_8_patch1/src/flashgg/myMicroAODOutputFile.root"
@@ -331,20 +331,19 @@ process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string("test.root"))
 
 process.extraDumpers = cms.Sequence()
-process.load("flashgg.Taggers.diphotonTagDumper_cfi") ##  import diphotonTagDumper 
 import flashgg.Taggers.dumperConfigTools as cfgTools
+if customize.doStage1:
+  process.load("flashgg.Taggers.stage1diphotonTagDumper_cfi") #trying out stage 1 version
+  process.tagsDumper.className = "Stage1DiPhotonTagDumper" 
+else:
+  process.load("flashgg.Taggers.diphotonTagDumper_cfi") ##  import diphotonTagDumper 
+  process.tagsDumper.className = "DiPhotonTagDumper"
 
-
-process.tagsDumper.className = "DiPhotonTagDumper"
 process.tagsDumper.src = "flashggSystTagMerger"
 #process.tagsDumper.src = "flashggTagSystematics"
 process.tagsDumper.processId = "test"
-if customize.doStage1Ntuples:
-    process.tagsDumper.dumpTrees = True
-    process.tagsDumper.dumpWorkspace = False
-else:
-    process.tagsDumper.dumpTrees = customize.dumpTrees
-    process.tagsDumper.dumpWorkspace = customize.dumpWorkspace
+process.tagsDumper.dumpTrees = customize.dumpTrees
+process.tagsDumper.dumpWorkspace = customize.dumpWorkspace
 process.tagsDumper.dumpHistos = False
 process.tagsDumper.quietRooFit = True
 process.tagsDumper.nameTemplate = cms.untracked.string("$PROCESS_$SQRTS_$CLASSNAME_$SUBCAT_$LABEL")
@@ -371,6 +370,14 @@ if(customize.doFiducial):
 
 if customize.doFiducial:
     tagList=[["SigmaMpTTag",3]]
+elif customize.doStage1:
+    tagList = [
+    ["LOGICERROR",0], ["RECO_0J",0], ["RECO_1J_PTH_0_60",0], ["RECO_1J_PTH_60_120",0], ["RECO_1J_PTH_120_200",0], ["RECO_1J_PTH_GT200",0], 
+    ["RECO_GE2J_PTH_0_60",0], ["RECO_GE2J_PTH_60_120",0], ["RECO_GE2J_PTH_120_200",0], ["RECO_GE2J_PTH_GT200",0], ["RECO_VBFTOPO_JET3VETO",0], ["RECO_VBFTOPO_JET3",0], ["RECO_VH2JET",0],
+    ["RECO_0LEP_PTV_0_150",0], ["RECO_0LEP_PTV_150_250_0J",0], ["RECO_0LEP_PTV_150_250_GE1J",0], ["RECO_0LEP_PTV_GT250",0], 
+    ["RECO_1LEP_PTV_0_150",0], ["RECO_1LEP_PTV_150_250_0J",0], ["RECO_1LEP_PTV_150_250_GE1J",0], ["RECO_1LEP_PTV_GT250",0], 
+    ["RECO_2LEP_PTV_0_150",0], ["RECO_2LEP_PTV_150_250_0J",0], ["RECO_2LEP_PTV_150_250_GE1J",0], ["RECO_2LEP_PTV_GT250",0], 
+    ["RECO_TTH_LEP",0], ["RECO_TTH_HAD",0] ]
 elif customize.tthTagsOnly:
     tagList=[
         ["TTHHadronicTag",0],
@@ -434,7 +441,8 @@ for tag in tagList:
           nAlphaSWeights = -1
           nScaleWeights = -1
 
-      if (not customize.doStage1Ntuples) or systlabel == "":
+      #if (not customize.doStage1) or systlabel == "":
+      if (not customize.doStage1) or systlabel == "" or True:
           cfgTools.addCategory(process.tagsDumper,
                                systlabel,
                                classname=tagName,
@@ -608,7 +616,7 @@ customize.setDefault("targetLumi",1.00e+3)
 # call the customization
 customize(process)
 
-if customize.doStage1Ntuples:
+if customize.doStage1:
     process.flashggTagSorter.Stage1Printout = True
     
     

@@ -29,7 +29,8 @@ namespace flashgg {
         std::pair<std::string, int> operator()( const T &obj ) const
         {
             int id = ( int )obj;
-            std::type_index idx( typeid( obj ) );
+            //std::type_index idx( typeid( obj ) );
+            int idx = obj.stage1recoEnum();
             auto cached = cache_.find( idx );
             if( cached != cache_.end() ) { return std::make_pair( cached->second, id ); }
             auto ret = std::make_pair( obj.stage1KinematicLabel(), id );
@@ -45,7 +46,8 @@ namespace flashgg {
 
     private:
         std::map<std::string, std::string> remap_;
-        mutable std::unordered_map<std::type_index, std::string> cache_;
+        //mutable std::unordered_map<std::type_index, std::string> cache_;
+        mutable std::unordered_map<int, std::string> cache_;
     };
 }
 
