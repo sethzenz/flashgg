@@ -42,6 +42,7 @@ for name in catalogue_names:
 
     for key,value in catalogue.iteritems():
 
+        sample_n = 0
         for f in value['files']:
             if f['bad']: continue
     
@@ -53,8 +54,9 @@ for name in catalogue_names:
 
             num_events += f['nevents']
             num_files += 1
+            sample_n += f['nevents']
 
-        print '\t',key.split('/')[1]
+        print '\t',key.split('/')[1], sample_n
 
 print "\tTotal number of files: %d"%num_files
 print "\tTotal number of events: %d"%num_events
@@ -71,7 +73,7 @@ for i,run_list in enumerate(jobs):
     total_events = 0
     for run in run_list:
         total_events += run['n_events']
-    print "%s: %d"%(job_info['name'],total_events)
+#    print "%s: %d"%(job_info['name'],total_events)
     
     script = ''
     script += '#!/bin/sh' + '\n'
@@ -91,12 +93,19 @@ for i,run_list in enumerate(jobs):
     os.chmod(script_path, 0755)
     script_paths.append(script_path)
 
-#for path in script_paths:
-#    qsub_string =  'qsub -q hep.q -l h_rt=12:0:0 -l h_vmem=8G ./%s'%path
-#    print qsub_string 
-#    qsub_message = os.popen(qsub_string).read()
-#    print qsub_message
+'''
+for i,path in enumerate(script_paths):
 
+    qsub_string =  'qsub -q hep.q -l h_rt=9:58:0 -l h_vmem=4G ./%s'%path
+
+    if i%50 == 0:
+        print qsub_string 
+
+    qsub_message = os.popen(qsub_string).read()
+
+    if i%50 == 0:
+        print qsub_message
+'''
 
 
 

@@ -57,7 +57,7 @@ print xs_info
 
 
 
-
+#file_path = 'file:uAODForJack6Feb.root'
 process.source = cms.Source ("PoolSource", fileNames = cms.untracked.vstring(file_path))
 
 process.load("flashgg/Taggers/flashggTagSequence_cfi")
@@ -173,5 +173,5 @@ process.TFileService = cms.Service("TFileService",
 process.p = cms.Path(process.flashggTagSequence*process.flashggDJINNTreeMaker)
 
 
-open(file_out+'.done', 'a').close()
+open(file_out.replace('.root','.done'), 'a').close()
 

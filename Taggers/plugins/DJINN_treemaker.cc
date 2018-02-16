@@ -359,7 +359,7 @@ namespace flashgg {
         //Pileup weight
         float puWeight = 1.0;
         if (!_isData && _getPu){
-            //std::cout << "Calculating PU weighting" << std::endl;
+            
             double truePu = 0.0, obsPu = 0.0;
             for (auto & frame : *puInfo){
                 if (frame.getBunchCrossing() == 0){
@@ -380,7 +380,7 @@ namespace flashgg {
                     puWeight = _puWeights[ibin];
                 }
             }
-            //std::cout << puWeight << std::endl;
+            
         }
 
         //Systematics weights
@@ -390,7 +390,7 @@ namespace flashgg {
         */
         
         float event_weight = scale*genWeight*puWeight*systWeight;
-        //std::cout << event_weight << std::endl;
+        
 
 
         edm::Ptr<flashgg::DiPhotonCandidate> diphoton;
@@ -417,7 +417,7 @@ namespace flashgg {
                 //The Jet
                 edm::Ptr<flashgg::Jet> jet = jets->ptrAt(i);
 
-                std::cout << "Jet " << i << " PUJID = " << jet->puJetIdMVA() << std::endl;
+                
 
                 //Photon removal
                 float dr_leadPhoton = deltaR(jet->eta(),jet->phi(),
@@ -487,7 +487,6 @@ namespace flashgg {
                 }
 
             }
-            std::cout << std::endl;
 
             // ********************************************************************************
             // do stuff with selected objects
@@ -553,13 +552,9 @@ namespace flashgg {
                 tree_->Fill();
 
             }else{
-            //    std::cout << "No valid dijet!" << std::endl;
             }
         }
 
-        //if (count == 0){
-        //    std::cout << "NO TAG RECOVERED" << std::endl; 
-        //}
              
     } // analyze
 
