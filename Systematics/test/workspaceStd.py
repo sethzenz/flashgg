@@ -376,7 +376,7 @@ if customize.doFiducial:
     tagList=[["SigmaMpTTag",3]]
 elif customize.doStage1:
     tagList = [
-    ["LOGICERROR",0], ["RECO_0J",0], ["RECO_1J_PTH_0_60",0], ["RECO_1J_PTH_60_120",0], ["RECO_1J_PTH_120_200",0], ["RECO_1J_PTH_GT200",0], 
+    ["LOGICERROR",0], ["NOTAG",0], ["RECO_0J",0], ["RECO_1J_PTH_0_60",0], ["RECO_1J_PTH_60_120",0], ["RECO_1J_PTH_120_200",0], ["RECO_1J_PTH_GT200",0], 
     ["RECO_GE2J_PTH_0_60",0], ["RECO_GE2J_PTH_60_120",0], ["RECO_GE2J_PTH_120_200",0], ["RECO_GE2J_PTH_GT200",0], ["RECO_VBFTOPO_JET3VETO",0], ["RECO_VBFTOPO_JET3",0], ["RECO_VH2JET",0],
     ["RECO_0LEP_PTV_0_150",0], ["RECO_0LEP_PTV_150_250_0J",0], ["RECO_0LEP_PTV_150_250_GE1J",0], ["RECO_0LEP_PTV_GT250",0], 
     ["RECO_1LEP_PTV_0_150",0], ["RECO_1LEP_PTV_150_250_0J",0], ["RECO_1LEP_PTV_150_250_GE1J",0], ["RECO_1LEP_PTV_GT250",0], 
@@ -425,7 +425,7 @@ for tag in tagList:
               currentVariables = systematicVariablesHTXS
           else:    
               currentVariables = systematicVariables
-      if tagName == "NoTag":
+      if tagName.upper() == "NOTAG":
           if customize.doStage1:
               currentVariables = ["stage1cat[30,-0.5,29.5] := tagTruth().HTXSstage1orderedBin"]
           elif customize.doHTXS:

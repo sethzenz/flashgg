@@ -608,10 +608,13 @@ bool CategoryDumper<F, O>::isBinnedOnly( )
     }
     
     for( size_t ivar = 0; ivar < names_.size(); ++ivar ) {
+        std::cout << " var loop " << ivar << std::endl;
         auto name = names_[ivar].c_str();
+        std::cout << " var name " << names_[ivar].c_str() << std::endl;
         auto &var = variables_[ivar];
         auto &val = std::get<0>( var );
         val = ( *std::get<1>( var ) )( obj );
+        std::cout << " val " << val << std::endl;
         if( dataset_ ) {
             dynamic_cast<RooRealVar &>( rooVars_[name] ).setVal( val );
             if (dumpPdfWeights_) {
