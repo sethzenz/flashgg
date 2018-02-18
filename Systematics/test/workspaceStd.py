@@ -4,7 +4,7 @@ import FWCore.ParameterSet.Config as cms
 import FWCore.Utilities.FileUtils as FileUtils
 import FWCore.ParameterSet.VarParsing as VarParsing
 from flashgg.Systematics.SystematicDumperDefaultVariables import minimalVariables,minimalHistograms,minimalNonSignalVariables,systematicVariables
-from flashgg.Systematics.SystematicDumperDefaultVariables import minimalVariablesHTXS,systematicVariablesHTXS
+from flashgg.Systematics.SystematicDumperDefaultVariables import minimalVariablesHTXS,systematicVariablesHTXS,minimalVariablesStage1,systematicVariablesStage1
 import os
 
 # SYSTEMATICS SECTION
@@ -195,7 +195,9 @@ useEGMTools(process)
 # Only run systematics for signal events
 if customize.processId.count("h_") or customize.processId.count("vbf_") or customize.processId.count("Acceptance"): # convention: ggh vbf wzh (wh zh) tth
     print "Signal MC, so adding systematics and dZ"
-    if customize.doHTXS:
+    if customize.doStage1:
+        variablesToUse = minimalVariablesStage1
+    elif customize.doHTXS:
         variablesToUse = minimalVariablesHTXS
     else:
         variablesToUse = minimalVariables
@@ -335,6 +337,7 @@ import flashgg.Taggers.dumperConfigTools as cfgTools
 if customize.doStage1:
   process.load("flashgg.Taggers.stage1diphotonTagDumper_cfi") #trying out stage 1 version
   process.tagsDumper.className = "Stage1DiPhotonTagDumper" 
+  assert(not customize.doHTXS)
 else:
   process.load("flashgg.Taggers.diphotonTagDumper_cfi") ##  import diphotonTagDumper 
   process.tagsDumper.className = "DiPhotonTagDumper"
@@ -348,6 +351,7 @@ process.tagsDumper.dumpHistos = False
 process.tagsDumper.quietRooFit = True
 process.tagsDumper.nameTemplate = cms.untracked.string("$PROCESS_$SQRTS_$CLASSNAME_$SUBCAT_$LABEL")
 process.tagsDumper.splitPdfByStage0Cat = cms.untracked.bool(customize.doHTXS)
+process.tagsDumper.splitPdfByStage1Cat = cms.untracked.bool(customize.doStage1)
 process.tagsDumper.reweighGGHforNNLOPS = cms.untracked.bool(bool(customize.processId.count("ggh")))
 
 if(customize.doFiducial):
@@ -415,16 +419,20 @@ for tag in tagList:
       if systlabel == "":
           currentVariables = variablesToUse
       else:
-          if customize.doHTXS:
+          if customize.doStage1:
+              currentVariables = systematicVariablesStage1
+          elif customize.doHTXS:
               currentVariables = systematicVariablesHTXS
           else:    
               currentVariables = systematicVariables
       if tagName == "NoTag":
-          if customize.doHTXS:
-              #currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat"]
-              currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat",
-                                  "stage1cat[1000,-0.5,999.5] := tagTruth().HTXSstage1cat",
-                                  "stage1recoEnum[30,-0.5,29.5] := stage1recoEnum"]
+          if customize.doStage1:
+              currentVariables = ["stage1cat[30,-0.5,29.5] := tagTruth().HTXSstage1orderedBin"]
+          elif customize.doHTXS:
+              currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat"]
+#              currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat",
+#                                  "stage1cat[1000,-0.5,999.5] := tagTruth().HTXSstage1cat",
+#                                  "stage1recoEnum[30,-0.5,29.5] := stage1recoEnum"]
           else:
               currentVariables = []
       isBinnedOnly = (systlabel !=  "")
@@ -442,7 +450,8 @@ for tag in tagList:
           nScaleWeights = -1
 
       #if (not customize.doStage1) or systlabel == "":
-      if (not customize.doStage1) or systlabel == "" or True:
+#      if (not customize.doStage1) or systlabel == "" or True:
+      if systlabel == "":
           cfgTools.addCategory(process.tagsDumper,
                                systlabel,
                                classname=tagName,
@@ -455,7 +464,8 @@ for tag in tagList:
                                nPdfWeights=nPdfWeights,
                                nAlphaSWeights=nAlphaSWeights,
                                nScaleWeights=nScaleWeights,
-                               splitPdfByStage0Cat=customize.doHTXS
+                               splitPdfByStage0Cat=customize.doHTXS,
+                               splitPdfByStage1Cat=customize.doStage1
                                )
 
 # Require standard diphoton trigger
