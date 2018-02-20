@@ -37,9 +37,6 @@ namespace flashgg {
             auto rm = remap_.find( ret.first );
             if( rm != remap_.end() ) { ret.first = rm->second; }
             cache_.insert( std::make_pair( idx, ret.first ) );
-            std::cout << "Inside Stage1NameClassifier" << std::endl;
-            std::cout << "ret.first    = " << ret.first << std::endl;
-            std::cout << "ret.second   = " << ret.second << std::endl << std::endl;
             return ret;
         }
 

@@ -464,8 +464,6 @@ namespace flashgg {
     template<class F, class O>
     void CategoryDumper<F, O>::bookRooDataset( RooWorkspace &ws, const char *weightVar, const std::map<std::string, std::string> &replacements )
 {
-    std::cout << "bookRooDataset" << std::endl;
-
     if( ! binnedOnly_ ) {
         rooVars_.add( *ws.var( weightVar ) );
     }
@@ -473,16 +471,12 @@ namespace flashgg {
     RooArgSet  rooVars_pdfWeights0 ;
     
     for( size_t iv = 0; iv < names_.size(); ++iv ) {
-        std::cout << iv << std::endl;
         auto &name = names_[iv];
         auto &var = variables_[iv];
-        std::cout << names_[iv] << std::endl;
         auto &nbins = std::get<2>( var );
         auto &vmin = std::get<3>( var );
         auto &vmax = std::get<4>( var );
-        std::cout << " before factory for " << name << std::endl;
         RooRealVar &rooVar = dynamic_cast<RooRealVar &>( *ws.factory( Form( "%s[0.]", name.c_str() ) ) );
-        std::cout << " after factory for " << name << std::endl;
         rooVar.setConstant( false );
         if(binnedOnly_ && (nbins==0)){
             throw cms::Exception( "Dumper Binning" ) << "One or more variable which is to be dumped in a RooDataHist has not been allocated any binning options. Please specify these in your dumper configuration using the format variable[nBins,min,max] := variable definition ";
@@ -496,8 +490,6 @@ namespace flashgg {
         rooVars_pdfWeights0.add( rooVar, true );
     }
 
-    std::cout << "before dumpPuWeights" << std::endl;
-
     if (dumpPdfWeights_){
         for (int i =0; i< nPdfWeights_ ; i++) {
             rooVars_pdfWeights0.add( *ws.var( Form("pdfWeight_%d",i) ) );
@@ -510,14 +502,10 @@ namespace flashgg {
             rooVars_pdfWeights0.add( *ws.var( Form("scaleWeight_%d",i) ) ); // maybe do both and check we get same result ??
         }
         if ( splitPdfByStage0Cat_ ) {
-            std::cout << " Before             rooVars_pdfWeights0.add( *ws.var( \"stage0cat\" ) );" << std::endl;
             rooVars_pdfWeights0.add( *ws.var( "stage0cat" ) );
-            std::cout << " After             rooVars_pdfWeights0.add( *ws.var( \"stage0cat\" ) );" << std::endl;
         }
         if ( splitPdfByStage1Cat_ ) {
-            std::cout << " Before             rooVars_pdfWeights0.add( *ws.var( \"stage1cat\" ) );" << std::endl;
             rooVars_pdfWeights0.add( *ws.var( "stage1cat" ) );
-            std::cout << " After             rooVars_pdfWeights0.add( *ws.var( \"stage1cat\" ) );" << std::endl;
         }
     }
 
@@ -532,10 +520,7 @@ namespace flashgg {
     //    std::cout << " after     rooVars_pdfWeights_.add(*((RooArgSet*) rooVars_pdfWeights0.selectByName(\"stage0cat\")),true);" << std::endl;
     rooVars_pdfWeights_.add(*ws.var( weightVar ),true);
     
-    
-    std::cout << "before formatString" << std::endl;
     std::string dsetName = formatString( name_, replacements );
-    std::cout << "before dset" << std::endl;
     if( ! binnedOnly_ ) {
         RooDataSet dset( dsetName.c_str(), dsetName.c_str(), rooVars_, weightVar );
         ws.import( dset );
@@ -544,8 +529,6 @@ namespace flashgg {
         ws.import( dhist );
     }
     dataset_ = ws.data( dsetName.c_str() );
-
-    std::cout << "after dset" << std::endl;
 
     if( dumpPdfWeights_ ) {
         RooDataSet * dset_pdfWeights = new RooDataSet( (dsetName+"_pdfWeights").c_str(), (dsetName+"_pdfWeights").c_str(), rooVars_pdfWeights_, weightVar ); // store in separate RooDataSet where we store all PDF weights as one. (because including it as a refular weight is too heavy and causes crashes)
@@ -598,23 +581,18 @@ bool CategoryDumper<F, O>::isBinnedOnly( )
             }
             if ( splitPdfByStage0Cat_ && htxsCat > -1 ) {
                 dynamic_cast<RooRealVar &>( rooVars_pdfWeights_["stage0cat"]).setVal( htxsCat );
-                std::cout << "In CategoryDumper<F, O>::fill set stage0cat to " << htxsCat << std::endl;
             }
             if ( splitPdfByStage1Cat_ && htxsCat > -1 ) {
                 dynamic_cast<RooRealVar &>( rooVars_pdfWeights_["stage1cat"]).setVal( htxsCat );
-                std::cout << "In CategoryDumper<F, O>::fill set stage1cat to " << htxsCat << std::endl;                                                                                                                  
             }
         }
     }
     
     for( size_t ivar = 0; ivar < names_.size(); ++ivar ) {
-        std::cout << " var loop " << ivar << std::endl;
         auto name = names_[ivar].c_str();
-        std::cout << " var name " << names_[ivar].c_str() << std::endl;
         auto &var = variables_[ivar];
         auto &val = std::get<0>( var );
         val = ( *std::get<1>( var ) )( obj );
-        std::cout << " val " << val << std::endl;
         if( dataset_ ) {
             dynamic_cast<RooRealVar &>( rooVars_[name] ).setVal( val );
             if (dumpPdfWeights_) {

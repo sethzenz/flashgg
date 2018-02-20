@@ -176,7 +176,6 @@ namespace flashgg {
         dumpGlobalVariables_( cfg.getUntrackedParameter<bool>( "dumpGlobalVariables", true ) ),
         globalVarsDumper_(0)
     {
-        std::cout << "CollectionDumper" << std::endl;
         if( dumpGlobalVariables_ ) {
             globalVarsDumper_ = new GlobalVariablesDumper( cfg.getParameter<edm::ParameterSet>( "globalVariables" ) );
         }
@@ -321,11 +320,8 @@ namespace flashgg {
 
         workspaceName_ = formatString( workspaceName_, replacements );
         if( dumpWorkspace_ ) {
-            std::cout << "Inside first dumpWorkspace statement" << std::endl;
             ws_ = fs.make<RooWorkspace>( workspaceName_.c_str(), workspaceName_.c_str() );
-            std::cout << "ED DEBUG 1" << std::endl;
             dynamic_cast<RooRealVar *>( ws_->factory( "weight[1.]" ) )->setConstant( false );
-            std::cout << "ED DEBUG 2" << std::endl;
             if (dumpPdfWeights_){
                 // Already on default list anyway
                 //                if (splitPdfByStage0Cat_ ) {
@@ -341,17 +337,14 @@ namespace flashgg {
                     dynamic_cast<RooRealVar *>( ws_->factory( Form("scaleWeight_%d[1.]",j)) )->setConstant( false );
                 }
             }
-            std::cout << "ED DEBUG 3" << std::endl;
             RooRealVar* intLumi = new RooRealVar("IntLumi","IntLumi",intLumi_);
             //workspace expects intlumi in /pb
             intLumi->setConstant(); 
             // don't want this param to float in the fits at any point
             ws_->import(*intLumi);
-            std::cout << "ED DEBUG 4" << std::endl;
         } else {
             ws_ = 0;
         }
-        std::cout << "Completed first dumpWorkspace section, about to loop over dumpers" << std::endl;
         for( auto &dumpers : dumpers_ ) {
             for( auto &dumper : dumpers.second ) {
                 if( dumpWorkspace_ ) {
@@ -367,7 +360,6 @@ namespace flashgg {
                 }
             }
         }
-        std::cout << "done loop over dumpers" << std::endl;
         if ( ( splitPdfByStage0Cat_ || splitPdfByStage1Cat_ ) && dumpPdfWeights_) {
             NNLOPSWeightFile_ = cfg.getParameter<edm::FileInPath>( "NNLOPSWeightFile" );
             TFile* f = TFile::Open(NNLOPSWeightFile_.fullPath().c_str());

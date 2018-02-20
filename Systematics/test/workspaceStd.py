@@ -449,24 +449,21 @@ for tag in tagList:
           nAlphaSWeights = -1
           nScaleWeights = -1
 
-      #if (not customize.doStage1) or systlabel == "":
-#      if (not customize.doStage1) or systlabel == "" or True:
-      if systlabel == "":
-          cfgTools.addCategory(process.tagsDumper,
-                               systlabel,
-                               classname=tagName,
-                               cutbased=cutstring,
-                               subcats=tagCats, 
-                               variables=currentVariables,
-                               histograms=minimalHistograms,
-                               binnedOnly=isBinnedOnly,
-                               dumpPdfWeights=dumpPdfWeights,
-                               nPdfWeights=nPdfWeights,
-                               nAlphaSWeights=nAlphaSWeights,
-                               nScaleWeights=nScaleWeights,
-                               splitPdfByStage0Cat=customize.doHTXS,
-                               splitPdfByStage1Cat=customize.doStage1
-                               )
+      cfgTools.addCategory(process.tagsDumper,
+                           systlabel,
+                           classname=tagName,
+                           cutbased=cutstring,
+                           subcats=tagCats, 
+                           variables=currentVariables,
+                           histograms=minimalHistograms,
+                           binnedOnly=isBinnedOnly,
+                           dumpPdfWeights=dumpPdfWeights,
+                           nPdfWeights=nPdfWeights,
+                           nAlphaSWeights=nAlphaSWeights,
+                           nScaleWeights=nScaleWeights,
+                           splitPdfByStage0Cat=customize.doHTXS,
+                           splitPdfByStage1Cat=customize.doStage1
+                           )
 
 # Require standard diphoton trigger
 from HLTrigger.HLTfilters.hltHighLevel_cfi import hltHighLevel

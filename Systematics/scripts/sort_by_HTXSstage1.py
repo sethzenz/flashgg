@@ -6,27 +6,25 @@ from ROOT import *
 
 stage1catname2num = {"UNKNOWN":0, 
                      # Gluon fusion
-                     "GG2H_FWDH" : 100, "GG2H_VBFTOPO_JET3VETO" : 101, "GG2H_VBFTOPO_JET3" : 102, "GG2H_0J" : 103, 
-                     "GG2H_1J_PTH_0_60" : 104, "GG2H_1J_PTH_60_120" : 105, "GG2H_1J_PTH_120_200" : 106, "GG2H_1J_PTH_GT200" : 107,
-                     "GG2H_GE2J_PTH_0_60" : 108, "GG2H_GE2J_PTH_60_120" : 109, "GG2H_GE2J_PTH_120_200" : 110, "GG2H_GE2J_PTH_GT200" : 111, 
-                     # "VBF"
-                     "VBF_FWDH" : 200, "VBF_VBFTOPO_JET3VETO" : 201, "VBF_VBFTOPO_JET3" : 202, "VBF_VH2JET" : 203, "VBF_REST" : 204, "VBF_PTJET1_GT200" : 205,
+                     "GG2H_FWDH" : -1, "GG2H_VBFTOPO_JET3VETO" : 1, "GG2H_VBFTOPO_JET3" : 2, "GG2H_0J" : 3, 
+                     "GG2H_1J_PTH_0_60" : 4, "GG2H_1J_PTH_60_120" : 5, "GG2H_1J_PTH_120_200" : 6, "GG2H_1J_PTH_GT200" : 7,
+                     "GG2H_GE2J_PTH_0_60" : 8, "GG2H_GE2J_PTH_60_120" : 9, "GG2H_GE2J_PTH_120_200" : 10, "GG2H_GE2J_PTH_GT200" : 11, 
+                     # "VBF" / QQ2HQQ
+                     "QQ2HQQ_FWDH" : -2, "QQ2HQQ_QQ2HQQTOPO_JET3VETO" : 12, "QQ2HQQ_QQ2HQQTOPO_JET3" : 13, "QQ2HQQ_VH2JET" : 14, "QQ2HQQ_REST" : 15, "QQ2HQQ_PTJET1_GT200" : 16,
                      # qq -> WH
-                     "QQ2HLNU_FWDH" : 300, "QQ2HLNU_PTV_0_150" : 301, "QQ2HLNU_PTV_150_250_0J" : 302, "QQ2HLNU_PTV_150_250_GE1J" : 303, "QQ2HLNU_PTV_GT250" : 304,
+                     "QQ2HLNU_FWDH" : -3, "QQ2HLNU_PTV_0_150" : 17, "QQ2HLNU_PTV_150_250_0J" : 18, "QQ2HLNU_PTV_150_250_GE1J" : 19, "QQ2HLNU_PTV_GT250" : 20,
                      # qq -> ZH
-                     "QQ2HLL_FWDH" : 400, "QQ2HLL_PTV_0_150" : 401, "QQ2HLL_PTV_150_250_0J" : 402, "QQ2HLL_PTV_150_250_GE1J" : 403, "QQ2HLL_PTV_GT250" : 404,
+                     "QQ2HLL_FWDH" : -4, "QQ2HLL_PTV_0_150" : 21, "QQ2HLL_PTV_150_250_0J" : 22, "QQ2HLL_PTV_150_250_GE1J" : 23, "QQ2HLL_PTV_GT250" : 24,
                      # gg -> ZH
-                     "GG2HLL_FWDH" : 500, "GG2HLL_PTV_0_150" : 501, "GG2HLL_PTV_GT150_0J" : 502, "GG2HLL_PTV_GT150_GE1J" : 503,
+                     "GG2HLL_FWDH" : -5, "GG2HLL_PTV_0_150" : 25, "GG2HLL_PTV_GT150_0J" : 26, "GG2HLL_PTV_GT150_GE1J" : 27,
                      # ttH
-                     "TTH_FWDH" : 600, "TTH" : 601,
+                     "TTH_FWDH" : -6, "TTH" : 28,
                      # bbH
-                     "BBH_FWDH" : 700, "BBH" : 701,
+                     "BBH_FWDH" : -7, "BBH" : 29,
                      # tH
-                     "TH_FWDH" : 800, "TH" : 801}
+                     "TH_FWDH" : -8, "TH" : 30}
 stage1catnum2name = {v: k for k, v in stage1catname2num.iteritems()}
-relevantstage1cats = [cat for cat in stage1catname2num.values()] #if cat > 0 and (cat <= 49 or cat == 60 or cat == 61)]
-#relevantstage1cats = [40] # for debugging
-#print relevantstage1cats
+relevantstage1cats = [cat for cat in stage1catname2num.values()]
 
 from sys import argv
 fn = "output.root"
@@ -37,7 +35,6 @@ assert(fn.count(".root"))
 _file = TFile(fn)
 _ws = _file.Get("tagsDumper/cms_hgg_13TeV")
 _data = _ws.allData()
-#print _data
 
 files = {}
 wss = {}
