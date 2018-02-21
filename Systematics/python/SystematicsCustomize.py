@@ -112,6 +112,27 @@ def cloneTagSequenceForEachSystematic(process,systlabels=[],phosystlabels=[],met
         else:
             process.flashggSystTagMerger.src.append(cms.InputTag("flashggTagSorter" + systlabel))
 
+def cloneDJINNForEachSystematic(process,systlabels=[],phosystlabels=[],metsystlabels=[],jetsystlabels=[],jetSystematicsInputTags=None):
+    process.flashggDJINNSequence = cms.Sequence(process.flashggDJINNTreeMaker)
+    process.DJINNSystematics = cms.Sequence()
+    if jetSystematicsInputTags is None:
+        raise TypeError
+    for systlabel in systlabels:
+        if systlabel == "":
+            continue
+        from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet,massSearchReplaceAnyInputTag
+        newseq = cloneProcessingSnippet(process,process.flashggDJINNSequence,systlabel)
+        newtree = getattr(process,"flashggDJINNTreeMaker%s"%systlabel)
+        newtree.MVAResultTag = cms.InputTag('flashggDiPhotonMVA%s' % systlabel)
+        newtree.DiPhotonTag = cms.InputTag('flashggPreselectedDiPhotons%s' % systlabel)
+        newtree.VBFMVAResultTag = cms.InputTag('flashggVBFMVA%s'%systlabel)
+        newtree.TagSorter = cms.InputTag('flashggTagSorter%s'%systlabel)
+        if systlabel in jetsystlabels:
+            for i in range(len(jetSystematicsInputTags)):
+                newtree.inputTagJets[i] = cms.InputTag(jetSystematicsInputTags[i].moduleLabel,systlabel)
+#        for i in range(len(jetSystematicsInputTags)):
+#            newseq[0]
+        process.DJINNSystematics += newseq
 
 def customizeSystematicsForMC(process):
     customizePhotonSystematicsForMC(process)
