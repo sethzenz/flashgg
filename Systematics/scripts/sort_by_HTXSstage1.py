@@ -10,7 +10,7 @@ stage1catname2num = {"UNKNOWN":0,
                      "GG2H_1J_PTH_0_60" : 4, "GG2H_1J_PTH_60_120" : 5, "GG2H_1J_PTH_120_200" : 6, "GG2H_1J_PTH_GT200" : 7,
                      "GG2H_GE2J_PTH_0_60" : 8, "GG2H_GE2J_PTH_60_120" : 9, "GG2H_GE2J_PTH_120_200" : 10, "GG2H_GE2J_PTH_GT200" : 11, 
                      # "VBF" / QQ2HQQ
-                     "QQ2HQQ_FWDH" : -2, "QQ2HQQ_QQ2HQQTOPO_JET3VETO" : 12, "QQ2HQQ_QQ2HQQTOPO_JET3" : 13, "QQ2HQQ_VH2JET" : 14, "QQ2HQQ_REST" : 15, "QQ2HQQ_PTJET1_GT200" : 16,
+                     "QQ2HQQ_FWDH" : -2, "QQ2HQQ_VBFTOPO_JET3VETO" : 12, "QQ2HQQ_VBFTOPO_JET3" : 13, "QQ2HQQ_VH2JET" : 14, "QQ2HQQ_REST" : 15, "QQ2HQQ_PTJET1_GT200" : 16,
                      # qq -> WH
                      "QQ2HLNU_FWDH" : -3, "QQ2HLNU_PTV_0_150" : 17, "QQ2HLNU_PTV_150_250_0J" : 18, "QQ2HLNU_PTV_150_250_GE1J" : 19, "QQ2HLNU_PTV_GT250" : 20,
                      # qq -> ZH
@@ -64,6 +64,7 @@ for ds in _data:
          print " DISAGREEMENT IN DATASET SUMWEIGHTS BEFORE AND AFTER:",initw,sumfinw
       else:
          raise Exception," DISAGREEMENT IN DATASET SUMWEIGHTS BEFORE AND AFTER: %.4f %.4f"%(initw,sumfinw)
+         #pass
 
 for cat in relevantstage1cats:
 #   print cat

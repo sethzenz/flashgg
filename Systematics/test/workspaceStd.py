@@ -427,12 +427,9 @@ for tag in tagList:
               currentVariables = systematicVariables
       if tagName.upper() == "NOTAG":
           if customize.doStage1:
-              currentVariables = ["stage1cat[30,-0.5,29.5] := tagTruth().HTXSstage1orderedBin"]
+              currentVariables = ["stage1cat[39,-8.5,30.5] := tagTruth().HTXSstage1orderedBin"]
           elif customize.doHTXS:
               currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat"]
-#              currentVariables = ["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat",
-#                                  "stage1cat[1000,-0.5,999.5] := tagTruth().HTXSstage1cat",
-#                                  "stage1recoEnum[30,-0.5,29.5] := stage1recoEnum"]
           else:
               currentVariables = []
       isBinnedOnly = (systlabel !=  "")
