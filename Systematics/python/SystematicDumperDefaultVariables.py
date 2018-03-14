@@ -32,4 +32,4 @@ systematicVariables=["CMS_hgg_mass[160,100,180]:=diPhoton().mass"]#,"centralObje
 systematicHistograms=["CMS_hgg_mass>>mass(160,100,180)"]
 
 systematicVariablesHTXS = systematicVariables+["stage0cat[72,9.5,81.5] := tagTruth().HTXSstage0cat"]
-systematicVariablesStage1 = systematicVariables+["stage1cat[30,-0.5,29.5] := tagTruth().HTXSstage1orderedBin"]
+systematicVariablesStage1 = systematicVariables+["stage1cat[39,-8.5,30.5] := tagTruth().HTXSstage1orderedBin"]
