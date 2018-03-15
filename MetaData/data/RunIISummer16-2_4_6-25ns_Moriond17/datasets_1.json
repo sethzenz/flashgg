@@ -5814,6 +5814,7 @@
                 "weights": 5141268.5
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/GluGluHToGG_M123_13TeV_amcatnloFXFX_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-53c11c8098ca86d17d48d6827bc7d99f/USER": {
@@ -5867,6 +5868,7 @@
                 "weights": 7922975.0
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/GluGluHToGG_M124_13TeV_amcatnloFXFX_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-53c11c8098ca86d17d48d6827bc7d99f/USER": {
@@ -5912,6 +5914,7 @@
                 "weights": 13777048.0
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/GluGluHToGG_M125_13TeV_amcatnloFXFX_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1-53c11c8098ca86d17d48d6827bc7d99f/USER": {
@@ -6203,6 +6206,7 @@
                 "weights": 10927394.0
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/GluGluHToGG_M127_13TeV_amcatnloFXFX_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-53c11c8098ca86d17d48d6827bc7d99f/USER": {
@@ -6304,6 +6308,7 @@
                 "weights": 2980401.75
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VBFHToGG_M120_13TeV_amcatnlo_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-67640ef3d144e146828b35e73b97add3/USER": {
@@ -6429,6 +6434,7 @@
                 "weights": 295473.34375
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VBFHToGG_M123_13TeV_amcatnlo_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-67640ef3d144e146828b35e73b97add3/USER": {
@@ -6650,6 +6656,7 @@
                 "weights": 186269.21875
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VBFHToGG_M124_13TeV_amcatnlo_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-67640ef3d144e146828b35e73b97add3/USER": {
@@ -6735,6 +6742,7 @@
                 "weights": 444618.25
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VBFHToGG_M126_13TeV_amcatnlo_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-67640ef3d144e146828b35e73b97add3/USER": {
@@ -6772,6 +6780,7 @@
                 "weights": 427088.0
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VBFHToGG_M127_13TeV_amcatnlo_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-67640ef3d144e146828b35e73b97add3/USER": {
@@ -6865,6 +6874,7 @@
                 "weights": 263436.125
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VBFHToGG_M130_13TeV_amcatnlo_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-67640ef3d144e146828b35e73b97add3/USER": {
@@ -7022,6 +7032,7 @@
                 "weights": 262560.25
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VHToGG_M120_13TeV_amcatnloFXFX_madspin_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-3468e8e8124d4b31a5fbac61e7fd89d8/USER": {
@@ -7235,6 +7246,7 @@
                 "weights": 23352.421875
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VHToGG_M123_13TeV_amcatnloFXFX_madspin_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-3468e8e8124d4b31a5fbac61e7fd89d8/USER": {
@@ -7304,6 +7316,7 @@
                 "weights": 57046.890625
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VHToGG_M124_13TeV_amcatnloFXFX_madspin_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-3468e8e8124d4b31a5fbac61e7fd89d8/USER": {
@@ -7413,6 +7426,7 @@
                 "weights": 22206.748046875
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VHToGG_M126_13TeV_amcatnloFXFX_madspin_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-3468e8e8124d4b31a5fbac61e7fd89d8/USER": {
@@ -7442,6 +7456,7 @@
                 "weights": 439561.28125
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VHToGG_M127_13TeV_amcatnloFXFX_madspin_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-3468e8e8124d4b31a5fbac61e7fd89d8/USER": {
@@ -7511,6 +7526,7 @@
                 "weights": 8785.35546875
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/VHToGG_M130_13TeV_amcatnloFXFX_madspin_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-3468e8e8124d4b31a5fbac61e7fd89d8/USER": {
@@ -7540,6 +7556,7 @@
                 "weights": 362597.3125
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/ttHJetToGG_M120_13TeV_amcatnloFXFX_madspin_pythia8_v2/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-c8c7f9d84bd9f140f6e825e3d925d0dd/USER": {
@@ -7617,6 +7634,7 @@
                 "weights": 47189.88671875
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/ttHJetToGG_M123_13TeV_amcatnloFXFX_madspin_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-c8c7f9d84bd9f140f6e825e3d925d0dd/USER": {
@@ -7694,6 +7712,7 @@
                 "weights": 16442.0703125
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/ttHJetToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8_v2/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-c8c7f9d84bd9f140f6e825e3d925d0dd/USER": {
@@ -7873,6 +7892,7 @@
                 "weights": 16427.029296875
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/ttHJetToGG_M127_13TeV_amcatnloFXFX_madspin_pythia8/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-c8c7f9d84bd9f140f6e825e3d925d0dd/USER": {
@@ -7926,6 +7946,7 @@
                 "weights": 48121.64453125
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/ttHJetToGG_M130_13TeV_amcatnloFXFX_madspin_pythia8_v2/sethzenz-RunIISummer16-2_4_6-25ns_Moriond17-2_4_6-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1-c8c7f9d84bd9f140f6e825e3d925d0dd/USER": {
@@ -8027,6 +8048,7 @@
                 "weights": 11631.1630859375
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }
 }
