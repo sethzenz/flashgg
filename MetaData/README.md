@@ -162,6 +162,9 @@ echo crabConfig_*.py | xargs -n 1 crab sub
 
 ./prepareCrabJobs.py -C RunIISummer16-2_4_6-25ns_Moriond17 -U 1 -L 25 -s campaigns/RunIISummer16-2_4_5-25ns_Moriond17.json -V 2_4_6 -p ${CMSSW_BASE}/src/flashgg/MicroAOD/test/microAODstd.py --outputSite=T2_UK_London_IC
 
+./prepareCrabJobs.py -C RunIISummer16-2_4_6-25ns_Moriond17 -U 1 -L 25 -s campaigns/RunIISummer16-2_4_6-25ns_Moriond17_ext0.json -V 2_4_6 -p ${CMSSW_BASE}/src/flashgg/MicroAOD/test/microAODstd.py --outputSite=T2_UK_London_IC --lumiMask jsons/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
+
+./prepareCrabJobs.py -C RunIISummer16-2_4_7-25ns_Moriond17 -U 1 -L 5 -s campaigns/RunIISummer16-2_4_7-25ns_Moriond17.json -V 2_4_7 -p ${CMSSW_BASE}/src/flashgg/MicroAOD/test/microAODstd.py --outputSite=T2_UK_London_IC --lumiMask jsons/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
 
 
 #### 15 Jan regression
