@@ -516,8 +516,8 @@ process.p = cms.Path(process.dataRequirements*
                      process.penultimateFilter*
                      process.finalFilter*
                      process.flashggDJINNTreeMaker*
-                     process.DJINNSystematics)
-#                     process.tagsDumper)
+                     process.DJINNSystematics*
+                     process.tagsDumper)
 
 
 if customize.doFiducial:

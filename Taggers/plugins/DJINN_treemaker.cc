@@ -321,6 +321,8 @@ namespace flashgg {
         // ********************************************************************************
         // access edm objects
 
+        std::cout << "In analyze" << std::endl;
+        
         Handle<edm::View<flashgg::DiPhotonTagBase> > TagSorter;
         iEvent.getByToken( TagSorterToken_, TagSorter );
 
@@ -343,6 +345,8 @@ namespace flashgg {
 
         edm::Handle<std::vector<PileupSummaryInfo> > puInfo;
         iEvent.getByToken(puInfoToken_, puInfo);
+
+        std::cout << "After tokens etc" << std::endl;
 
         //Scale (XS weight * lumi weight)
         float scale = 1.0;
@@ -383,6 +387,8 @@ namespace flashgg {
             
         }
 
+        std::cout << "after pu" << std::endl;
+
         //Systematics weights
         float systWeight = 1.0;
         /*
@@ -402,11 +408,16 @@ namespace flashgg {
 
             count++;
 
+            std::cout << " Tag " << count << std::endl;
+
             // ********************************************************************************
             // get the objects
             diphoton = tag->diPhoton();
             jets = jetCollection[diphoton->jetCollectionIndex()];
             mvares = tag->diPhotonMVA();
+            
+            std::cout << "Got objects" << std::endl;
+
 
             //----Select jets
             std::pair<int,int> dijet_indices(-999,-999);
