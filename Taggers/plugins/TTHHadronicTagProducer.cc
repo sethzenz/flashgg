@@ -19,6 +19,8 @@
 #include "DataFormats/Math/interface/deltaR.h"
 
 #include "flashgg/DataFormats/interface/TagTruthBase.h"
+#include "flashgg/DataFormats/interface/StageOneTag.h"
+
 #include "DataFormats/Common/interface/RefToPtr.h"
 
 #include <vector>
@@ -219,6 +221,8 @@ namespace flashgg {
 
         produces<vector<TTHHadronicTag> >();
         produces<vector<TagTruthBase> >();
+        produces<vector<StageOneTag> >("stageone");
+
     }
 
     void TTHHadronicTagProducer::produce( Event &evt, const EventSetup & )
@@ -265,6 +269,8 @@ namespace flashgg {
 
         std::unique_ptr<vector<TTHHadronicTag> > tthhtags( new vector<TTHHadronicTag> );
         std::unique_ptr<vector<TagTruthBase> > truths( new vector<TagTruthBase> );
+        std::unique_ptr<vector<StageOneTag> > stage1tags( new vector<StageOneTag> );
+
 
         Point higgsVtx;
         if( ! evt.isRealData() ) {
@@ -475,10 +481,16 @@ namespace flashgg {
                         tthhtags_obj.includeWeightsByLabel( *JetVect[num] , "JetBTagReshapeWeight");
                     }                    
                 }
-                tthhtags_obj.setStage1KinematicLabel( "RECO_TTH_HAD" );
-                tthhtags_obj.setStage1recoTag( DiPhotonTagBase::RECO_TTH_HAD );
                 tthhtags_obj.includeWeights( *dipho );
                 tthhtags->push_back( tthhtags_obj );
+
+                StageOneTag stage1tag_obj( dipho, mvares );
+                stage1tag_obj.setStage1recoTag( flashgg::RECO_TTH_HAD );
+                stage1tag_obj.setSystLabel( systLabel_ );
+                stage1tag_obj.includeWeights(tthhtags_obj);
+                stage1tags->push_back(stage1tag_obj);
+
+
                 if( ! evt.isRealData() ) {
                     TagTruthBase truth_obj;
                     truth_obj.setGenPV( higgsVtx );
@@ -492,13 +504,15 @@ namespace flashgg {
                         truth_obj.setHTXSInfo( 0, 0, 0, 0., 0. );
                     }
                     truths->push_back( truth_obj );
-                    tthhtags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx++ ) ) );
+                    tthhtags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx ) ) );
+                    stage1tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx++ ) ) );
                 }
                 // count++;
             }
         }
         evt.put( std::move( tthhtags ) );
         evt.put( std::move( truths ) );
+        evt.put( std::move( stage1tags ), "stageone" );
         // cout << "tagged events = " << count << endl;
     }
 }

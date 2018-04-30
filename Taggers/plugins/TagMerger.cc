@@ -4,15 +4,18 @@
 #include "flashgg/DataFormats/interface/DiPhotonTagBase.h"
 #include "flashgg/DataFormats/interface/VBFTag.h"
 #include "flashgg/DataFormats/interface/ZPlusJetTag.h"
+#include "flashgg/DataFormats/interface/StageOneTag.h"
 
 typedef Merger<edm::OwnVector<flashgg::DiPhotonTagBase> > TagMerger;
 typedef Merger<std::vector<flashgg::VBFTag> > VBFTagMerger;
 typedef Merger<std::vector<flashgg::ZPlusJetTag> > ZPlusJetTagMerger;
+typedef Merger<edm::OwnVector<flashgg::StageOneTag> > StageOneTagMerger;
 
 
 DEFINE_FWK_MODULE( TagMerger );
 DEFINE_FWK_MODULE( VBFTagMerger );
 DEFINE_FWK_MODULE( ZPlusJetTagMerger );
+DEFINE_FWK_MODULE( StageOneTagMerger );
 
 // Local Variables:
 // mode:c++

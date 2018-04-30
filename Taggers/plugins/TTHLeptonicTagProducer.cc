@@ -20,6 +20,7 @@
 #include "flashgg/Taggers/interface/LeptonSelection.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
+#include "flashgg/DataFormats/interface/StageOneTag.h"
 
 #include "flashgg/DataFormats/interface/TagTruthBase.h"
 #include "DataFormats/Common/interface/RefToPtr.h"
@@ -174,6 +175,8 @@ namespace flashgg {
         }
         produces<vector<TTHLeptonicTag> >();
         produces<vector<TagTruthBase> >();
+        produces<vector<StageOneTag> >("stageone");
+
     }
 
     void TTHLeptonicTagProducer::produce( Event &evt, const EventSetup & )
@@ -218,6 +221,8 @@ namespace flashgg {
         evt.getByToken( vertexToken_, vertices );
 
         std::unique_ptr<vector<TagTruthBase> > truths( new vector<TagTruthBase> );
+        std::unique_ptr<vector<StageOneTag> > stage1tags( new vector<StageOneTag> );
+
 
         Point higgsVtx;
 
@@ -519,8 +524,8 @@ namespace flashgg {
                     //                    std::cout << "including electron weights" << std::endl; 
                     tthltags_obj.includeWeights( *tagElectrons.at(0) );                    
                 }
-                tthltags_obj.setStage1KinematicLabel( "RECO_TTH_LEP" );
-                tthltags_obj.setStage1recoTag( DiPhotonTagBase::RECO_TTH_LEP );
+
+
                 tthltags_obj.includeWeights( *dipho );
 
                 // This code illustrates why usecentralifnotfound had to be added to DataFormats/src/WeightedObject.cc
@@ -580,6 +585,14 @@ namespace flashgg {
                 tthltags_obj.setDiPhotonIndex( diphoIndex );
                 tthltags_obj.setSystLabel( systLabel_ );
                 tthltags->push_back( tthltags_obj );
+
+                StageOneTag stage1tag_obj( dipho, mvares );
+                stage1tag_obj.setSystLabel( systLabel_ );
+                stage1tag_obj.includeWeights(tthltags_obj);
+                stage1tag_obj.setStage1recoTag( flashgg::RECO_TTH_LEP );
+                stage1tags->push_back(stage1tag_obj);
+
+
                 if( ! evt.isRealData() ) {
                     TagTruthBase truth_obj;
                     truth_obj.setGenPV( higgsVtx );
@@ -593,7 +606,8 @@ namespace flashgg {
                         truth_obj.setHTXSInfo( 0, 0, 0, 0., 0. );
                     }
                     truths->push_back( truth_obj );
-                    tthltags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx++ ) ) );
+                    tthltags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx ) ) );
+                    stage1tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx++ ) ) );
                 }
             } else {
                 //                std::cout << " TTHLeptonicTagProducer NO TAG " << std::endl;
@@ -602,6 +616,7 @@ namespace flashgg {
         }//diPho loop end !
         evt.put( std::move( tthltags ) );
         evt.put( std::move( truths ) );
+        evt.put( std::move( stage1tags ), "stageone" );
     }
 
 }

@@ -41,6 +41,7 @@
 #include "flashgg/DataFormats/interface/PDFWeightObject.h"
 #include "flashgg/DataFormats/interface/ZPlusJetTag.h"
 #include "flashgg/DataFormats/interface/TagCandidate.h"
+#include "flashgg/DataFormats/interface/StageOneTag.h"
 
 #include <vector>
 #include <map>
@@ -195,6 +196,10 @@ namespace  {
         std::vector<flashgg::SigmaMpTTag> vec_sigmamptcat;
         edm::Wrapper<std::vector<flashgg::SigmaMpTTag> > wrp_vec_sigmamptcat;
 
+        flashgg::StageOneTag stageonecat;
+        std::vector<flashgg::StageOneTag> vec_stageonecat;
+        edm::Wrapper<std::vector<flashgg::StageOneTag> > wrp_vec_stageonecat;
+
         flashgg::VBFTag vbf_cat;
         std::vector<flashgg::VBFTag> vec_vbf_cat;
         edm::Wrapper<std::vector<flashgg::VBFTag> > wrp_vec_vbf_cat;
@@ -224,6 +229,9 @@ namespace  {
 
         edm::OwnVector<flashgg::TagTruthBase, edm::ClonePolicy<flashgg::TagTruthBase> > ownvec_truthbase;
         edm::Wrapper<edm::OwnVector<flashgg::TagTruthBase, edm::ClonePolicy<flashgg::TagTruthBase> > > wrp_ownvec_truthbase;
+
+        edm::OwnVector<flashgg::StageOneTag, edm::ClonePolicy<flashgg::StageOneTag> > ownvec_stageone;
+        edm::Wrapper<edm::OwnVector<flashgg::StageOneTag, edm::ClonePolicy<flashgg::StageOneTag> > > wrp_ownvec_stageone;
 
         flashgg::VBFTagTruth vbftt;
         std::vector<flashgg::VBFTagTruth> vec_vbftt;

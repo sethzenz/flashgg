@@ -64,7 +64,7 @@ def createStandardSystematicsProducers(process):
     jetSystematicsInputTags = createJetSystematics(process,UnpackedJetCollectionVInputTag)
     return jetSystematicsInputTags
 
-def modifyTagSequenceForSystematics(process,jetSystematicsInputTags,ZPlusJetMode=False):
+def modifyTagSequenceForSystematics(process,jetSystematicsInputTags,ZPlusJetMode=False,Stage1=True):
     process.flashggTagSequence.remove(process.flashggUnpackedJets) # to avoid unnecessary cloning
     process.flashggTagSequence.remove(process.flashggUpdatedIdMVADiPhotons) # Needs to be run before systematics
     from PhysicsTools.PatAlgos.tools.helpers import cloneProcessingSnippet,massSearchReplaceAnyInputTag
@@ -80,6 +80,8 @@ def modifyTagSequenceForSystematics(process,jetSystematicsInputTags,ZPlusJetMode
         process.flashggSystTagMerger = cms.EDProducer("VBFTagMerger",src=cms.VInputTag("flashggVBFTag"))
     elif ZPlusJetMode:    
         process.flashggSystTagMerger = cms.EDProducer("ZPlusJetTagMerger",src=cms.VInputTag("flashggZPlusJetTag"))
+    elif Stage1:
+        process.flashggSystTagMerger = cms.EDProducer("StageOneTagMerger",src=cms.VInputTag("flashggTagSorter"))
     else:
         process.flashggSystTagMerger = cms.EDProducer("TagMerger",src=cms.VInputTag("flashggTagSorter"))
     process.systematicsTagSequences = cms.Sequence()

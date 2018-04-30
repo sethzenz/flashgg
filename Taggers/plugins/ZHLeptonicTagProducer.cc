@@ -18,6 +18,8 @@
 
 #include "DataFormats/Math/interface/deltaR.h"
 #include "flashgg/DataFormats/interface/VHTagTruth.h"
+#include "flashgg/DataFormats/interface/StageOneTag.h"
+
 #include "DataFormats/Common/interface/RefToPtr.h"
 
 #include <vector>
@@ -149,6 +151,8 @@ namespace flashgg {
         
         produces<vector<ZHLeptonicTag> >();
         produces<vector<VHTagTruth> >();
+        produces<vector<StageOneTag> >("stageone");
+
     }
 
     void ZHLeptonicTagProducer::produce( Event &evt, const EventSetup & )
@@ -187,6 +191,8 @@ namespace flashgg {
 
         std::unique_ptr<vector<ZHLeptonicTag> > ZHLeptonicTags( new vector<ZHLeptonicTag> );
         std::unique_ptr<vector<VHTagTruth> > truths( new vector<VHTagTruth> );
+        std::unique_ptr<vector<StageOneTag> > stage1tags( new vector<StageOneTag> );
+
 
         Point higgsVtx;
         bool associatedZ=0;
@@ -325,6 +331,9 @@ namespace flashgg {
                                     }
                             }
                 }
+            StageOneTag stage1tag_obj( dipho, mvares );
+            stage1tag_obj.setSystLabel( systLabel_ );
+
             if( photonSelection && ( isDiMuon  || isDiElectron )) {
                 ZHLeptonicTags_obj.setMuons( tagMuons );
                 ZHLeptonicTags_obj.setElectrons( tagElectrons );
@@ -333,16 +342,19 @@ namespace flashgg {
                     ZHLeptonicTags_obj.includeWeightsByLabel( *tagMuons.at(0), "MuonWeight");
                     ZHLeptonicTags_obj.includeWeightsByLabel( *tagMuons.at(1), "MuonWeight");
                     unsigned int jet_i = diPhotons->ptrAt( diphoIndex )->jetCollectionIndex();
-                    ZHLeptonicTags_obj.computeStage1Kinematics( Jets[jet_i], (tagMuons.at(0)->p4() + tagMuons.at(1)->p4()).pt(), tagMuons.at(0)->eta(), tagMuons.at(0)->phi(), tagMuons.at(1)->eta(), tagMuons.at(1)->phi() );
+                    stage1tag_obj.computeStage1Kinematics( Jets[jet_i], (tagMuons.at(0)->p4() + tagMuons.at(1)->p4()).pt(), tagMuons.at(0)->eta(), tagMuons.at(0)->phi(), tagMuons.at(1)->eta(), tagMuons.at(1)->phi() );
                 } else if(isDiElectron){
                     ZHLeptonicTags_obj.includeWeights( *tagElectrons.at(0) );
                     ZHLeptonicTags_obj.includeWeights( *tagElectrons.at(1) );
                     unsigned int jet_i = diPhotons->ptrAt( diphoIndex )->jetCollectionIndex();
-                    ZHLeptonicTags_obj.computeStage1Kinematics( Jets[jet_i], (tagElectrons.at(0)->p4() + tagElectrons.at(1)->p4()).pt(), tagElectrons.at(0)->eta(), tagElectrons.at(0)->phi(), tagElectrons.at(1)->eta(), tagElectrons.at(1)->phi() );
+                    stage1tag_obj.computeStage1Kinematics( Jets[jet_i], (tagElectrons.at(0)->p4() + tagElectrons.at(1)->p4()).pt(), tagElectrons.at(0)->eta(), tagElectrons.at(0)->phi(), tagElectrons.at(1)->eta(), tagElectrons.at(1)->phi() );
                 }
                 ZHLeptonicTags_obj.setDiPhotonIndex( diphoIndex );
                 ZHLeptonicTags_obj.setSystLabel( systLabel_ );
                 ZHLeptonicTags->push_back( ZHLeptonicTags_obj );
+                stage1tag_obj.setDiPhotonIndex( diphoIndex );
+                stage1tag_obj.includeWeights( ZHLeptonicTags_obj );
+                stage1tags->push_back( stage1tag_obj );
                 if( ! evt.isRealData() ){
                     VHTagTruth truth_obj;
                     truth_obj.setGenPV( higgsVtx );
@@ -364,12 +376,14 @@ namespace flashgg {
                     truth_obj.setVhasMissingLeptons( VhasMissingLeptons );
                     truth_obj.setVpt( Vpt );
                     truths->push_back( truth_obj );
-                    ZHLeptonicTags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
+                    ZHLeptonicTags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx ) ) );
+                    stage1tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
                 }
             }
         }
         evt.put( std::move( ZHLeptonicTags ) );
         evt.put( std::move( truths ) );
+        evt.put( std::move( stage1tags ), "stageone" );
     }
 }
 typedef flashgg::ZHLeptonicTagProducer FlashggZHLeptonicTagProducer;

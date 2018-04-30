@@ -12,6 +12,7 @@
 #include "flashgg/DataFormats/interface/Jet.h"
 #include "flashgg/DataFormats/interface/UntaggedTag.h"
 #include "flashgg/DataFormats/interface/TagTruthBase.h"
+#include "flashgg/DataFormats/interface/StageOneTag.h"
 #include "DataFormats/Common/interface/RefToPtr.h"
 
 
@@ -76,6 +77,7 @@ namespace flashgg {
 
         produces<vector<UntaggedTag> >();
         produces<vector<TagTruthBase> >();
+        produces<vector<StageOneTag> >("stageone");
     }
 
     int UntaggedTagProducer::chooseCategory( float mvavalue )
@@ -115,6 +117,7 @@ namespace flashgg {
 
         std::unique_ptr<vector<UntaggedTag> > tags( new vector<UntaggedTag> );
         std::unique_ptr<vector<TagTruthBase> > truths( new vector<TagTruthBase> );
+        std::unique_ptr<vector<StageOneTag> > stage1tags( new vector<StageOneTag> );
 
         Point higgsVtx;
         if( ! evt.isRealData() ) {
@@ -148,9 +151,14 @@ namespace flashgg {
             tag_obj.setCategoryNumber( catnum );
 
             unsigned int jetCollectionIndex = diPhotons->ptrAt( candIndex )->jetCollectionIndex();
-            tag_obj.computeStage1Kinematics( Jets[jetCollectionIndex] );
 
             tag_obj.includeWeights( *dipho );
+
+            StageOneTag stage1tag_obj( dipho, mvares );
+            stage1tag_obj.setDiPhotonIndex( candIndex );
+            stage1tag_obj.setSystLabel( systLabel_ );
+            stage1tag_obj.includeWeights( *dipho );
+            stage1tag_obj.computeStage1Kinematics( Jets[jetCollectionIndex] );
 
             bool passScaledPtCuts = 1;
             if ( requireScaledPtCuts_ ) {
@@ -164,6 +172,7 @@ namespace flashgg {
 
             if( passScaledPtCuts && tag_obj.categoryNumber() >= 0 ) {
                 tags->push_back( tag_obj );
+                stage1tags->push_back( stage1tag_obj );
                 if( ! evt.isRealData() ) {
                     TagTruthBase truth_obj;
                     truth_obj.setGenPV( higgsVtx );
@@ -177,12 +186,14 @@ namespace flashgg {
                         truth_obj.setHTXSInfo( 0, 0, 0, 0., 0. );
                     }
                     truths->push_back( truth_obj );
-                    tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx++ ) ) );
+                    tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx ) ) );
+                    stage1tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTagTruth, idx++ ) ) );
                 }
             }
         }
         evt.put( std::move( tags ) );
         evt.put( std::move( truths ) );
+        evt.put( std::move( stage1tags ), "stageone" );
     }
 }
 

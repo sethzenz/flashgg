@@ -13,6 +13,7 @@
 #include "flashgg/DataFormats/interface/Jet.h"
 #include "flashgg/DataFormats/interface/DiPhotonCandidate.h"
 #include "flashgg/DataFormats/interface/VHHadronicTag.h"
+#include "flashgg/DataFormats/interface/StageOneTag.h"
 
 #include "flashgg/DataFormats/interface/VHTagTruth.h"
 #include "DataFormats/Common/interface/RefToPtr.h"
@@ -115,6 +116,8 @@ namespace flashgg {
         }
         produces<vector<VHHadronicTag> >();
         produces<vector<VHTagTruth> >();
+        produces<vector<StageOneTag> >("stageone");
+
     }
 
     void VHHadronicTagProducer::produce( Event &evt, const EventSetup & )
@@ -149,6 +152,8 @@ namespace flashgg {
 
         std::unique_ptr<vector<VHHadronicTag> > vhhadtags( new vector<VHHadronicTag> );
         std::unique_ptr<vector<VHTagTruth> > truths( new vector<VHTagTruth> );
+        std::unique_ptr<vector<StageOneTag> > stage1tags( new vector<StageOneTag> );
+
         
         Point higgsVtx;
         bool associatedZ=0;
@@ -305,9 +310,14 @@ namespace flashgg {
             vhhadtag_obj.setDiPhotonIndex( diphoIndex );
             vhhadtag_obj.setSystLabel( systLabel_ );
 
-            vhhadtag_obj.computeStage1Kinematics( Jets[jetCollectionIndex] ); // DO NOT give dijet pT here, that would be interpreted as leptonic
+            StageOneTag stage1tag_obj( dipho, mvares );
+            stage1tag_obj.setSystLabel( systLabel_ );
+            stage1tag_obj.computeStage1Kinematics( Jets[jetCollectionIndex] ); // DO NOT give dijet pT here, that would be interpreted as leptonic
+            stage1tag_obj.includeWeights(vhhadtag_obj);
+
 
             vhhadtags->push_back( vhhadtag_obj );
+            stage1tags->push_back( stage1tag_obj );
 
             if( ! evt.isRealData() ) {
                 VHTagTruth truth_obj;
@@ -330,11 +340,13 @@ namespace flashgg {
                 truth_obj.setVhasMissingLeptons( VhasMissingLeptons );
                 truth_obj.setVpt( Vpt );
                 truths->push_back( truth_obj );
-                vhhadtags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
+                vhhadtags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx ) ) );
+                stage1tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
             }
         }
         evt.put( std::move( vhhadtags ) );
         evt.put( std::move( truths ) );
+        evt.put( std::move( stage1tags ), "stageone" );
     }
 
 

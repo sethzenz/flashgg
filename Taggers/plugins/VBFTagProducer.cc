@@ -12,7 +12,7 @@
 #include "flashgg/DataFormats/interface/VBFMVAResult.h"
 #include "flashgg/DataFormats/interface/VBFTag.h"
 #include "flashgg/DataFormats/interface/VBFTagTruth.h"
-
+#include "flashgg/DataFormats/interface/StageOneTag.h"
 #include "DataFormats/Common/interface/RefToPtr.h"
 
 #include "flashgg/DataFormats/interface/PDFWeightObject.h"
@@ -101,6 +101,8 @@ namespace flashgg {
 
         produces<vector<VBFTag> >();
         produces<vector<VBFTagTruth> >();
+        produces<vector<StageOneTag> >("stageone");
+        produces<vector<TagTruthBase> >("stageone");
     }
 
     int VBFTagProducer::chooseCategory( float mvavalue )
@@ -147,9 +149,13 @@ namespace flashgg {
 
         std::unique_ptr<vector<VBFTag> >      tags  ( new vector<VBFTag> );
         std::unique_ptr<vector<VBFTagTruth> > truths( new vector<VBFTagTruth> );
+        std::unique_ptr<vector<StageOneTag> > stage1tags( new vector<StageOneTag> );
+        std::unique_ptr<vector<TagTruthBase> > stage1truths( new vector<TagTruthBase> );
+
 
         unsigned int idx = 0;
         edm::RefProd<vector<VBFTagTruth> > rTagTruth = evt.getRefBeforePut<vector<VBFTagTruth> >();
+        edm::RefProd<vector<TagTruthBase> > rTag1Truth = evt.getRefBeforePut<vector<TagTruthBase> >("stageone");
 
         unsigned int index_leadq       = std::numeric_limits<unsigned int>::max();
         unsigned int index_subleadq    = std::numeric_limits<unsigned int>::max();
@@ -203,6 +209,12 @@ namespace flashgg {
             tag_obj.setSystLabel    ( systLabel_ );
 
             tag_obj.includeWeights( *dipho );
+
+            StageOneTag stage1tag_obj( dipho, mvares, vbfdipho_mvares );
+            stage1tag_obj.setDiPhotonIndex( candIndex );
+            stage1tag_obj.setSystLabel( systLabel_ );
+
+
             if ( tag_obj.VBFMVA().dijet_Mjj > 0. ) {
 
                 // We don't want to include all the jet weights because btag weights are not relevant
@@ -238,7 +250,7 @@ namespace flashgg {
                     tag_obj.setWeight("UnmatchedPUWeightUp01sigma", tag_obj.centralWeight() * j1upadjust * j2upadjust );
                     tag_obj.setWeight("UnmatchedPUWeightDown01sigma", tag_obj.centralWeight() * j1downadjust * j2downadjust );
                 }
-
+                stage1tag_obj.includeWeights(tag_obj);
                 if (false && systLabel_ == "") {
                     for (auto it = tag_obj.weightListBegin() ; it != tag_obj.weightListEnd(); it++) {
                         std::cout << "SCZ Weight Debug " << *it << " " << tag_obj.weight(*it) << std::endl;
@@ -319,7 +331,8 @@ namespace flashgg {
             tag_obj.setCategoryNumber( catnum );
 
             unsigned int jetCollectionIndex = diPhotons->ptrAt( candIndex )->jetCollectionIndex();
-            tag_obj.computeStage1Kinematics( Jets[jetCollectionIndex] );
+            stage1tag_obj.computeStage1Kinematics( Jets[jetCollectionIndex] );
+            stage1tag_obj.setCategoryNumber( catnum );
 
             unsigned int index_gp_leadjet = std::numeric_limits<unsigned int>::max();
             unsigned int index_gp_subleadjet = std::numeric_limits<unsigned int>::max();
@@ -335,6 +348,7 @@ namespace flashgg {
             float dr_gj_leadjet = 999.;
             float dr_gj_subleadjet = 999.;
             VBFTagTruth truth_obj;
+            TagTruthBase truth1_obj;
             if( ! evt.isRealData() ) {
                 for( unsigned int genLoop = 0 ; genLoop < genParticles->size(); genLoop++ ) {
                     edm::Ptr<reco::GenParticle> part = genParticles->ptrAt( genLoop );
@@ -388,14 +402,21 @@ namespace flashgg {
                 if( index_subsubleadq < std::numeric_limits<unsigned int>::max()) { truth_obj.setSubSubLeadingParton( genParticles->ptrAt( index_subsubleadq ));}
 
                 truth_obj.setGenPV( higgsVtx );
+                truth1_obj.setGenPV( higgsVtx );
                 if ( stage0cat.isValid() ) {
                     truth_obj.setHTXSInfo( *( stage0cat.product() ),
                                            *( stage1cat.product() ),
                                            *( njets.product() ),
                                            *( pTH.product() ),
                                            *( pTV.product() ) );
+                    truth1_obj.setHTXSInfo( *( stage0cat.product() ),
+                                           *( stage1cat.product() ),
+                                           *( njets.product() ),
+                                           *( pTH.product() ),
+                                           *( pTV.product() ) );
                 } else {
                     truth_obj.setHTXSInfo( 0, 0, 0, 0., 0. );
+                    truth1_obj.setHTXSInfo( 0, 0, 0, 0., 0. );
                 }
 
                 // Yacine: filling tagTruth Tag with 3 jets matchings
@@ -593,15 +614,20 @@ namespace flashgg {
             // saving the collection
             if( VBFpresel && tag_obj.categoryNumber() >= 0 ) {
                 tags->push_back( tag_obj );
+                stage1tags->push_back( stage1tag_obj);
                 if( ! evt.isRealData() ) {
                     truths->push_back( truth_obj );
-                    tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VBFTagTruth> >( rTagTruth, idx++ ) ) );
+                    stage1truths->push_back( truth1_obj );
+                    tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VBFTagTruth> >( rTagTruth, idx ) ) );
+                    stage1tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<TagTruthBase> >( rTag1Truth, idx++ ) ) );
                 }
             }
         }
 
         evt.put( std::move( tags ) );
         evt.put( std::move( truths ) );
+        evt.put( std::move( stage1tags ), "stageone" );
+        evt.put ( std::move( stage1truths ), "stageone" );
     }
 }
 

@@ -24,6 +24,8 @@
 
 #include "flashgg/DataFormats/interface/VHTagTruth.h"
 #include "flashgg/DataFormats/interface/TagTruthBase.h"
+#include "flashgg/DataFormats/interface/StageOneTag.h"
+
 #include "DataFormats/Common/interface/RefToPtr.h"
 
 #include <vector>
@@ -169,6 +171,8 @@ namespace flashgg {
         }
         produces<vector<WHLeptonicTag> >();
         produces<vector<VHTagTruth> >();
+        produces<vector<StageOneTag> >("stageone");
+
     }
 
     void WHLeptonicTagProducer::produce( Event &evt, const EventSetup & )
@@ -205,6 +209,8 @@ namespace flashgg {
         Handle<View<reco::GenParticle> > genParticles;
 
         std::unique_ptr<vector<WHLeptonicTag> > whleptonictags( new vector<WHLeptonicTag> );
+        std::unique_ptr<vector<StageOneTag> > stage1tags( new vector<StageOneTag> );
+
 
         Handle<View<flashgg::Met> > METs;
         evt.getByToken( METToken_, METs );
@@ -431,7 +437,10 @@ namespace flashgg {
 
                 float px = theMET->getCorPx() + lpx;
                 float py = theMET->getCorPy() + lpy;
-                whleptonictags_obj.computeStage1Kinematics( Jets[jetCollectionIndex], sqrt(px*px+py*py), leta, lphi );
+                StageOneTag stage1tag_obj( dipho, mvares );
+                stage1tag_obj.setSystLabel( systLabel_ );
+                stage1tag_obj.computeStage1Kinematics( Jets[jetCollectionIndex], sqrt(px*px+py*py), leta, lphi );
+                stage1tags->push_back(stage1tag_obj);
 
                 whleptonictags->push_back( whleptonictags_obj );
                 if( ! evt.isRealData() ) 
@@ -456,12 +465,15 @@ namespace flashgg {
                         truth_obj.setVhasMissingLeptons( VhasMissingLeptons );
                         truth_obj.setVpt( Vpt );
                         truths->push_back( truth_obj );
-                        whleptonictags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
+                        whleptonictags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx ) ) );
+                        stage1tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
                     }
             }
         }
         evt.put( std::move( whleptonictags ) );
         evt.put( std::move( truths ) );
+        evt.put( std::move( stage1tags ), "stageone" );
+
     }
 
 }

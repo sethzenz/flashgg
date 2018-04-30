@@ -28,9 +28,10 @@ flashggTagSorter = cms.EDProducer('FlashggTagSorter',
                                   MaxObjectWeightWarning = cms.double(2.),
                                   StoreOtherTagInfo = cms.bool(False),
                                   BlindedSelectionPrintout = cms.bool(False),
-                                  Debug = cms.untracked.bool(False),
+                                  Debug = cms.untracked.bool(True),
                                   CreateNoTag = cms.bool(False),  # Placeholder for tracking rejected events
                                   HTXSTags = HTXSInputTags ,
-                                  Stage1Printout = cms.bool(False)
+                                  Stage1Printout = cms.bool(False),
+                                  DoStage1RecoTags = cms.bool(False)
                                   )
 

@@ -11,6 +11,8 @@
 #include "flashgg/DataFormats/interface/Jet.h"
 #include "flashgg/DataFormats/interface/DiPhotonCandidate.h"
 #include "flashgg/DataFormats/interface/VHLeptonicLooseTag.h"
+#include "flashgg/DataFormats/interface/StageOneTag.h"
+
 #include "flashgg/DataFormats/interface/Met.h"
 #include "flashgg/DataFormats/interface/Electron.h"
 #include "flashgg/DataFormats/interface/Muon.h"
@@ -170,6 +172,8 @@ namespace flashgg {
         }
         produces<vector<VHLeptonicLooseTag> >();
         produces<vector<VHTagTruth> >();
+        produces<vector<StageOneTag> >("stageone");
+
     }
 
     void VHLeptonicLooseTagProducer::produce( Event &evt, const EventSetup & )
@@ -207,6 +211,9 @@ namespace flashgg {
 
         std::unique_ptr<vector<VHLeptonicLooseTag> > VHLeptonicLooseTags( new vector<VHLeptonicLooseTag> );
         std::unique_ptr<vector<VHTagTruth> > truths( new vector<VHTagTruth> );
+        std::unique_ptr<vector<StageOneTag> > stage1tags( new vector<StageOneTag> );
+
+
 
         Point higgsVtx;
         bool associatedZ=0;
@@ -381,16 +388,21 @@ namespace flashgg {
                                                rho_, evt.isRealData() );
             
 
+            StageOneTag stage1tag_obj( dipho, mvares );
+            stage1tag_obj.setSystLabel( systLabel_ );
         
             if( !(tagElectrons.size() > 0) && !(tagMuons.size()>0) ) { continue; }
             //including SFs for leading muon or electron
             if(tagMuons.size()>0){
                 VHLeptonicLooseTags_obj.includeWeightsByLabel( *tagMuons.at(0), "MuonWeight");
-                VHLeptonicLooseTags_obj.computeStage1Kinematics( Jets[jetCollectionIndex], tagMuons.at(0)->pt(), tagMuons.at(0)->eta(), tagMuons.at(0)->phi() );
+                stage1tag_obj.computeStage1Kinematics( Jets[jetCollectionIndex], tagMuons.at(0)->pt(), tagMuons.at(0)->eta(), tagMuons.at(0)->phi() );
             } else if (tagElectrons.size() > 0){
                 VHLeptonicLooseTags_obj.includeWeights( *tagElectrons.at(0));
-                VHLeptonicLooseTags_obj.computeStage1Kinematics( Jets[jetCollectionIndex], tagElectrons.at(0)->pt(), tagElectrons.at(0)->eta(),tagElectrons.at(0)->phi() );
+                stage1tag_obj.computeStage1Kinematics( Jets[jetCollectionIndex], tagElectrons.at(0)->pt(), tagElectrons.at(0)->eta(),tagElectrons.at(0)->phi() );
             }
+
+            stage1tag_obj.includeWeights(VHLeptonicLooseTags_obj);
+            
 
             /*  
                 //uncomment if we want to keep track of lepton vs muon tagged event
@@ -449,6 +461,7 @@ namespace flashgg {
                 VHLeptonicLooseTags_obj.setDiPhotonIndex( diphoIndex );
                 VHLeptonicLooseTags_obj.setSystLabel( systLabel_ );
                 VHLeptonicLooseTags->push_back( VHLeptonicLooseTags_obj );
+                stage1tags->push_back(stage1tag_obj);
                 if( ! evt.isRealData() ) {
                     VHTagTruth truth_obj;
                     truth_obj.setGenPV( higgsVtx );
@@ -470,12 +483,14 @@ namespace flashgg {
                     truth_obj.setVhasMissingLeptons( VhasMissingLeptons );
                     truth_obj.setVpt( Vpt );
                     truths->push_back( truth_obj );
-                    VHLeptonicLooseTags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
+                    VHLeptonicLooseTags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx ) ) );
+                    stage1tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
                 }
             }
         }
         evt.put( std::move( VHLeptonicLooseTags ) );
         evt.put( std::move( truths ) );
+        evt.put( std::move( stage1tags), "stageone" );
     }
 
 }

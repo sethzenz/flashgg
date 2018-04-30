@@ -16,7 +16,7 @@
 //#include "flashgg/DataFormats/interface/VBFDiPhoDiJetMVAResult.h"
 //#include "flashgg/DataFormats/interface/VBFMVAResult.h"
 #include "flashgg/DataFormats/interface/VHMetTag.h"
-
+#include "flashgg/DataFormats/interface/StageOneTag.h"
 #include "flashgg/DataFormats/interface/VHTagTruth.h"
 #include "DataFormats/Common/interface/RefToPtr.h"
 
@@ -110,6 +110,8 @@ namespace flashgg {
 
         produces<vector<VHMetTag> >();
         produces<vector<VHTagTruth> >();
+        produces<vector<StageOneTag> >("stageone");
+
         photonCollection_=iConfig.getParameter<InputTag> ( "DiPhotonTag" );
 
     }
@@ -146,6 +148,8 @@ namespace flashgg {
 
         std::unique_ptr<vector<VHMetTag> > vhettags( new vector<VHMetTag> );
         std::unique_ptr<vector<VHTagTruth> > truths( new vector<VHTagTruth> );
+        std::unique_ptr<vector<StageOneTag> > stage1tags( new vector<StageOneTag> );
+
         
         Point higgsVtx;
         bool associatedZ=0;
@@ -293,7 +297,6 @@ namespace flashgg {
             tag_obj.setDiPhotonIndex( candIndex );
             tag_obj.setSystLabel( systLabel_ );
             tag_obj.setMet( theMET );
-            tag_obj.computeStage1Kinematics( Jets[jetCollectionIndex], theMET->getCorPt() );
             if(tagJets.size())
                 tag_obj.setJet(tagJets[0]);
             //float newPhi=theMET->corPhi(pat::MET::Type1XY);  //xy-correction is worse | don't use newPhi
@@ -303,6 +306,11 @@ namespace flashgg {
                 if(fabs(deltaPhi(dipho->phi(),tagJets[0]->phi()))>deltaPhiJetMetThreshold_)    {continue;}
             if(theMET->getCorPt()< metPtThreshold_ )   {continue;}
 
+            StageOneTag stage1tag_obj( dipho, mvares );
+            stage1tag_obj.setSystLabel( systLabel_ );
+            stage1tag_obj.computeStage1Kinematics ( Jets[jetCollectionIndex], theMET->getCorPt() );
+            stage1tag_obj.includeWeights( tag_obj );
+            stage1tags->push_back(stage1tag_obj);
             
             
             vhettags->push_back( tag_obj );
@@ -328,11 +336,15 @@ namespace flashgg {
                     truth_obj.setVhasMissingLeptons( VhasMissingLeptons );
                     truth_obj.setVpt( Vpt );
                     truths->push_back( truth_obj );
-                    vhettags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
+                    vhettags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx ) ) );                    
+                    stage1tags->back().setTagTruth( edm::refToPtr( edm::Ref<vector<VHTagTruth> >( rTagTruth, idx++ ) ) );
+
                 }
         }
         evt.put( std::move( vhettags ) );
         evt.put( std::move( truths ) );
+        evt.put( std::move( stage1tags ), "stageone" );
+
     }
 }
 
