@@ -102,6 +102,12 @@ customize.options.register('dumpWorkspace',
                            VarParsing.VarParsing.varType.bool,
                            'dumpWorkspace'
                            )
+customize.options.register('verboseTagDump',
+                           False,
+                           VarParsing.VarParsing.multiplicity.singleton,
+                           VarParsing.VarParsing.varType.bool,
+                           'verboseTagDump'
+                           )
 
 
 print "Printing defaults"
@@ -289,6 +295,7 @@ from flashgg.MetaData.samples_utils import SamplesManager
 
 process.source = cms.Source ("PoolSource",
                              fileNames = cms.untracked.vstring(
+#"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_0_0/3_0_0/GluGluHToGG_M125_13TeV_amcatnloFXFX_pythia8/RunIIFall17-3_0_0-3_0_0-v0-RunIIFall17MiniAOD-94X_mc2017_realistic_v10-v1/180325_164819/0000/myMicroAODOutputFile_1.root"
 #"root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/THQ_HToGG_13TeV-madgraph-pythia8_TuneCUETP8M1/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_100016/0000/myMicroAODOutputFile_9.root"
 #"root://eoscms.cern.ch//eos/cms//store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/bbHToGG_M-125_4FS_ybyt_13TeV_amcatnlo/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_095140/0000/myMicroAODOutputFile_9.root"
 #"root://eoscms.cern.ch//eos/cms//store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIISummer16-2_4_1-25ns_Moriond17/2_4_1/bbHToGG_M-125_4FS_yb2_13TeV_amcatnlo/RunIISummer16-2_4_1-25ns_Moriond17-2_4_1-v0-RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170114_095013/0000/myMicroAODOutputFile_1.root"
@@ -564,16 +571,18 @@ process.flashggTagSorter.BlindedSelectionPrintout = True
 ## Dump merged tags to screen ##
 ################################
 
-#process.load("flashgg/Taggers/flashggTagTester_cfi")
-#process.flashggTagTester.TagSorter = cms.InputTag("flashggSystTagMerger")
-#process.flashggTagTester.ExpectMultiples = cms.untracked.bool(True)
-#process.p += process.flashggTagTester
+#if customize.verboseTagDump:
+#    process.load("flashgg/Taggers/flashggTagTester_cfi")
+#    process.flashggTagTester.TagSorter = cms.InputTag("flashggSystTagMerger")
+#    process.flashggTagTester.ExpectMultiples = cms.untracked.bool(True)
+#    process.p += process.flashggTagTester
 
 ############################################
 ## Additional details on tag sorter steps ##
 ############################################
 
-#process.flashggTagSorter.Debug = True
+if customize.verboseTagDump:
+    process.flashggTagSorter.Debug = True
 
 ##############
 ## Dump EDM ##

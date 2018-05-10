@@ -73,6 +73,7 @@ namespace flashgg {
         if(y.hasSwitchToGain1()) gain=1;
         if(y.hasSwitchToGain6()) gain=6;
 
+        if (run_number_ >= 294645) run_number_ = 284044; // Debugging 2017 data using end-of-2016                                                                                                                                            
         if( overall_range_( y ) ) {
             // Nothing will happen, with no warning, if the bin count doesn't match expected options
             // TODO for production: make this behavior more robust

@@ -66,6 +66,8 @@ namespace flashgg {
 
     void PhotonScaleEGMTool::applyCorrection( flashgg::Photon &y, int syst_shift )
     {
+        if (run_number_ >= 294645) run_number_ = 284044; // Debugging 2017 data using end-of-2016
+
         unsigned int gain=12;
         if(y.hasSwitchToGain1()) gain=1;
         if(y.hasSwitchToGain6()) gain=6;
