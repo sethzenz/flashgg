@@ -1,0 +1,1 @@
+fggRunJobs.py --load SingleElectron_3_0_1.json -d SingleElectron-301-2018-05-03 -x cmsRun moriond_vbf_dumper_cfg.py maxEvents=-1 runOnZee=True -q 8nh useAAA=0 targetLumi=1.00e+3 pujidWP=none lumiMask=/afs/cern.ch/work/s/sethzenz/fromscratch191/CMSSW_9_4_4/src/flashgg/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt -n 100

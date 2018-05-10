@@ -1,0 +1,8 @@
+{
+    "cmdLine"  : "campaign=RunIIFall17-3_0_0",
+    "processes": {
+	"Data"   : [
+"/SingleElectron/sethzenz-RunIIFall17-3_0_0-3_0_0-v0-Run2017D-17Nov2017-v1-a18f46d96a188391b5acca7d030a860e/USER"
+		   ]
+    }
+}
