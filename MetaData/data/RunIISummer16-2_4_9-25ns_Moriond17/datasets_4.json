@@ -52467,6 +52467,7 @@
                 "weights": 23826
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }
 }

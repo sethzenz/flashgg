@@ -31223,6 +31223,7 @@
                 "weights": 14825
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }, 
     "/SingleElectron/sethzenz-RunIISummer16-2_4_9-25ns_Moriond17-2_4_9-v0-Run2016H-03Feb2017_ver3-v1-0df09993833977462c9629fc2d0d4019/USER": {
@@ -33139,6 +33140,7 @@
                 "weights": 16138
             }
         ], 
+        "specialPrepend": "root://gfe02.grid.hep.ph.ic.ac.uk:1095/",
         "vetted": true
     }
 }
