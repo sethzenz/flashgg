@@ -1,0 +1,267 @@
+# Conditions read from  CMS_CONDITIONS  via FrontierProd 
+ ################################################################### 
+ # WARNING: this module is deprecated.                             # 
+ # Please use CondCore.CondDB.CondDB_cfi.py                        # 
+ ################################################################### 
+21-Aug-2018 16:46:02 CEST  Initiating request to open file file:myMicroAODOutputFile.root
+21-Aug-2018 16:46:03 CEST  Successfully opened file file:myMicroAODOutputFile.root
+Begin processing the 1st record. Run 1, Event 225302, LumiSection 1129 at 21-Aug-2018 16:46:26.879 CEST
+[UNTAGGED] category 2 mass=129.605, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.100883,0.167083,-11.2935)
+Begin processing the 2nd record. Run 1, Event 225301, LumiSection 1129 at 21-Aug-2018 16:46:27.800 CEST
+[UNTAGGED] category 1 mass=123.923, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104759,0.168907,-5.26192)
+Begin processing the 3rd record. Run 1, Event 225303, LumiSection 1129 at 21-Aug-2018 16:46:27.841 CEST
+[NO TAG]
+Begin processing the 4th record. Run 1, Event 225304, LumiSection 1129 at 21-Aug-2018 16:46:27.858 CEST
+[UNTAGGED] category 2 mass=125.179, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.102315,0.169403,8.86518)
+Begin processing the 5th record. Run 1, Event 225307, LumiSection 1129 at 21-Aug-2018 16:46:27.871 CEST
+[NO TAG]
+Begin processing the 6th record. Run 1, Event 225305, LumiSection 1129 at 21-Aug-2018 16:46:27.885 CEST
+[NO TAG]
+Begin processing the 7th record. Run 1, Event 225308, LumiSection 1129 at 21-Aug-2018 16:46:27.889 CEST
+[NO TAG]
+Begin processing the 8th record. Run 1, Event 225306, LumiSection 1129 at 21-Aug-2018 16:46:27.909 CEST
+[NO TAG]
+Begin processing the 9th record. Run 1, Event 225310, LumiSection 1129 at 21-Aug-2018 16:46:27.913 CEST
+[UNTAGGED] category 3 mass=125.344, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104468,0.16965,1.94258)
+Begin processing the 10th record. Run 1, Event 225309, LumiSection 1129 at 21-Aug-2018 16:46:27.923 CEST
+[NO TAG]
+Begin processing the 11th record. Run 1, Event 225313, LumiSection 1129 at 21-Aug-2018 16:46:27.928 CEST
+[NO TAG]
+Begin processing the 12th record. Run 1, Event 225311, LumiSection 1129 at 21-Aug-2018 16:46:27.938 CEST
+[NO TAG]
+Begin processing the 13th record. Run 1, Event 225315, LumiSection 1129 at 21-Aug-2018 16:46:27.943 CEST
+[NO TAG]
+Begin processing the 14th record. Run 1, Event 225317, LumiSection 1129 at 21-Aug-2018 16:46:27.947 CEST
+[UNTAGGED] category 3 mass=122.646, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104806,0.168405,-6.70126)
+Begin processing the 15th record. Run 1, Event 225314, LumiSection 1129 at 21-Aug-2018 16:46:27.958 CEST
+[NO TAG]
+Begin processing the 16th record. Run 1, Event 225320, LumiSection 1129 at 21-Aug-2018 16:46:27.968 CEST
+[NO TAG]
+Begin processing the 17th record. Run 1, Event 225318, LumiSection 1129 at 21-Aug-2018 16:46:27.976 CEST
+[NO TAG]
+Begin processing the 18th record. Run 1, Event 225319, LumiSection 1129 at 21-Aug-2018 16:46:27.991 CEST
+[NO TAG]
+Begin processing the 19th record. Run 1, Event 225323, LumiSection 1129 at 21-Aug-2018 16:46:27.997 CEST
+[NO TAG]
+Begin processing the 20th record. Run 1, Event 225324, LumiSection 1129 at 21-Aug-2018 16:46:28.002 CEST
+[NO TAG]
+Begin processing the 21st record. Run 1, Event 225325, LumiSection 1129 at 21-Aug-2018 16:46:28.008 CEST
+[NO TAG]
+Begin processing the 22nd record. Run 1, Event 225312, LumiSection 1129 at 21-Aug-2018 16:46:28.014 CEST
+[NO TAG]
+Begin processing the 23rd record. Run 1, Event 225329, LumiSection 1129 at 21-Aug-2018 16:46:28.037 CEST
+[NO TAG]
+Begin processing the 24th record. Run 1, Event 225321, LumiSection 1129 at 21-Aug-2018 16:46:28.051 CEST
+[NO TAG]
+Begin processing the 25th record. Run 1, Event 225327, LumiSection 1129 at 21-Aug-2018 16:46:28.063 CEST
+[UNTAGGED] category 2 mass=121.332, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105117,0.171104,1.68752)
+Begin processing the 26th record. Run 1, Event 225316, LumiSection 1129 at 21-Aug-2018 16:46:28.075 CEST
+[NO TAG]
+Begin processing the 27th record. Run 1, Event 225332, LumiSection 1129 at 21-Aug-2018 16:46:28.085 CEST
+[NO TAG]
+Begin processing the 28th record. Run 1, Event 225326, LumiSection 1129 at 21-Aug-2018 16:46:28.089 CEST
+[NO TAG]
+Begin processing the 29th record. Run 1, Event 225322, LumiSection 1129 at 21-Aug-2018 16:46:28.093 CEST
+[UNTAGGED] category 2 mass=123.96, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.106346,0.168845,10.4215)
+Begin processing the 30th record. Run 1, Event 225328, LumiSection 1129 at 21-Aug-2018 16:46:28.105 CEST
+[UNTAGGED] category 3 mass=124.053, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104698,0.168325,-6.48628)
+Begin processing the 31st record. Run 1, Event 225331, LumiSection 1129 at 21-Aug-2018 16:46:28.119 CEST
+[UNTAGGED] category 3 mass=123.513, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.106337,0.17062,7.3691)
+Begin processing the 32nd record. Run 1, Event 225333, LumiSection 1129 at 21-Aug-2018 16:46:28.131 CEST
+[UNTAGGED] category 2 mass=123.734, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105664,0.170898,-7.28991)
+Begin processing the 33rd record. Run 1, Event 225330, LumiSection 1129 at 21-Aug-2018 16:46:28.145 CEST
+[UNTAGGED] category 3 mass=121.509, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105317,0.167656,-8.43683)
+Begin processing the 34th record. Run 1, Event 225336, LumiSection 1129 at 21-Aug-2018 16:46:28.157 CEST
+[NO TAG]
+Begin processing the 35th record. Run 1, Event 225338, LumiSection 1129 at 21-Aug-2018 16:46:28.168 CEST
+[UNTAGGED] category 1 mass=121.295, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.106548,0.168798,-1.33474)
+Begin processing the 36th record. Run 1, Event 225334, LumiSection 1129 at 21-Aug-2018 16:46:28.183 CEST
+[NO TAG]
+Begin processing the 37th record. Run 1, Event 225340, LumiSection 1129 at 21-Aug-2018 16:46:28.187 CEST
+[UNTAGGED] category 2 mass=123.716, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104126,0.1692,-6.18671)
+Begin processing the 38th record. Run 1, Event 225335, LumiSection 1129 at 21-Aug-2018 16:46:28.196 CEST
+[NO TAG]
+Begin processing the 39th record. Run 1, Event 225337, LumiSection 1129 at 21-Aug-2018 16:46:28.200 CEST
+[UNTAGGED] category 2 mass=120.145, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104674,0.16949,-4.57198)
+Begin processing the 40th record. Run 1, Event 225341, LumiSection 1129 at 21-Aug-2018 16:46:28.210 CEST
+[UNTAGGED] category 1 mass=123.816, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.103199,0.167982,0.907379)
+Begin processing the 41st record. Run 1, Event 225344, LumiSection 1129 at 21-Aug-2018 16:46:28.218 CEST
+[UNTAGGED] category 2 mass=120.191, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.108004,0.16838,5.53637)
+Begin processing the 42nd record. Run 1, Event 225342, LumiSection 1129 at 21-Aug-2018 16:46:28.226 CEST
+[UNTAGGED] category 1 mass=125.048, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105178,0.168426,-3.53446)
+Begin processing the 43rd record. Run 1, Event 225346, LumiSection 1129 at 21-Aug-2018 16:46:28.238 CEST
+[NO TAG]
+Begin processing the 44th record. Run 1, Event 225347, LumiSection 1129 at 21-Aug-2018 16:46:28.242 CEST
+[UNTAGGED] category 1 mass=126.1, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104597,0.16902,-1.03239)
+Begin processing the 45th record. Run 1, Event 225345, LumiSection 1129 at 21-Aug-2018 16:46:28.251 CEST
+[NO TAG]
+Begin processing the 46th record. Run 1, Event 225339, LumiSection 1129 at 21-Aug-2018 16:46:28.267 CEST
+[NO TAG]
+Begin processing the 47th record. Run 1, Event 225349, LumiSection 1129 at 21-Aug-2018 16:46:28.276 CEST
+[UNTAGGED] category 2 mass=122.064, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.10419,0.1718,0.843154)
+Begin processing the 48th record. Run 1, Event 225348, LumiSection 1129 at 21-Aug-2018 16:46:28.298 CEST
+[NO TAG]
+Begin processing the 49th record. Run 1, Event 225354, LumiSection 1129 at 21-Aug-2018 16:46:28.302 CEST
+[UNTAGGED] category 1 mass=123.14, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105303,0.167545,-0.80805)
+Begin processing the 50th record. Run 1, Event 225352, LumiSection 1129 at 21-Aug-2018 16:46:28.314 CEST
+[UNTAGGED] category 1 mass=123.836, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104554,0.166871,-10.2144)
+Begin processing the 51st record. Run 1, Event 225355, LumiSection 1129 at 21-Aug-2018 16:46:28.332 CEST
+[NO TAG]
+Begin processing the 52nd record. Run 1, Event 225350, LumiSection 1129 at 21-Aug-2018 16:46:28.337 CEST
+[NO TAG]
+Begin processing the 53rd record. Run 1, Event 225357, LumiSection 1129 at 21-Aug-2018 16:46:28.343 CEST
+[NO TAG]
+Begin processing the 54th record. Run 1, Event 225353, LumiSection 1129 at 21-Aug-2018 16:46:28.352 CEST
+[NO TAG]
+Begin processing the 55th record. Run 1, Event 225356, LumiSection 1129 at 21-Aug-2018 16:46:28.362 CEST
+[UNTAGGED] category 1 mass=124.979, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.10553,0.168228,0.85687)
+Begin processing the 56th record. Run 1, Event 225343, LumiSection 1129 at 21-Aug-2018 16:46:28.372 CEST
+[NO TAG]
+Begin processing the 57th record. Run 1, Event 225358, LumiSection 1129 at 21-Aug-2018 16:46:28.383 CEST
+[UNTAGGED] category 1 mass=124.406, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105946,0.168186,4.14837)
+Begin processing the 58th record. Run 1, Event 225364, LumiSection 1129 at 21-Aug-2018 16:46:28.393 CEST
+[UNTAGGED] category 2 mass=124.019, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105105,0.167071,-3.67369)
+Begin processing the 59th record. Run 1, Event 225351, LumiSection 1129 at 21-Aug-2018 16:46:28.404 CEST
+[UNTAGGED] category 1 mass=125.187, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105433,0.168157,10.8125)
+Begin processing the 60th record. Run 1, Event 225362, LumiSection 1129 at 21-Aug-2018 16:46:28.419 CEST
+[NO TAG]
+Begin processing the 61st record. Run 1, Event 225359, LumiSection 1129 at 21-Aug-2018 16:46:28.429 CEST
+[UNTAGGED] category 2 mass=128.169, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.106564,0.168524,-4.46823)
+Begin processing the 62nd record. Run 1, Event 225370, LumiSection 1129 at 21-Aug-2018 16:46:28.441 CEST
+[UNTAGGED] category 1 mass=124.434, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104468,0.169835,1.6266)
+Begin processing the 63rd record. Run 1, Event 225360, LumiSection 1129 at 21-Aug-2018 16:46:28.452 CEST
+[UNTAGGED] category 1 mass=124.157, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.103468,0.17008,10.7079)
+Begin processing the 64th record. Run 1, Event 225363, LumiSection 1129 at 21-Aug-2018 16:46:28.465 CEST
+[NO TAG]
+Begin processing the 65th record. Run 1, Event 225372, LumiSection 1129 at 21-Aug-2018 16:46:28.474 CEST
+[NO TAG]
+Begin processing the 66th record. Run 1, Event 225368, LumiSection 1129 at 21-Aug-2018 16:46:28.486 CEST
+[UNTAGGED] category 2 mass=121.28, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.103998,0.169182,-4.49636)
+Begin processing the 67th record. Run 1, Event 225367, LumiSection 1129 at 21-Aug-2018 16:46:28.501 CEST
+[UNTAGGED] category 2 mass=126.03, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105276,0.167082,-1.81105)
+Begin processing the 68th record. Run 1, Event 225373, LumiSection 1129 at 21-Aug-2018 16:46:28.515 CEST
+[UNTAGGED] category 1 mass=115.513, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.103308,0.168936,-0.448452)
+Begin processing the 69th record. Run 1, Event 225361, LumiSection 1129 at 21-Aug-2018 16:46:28.524 CEST
+[NO TAG]
+Begin processing the 70th record. Run 1, Event 225369, LumiSection 1129 at 21-Aug-2018 16:46:28.536 CEST
+[NO TAG]
+Begin processing the 71st record. Run 1, Event 225365, LumiSection 1129 at 21-Aug-2018 16:46:28.548 CEST
+[NO TAG]
+Begin processing the 72nd record. Run 1, Event 225377, LumiSection 1129 at 21-Aug-2018 16:46:28.552 CEST
+[NO TAG]
+Begin processing the 73rd record. Run 1, Event 225374, LumiSection 1129 at 21-Aug-2018 16:46:28.556 CEST
+[NO TAG]
+Begin processing the 74th record. Run 1, Event 225371, LumiSection 1129 at 21-Aug-2018 16:46:28.564 CEST
+[NO TAG]
+Begin processing the 75th record. Run 1, Event 225366, LumiSection 1129 at 21-Aug-2018 16:46:28.573 CEST
+[NO TAG]
+Begin processing the 76th record. Run 1, Event 225379, LumiSection 1129 at 21-Aug-2018 16:46:28.578 CEST
+[NO TAG]
+Begin processing the 77th record. Run 1, Event 225375, LumiSection 1129 at 21-Aug-2018 16:46:28.589 CEST
+[UNTAGGED] category 2 mass=124.197, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105425,0.169117,0.120663)
+Begin processing the 78th record. Run 1, Event 225378, LumiSection 1129 at 21-Aug-2018 16:46:28.600 CEST
+[NO TAG]
+Begin processing the 79th record. Run 1, Event 225380, LumiSection 1129 at 21-Aug-2018 16:46:28.611 CEST
+[UNTAGGED] category 3 mass=125.563, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.10571,0.167771,-3.66797)
+Begin processing the 80th record. Run 1, Event 225382, LumiSection 1129 at 21-Aug-2018 16:46:28.623 CEST
+[NO TAG]
+Begin processing the 81st record. Run 1, Event 225383, LumiSection 1129 at 21-Aug-2018 16:46:28.636 CEST
+[UNTAGGED] category 2 mass=124.97, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.1045,0.168399,-10.5067)
+Begin processing the 82nd record. Run 1, Event 225385, LumiSection 1129 at 21-Aug-2018 16:46:28.647 CEST
+[NO TAG]
+Begin processing the 83rd record. Run 1, Event 225387, LumiSection 1129 at 21-Aug-2018 16:46:28.658 CEST
+[NO TAG]
+Begin processing the 84th record. Run 1, Event 225389, LumiSection 1129 at 21-Aug-2018 16:46:28.668 CEST
+[NO TAG]
+Begin processing the 85th record. Run 1, Event 225388, LumiSection 1129 at 21-Aug-2018 16:46:28.673 CEST
+[UNTAGGED] category 3 mass=123.755, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.106244,0.167304,-1.192)
+Begin processing the 86th record. Run 1, Event 225381, LumiSection 1129 at 21-Aug-2018 16:46:28.685 CEST
+[NO TAG]
+Begin processing the 87th record. Run 1, Event 225392, LumiSection 1129 at 21-Aug-2018 16:46:28.702 CEST
+[NO TAG]
+Begin processing the 88th record. Run 1, Event 225376, LumiSection 1129 at 21-Aug-2018 16:46:28.707 CEST
+[UNTAGGED] category 0 mass=125.472, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105684,0.168903,-7.35993)
+Begin processing the 89th record. Run 1, Event 225384, LumiSection 1129 at 21-Aug-2018 16:46:28.721 CEST
+[NO TAG]
+Begin processing the 90th record. Run 1, Event 225391, LumiSection 1129 at 21-Aug-2018 16:46:28.733 CEST
+[UNTAGGED] category 1 mass=124.817, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.105683,0.165906,1.30349)
+Begin processing the 91st record. Run 1, Event 225393, LumiSection 1129 at 21-Aug-2018 16:46:28.744 CEST
+[UNTAGGED] category 2 mass=124.94, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.106359,0.168871,0.345793)
+Begin processing the 92nd record. Run 1, Event 225396, LumiSection 1129 at 21-Aug-2018 16:46:28.759 CEST
+[NO TAG]
+Begin processing the 93rd record. Run 1, Event 225398, LumiSection 1129 at 21-Aug-2018 16:46:28.770 CEST
+[NO TAG]
+Begin processing the 94th record. Run 1, Event 225390, LumiSection 1129 at 21-Aug-2018 16:46:28.783 CEST
+[NO TAG]
+Begin processing the 95th record. Run 1, Event 225395, LumiSection 1129 at 21-Aug-2018 16:46:28.793 CEST
+[UNTAGGED] category 2 mass=125.678, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.103475,0.167466,1.22633)
+Begin processing the 96th record. Run 1, Event 225400, LumiSection 1129 at 21-Aug-2018 16:46:28.806 CEST
+[UNTAGGED] category 3 mass=121.223, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.104307,0.166558,0.851801)
+Begin processing the 97th record. Run 1, Event 225397, LumiSection 1129 at 21-Aug-2018 16:46:28.817 CEST
+[UNTAGGED] category 1 mass=126.82, systLabel 
+	[UNTAGGED TRUTH]: genPV=(0.103743,0.168901,-0.713358)
+Begin processing the 98th record. Run 1, Event 225394, LumiSection 1129 at 21-Aug-2018 16:46:28.837 CEST
+[NO TAG]
+Begin processing the 99th record. Run 1, Event 225401, LumiSection 1129 at 21-Aug-2018 16:46:28.848 CEST
+[NO TAG]
+Begin processing the 100th record. Run 1, Event 225402, LumiSection 1129 at 21-Aug-2018 16:46:28.852 CEST
+[NO TAG]
+21-Aug-2018 16:46:28 CEST  Closed file file:myMicroAODOutputFile.root
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 fileAction           -s file_close                             1        1
+    2 fileAction           -s file_open                              2        2
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 fileAction           PostEndRun                        
+    2 fileAction           pre-events       pre-events       
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+System                  3                   3

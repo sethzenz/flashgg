@@ -98,7 +98,18 @@ customize.options.register('dumpWorkspace',
                            VarParsing.VarParsing.varType.bool,
                            'dumpWorkspace'
                            )
-
+customize.options.register('verboseTagDump',
+                           False,
+                           VarParsing.VarParsing.multiplicity.singleton,
+                           VarParsing.VarParsing.varType.bool,
+                           'verboseTagDump'
+                           )
+customize.options.register('verboseSystDump',
+                           False,
+                           VarParsing.VarParsing.multiplicity.singleton,
+                           VarParsing.VarParsing.varType.bool,
+                           'verboseSystDump'
+                           )
 
 print "Printing defaults"
 print 'doFiducial '+str(customize.doFiducial)
@@ -571,6 +582,16 @@ process.flashggTagSorter.BlindedSelectionPrintout = True
 ############################################
 
 #process.flashggTagSorter.Debug = True
+
+if customize.verboseTagDump:
+    process.flashggUpdatedIdMVADiPhotons.Debug = True
+    process.flashggTagSorter.Debug = True
+    customize.maxEvents = 10
+                           
+if customize.verboseSystDump:
+    turnOnAllSystematicsDebug(process)
+    customize.maxEVents = 10
+
 
 ##############
 ## Dump EDM ##

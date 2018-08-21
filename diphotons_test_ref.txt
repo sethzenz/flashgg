@@ -1,0 +1,28 @@
+# Conditions read from  CMS_CONDITIONS  via FrontierProd 
+ ################################################################### 
+ # WARNING: this module is deprecated.                             # 
+ # Please use CondCore.CondDB.CondDB_cfi.py                        # 
+ ################################################################### 
+21-Aug-2018 16:46:51 CEST  Initiating request to open file file:myMicroAODOutputFile.root
+21-Aug-2018 16:46:51 CEST  Successfully opened file file:myMicroAODOutputFile.root
+here diphotonDumper/histograms
+Begin processing the 1st record. Run 1, Event 225302, LumiSection 1129 at 21-Aug-2018 16:47:17.327 CEST
+21-Aug-2018 16:47:18 CEST  Closed file file:myMicroAODOutputFile.root
+
+=============================================
+
+MessageLogger Summary
+
+ type     category        sev    module        subroutine        count    total
+ ---- -------------------- -- ---------------- ----------------  -----    -----
+    1 fileAction           -s file_close                             1        1
+    2 fileAction           -s file_open                              2        2
+
+ type    category    Examples: run/evt        run/evt          run/evt
+ ---- -------------------- ---------------- ---------------- ----------------
+    1 fileAction           PostEndRun                        
+    2 fileAction           pre-events       pre-events       
+
+Severity    # Occurrences   Total Occurrences
+--------    -------------   -----------------
+System                  3                   3
