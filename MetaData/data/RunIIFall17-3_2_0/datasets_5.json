@@ -66908,6 +66908,119 @@
                 "nevents": 36605, 
                 "totEvents": 36605, 
                 "weights": 36605
+            }, 
+            {
+                "bad": false, 
+                "events": 43852, 
+                "lumis": {
+                    "304661": [
+                        58, 
+                        59, 
+                        75, 
+                        76, 
+                        87, 
+                        77, 
+                        78, 
+                        168, 
+                        169, 
+                        79, 
+                        80, 
+                        81, 
+                        82, 
+                        132, 
+                        133
+                    ], 
+                    "304671": [
+                        677, 
+                        56, 
+                        57, 
+                        153, 
+                        87, 
+                        89, 
+                        117, 
+                        765, 
+                        766, 
+                        358
+                    ]
+                }, 
+                "name": "/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_2_0/3_2_0/DoubleEG/RunIIFall17-3_2_0-3_2_0-v0-Run2017E-31Mar2018-v1/180817_111315/0001/myMicroAODOutputFile_1487.root", 
+                "nevents": 43852, 
+                "totEvents": 43852, 
+                "weights": 43852
+            }, 
+            {
+                "bad": false, 
+                "events": 45868, 
+                "lumis": {
+                    "304562": [
+                        251, 
+                        252, 
+                        253, 
+                        260, 
+                        261, 
+                        262, 
+                        263, 
+                        264, 
+                        265, 
+                        266, 
+                        267, 
+                        268, 
+                        269, 
+                        270, 
+                        271, 
+                        272, 
+                        273, 
+                        276, 
+                        277, 
+                        280, 
+                        281, 
+                        282, 
+                        283, 
+                        284, 
+                        285
+                    ]
+                }, 
+                "name": "/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_2_0/3_2_0/DoubleEG/RunIIFall17-3_2_0-3_2_0-v0-Run2017E-31Mar2018-v1/180817_111315/0001/myMicroAODOutputFile_1374.root", 
+                "nevents": 45868, 
+                "totEvents": 45868, 
+                "weights": 45868
+            }, 
+            {
+                "bad": false, 
+                "events": 43455, 
+                "lumis": {
+                    "304625": [
+                        375, 
+                        378, 
+                        379, 
+                        380, 
+                        381, 
+                        382, 
+                        383, 
+                        426, 
+                        427, 
+                        428, 
+                        429, 
+                        432, 
+                        433, 
+                        430, 
+                        431, 
+                        434, 
+                        435, 
+                        436, 
+                        437, 
+                        438, 
+                        439, 
+                        478, 
+                        480, 
+                        479, 
+                        481
+                    ]
+                }, 
+                "name": "/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_2_0/3_2_0/DoubleEG/RunIIFall17-3_2_0-3_2_0-v0-Run2017E-31Mar2018-v1/180817_111315/0001/myMicroAODOutputFile_1436.root", 
+                "nevents": 43455, 
+                "totEvents": 43455, 
+                "weights": 43455
             }
         ], 
         "vetted": true

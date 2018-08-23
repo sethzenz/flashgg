@@ -16909,6 +16909,46 @@
                 "nevents": 94599, 
                 "totEvents": 94599, 
                 "weights": 1694070528.0
+            }, 
+            {
+                "bad": false, 
+                "events": 81731, 
+                "name": "/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_2_0/3_2_0/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17-3_2_0-3_2_0-v0-RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/180817_110444/0002/myMicroAODOutputFile_2002.root", 
+                "nevents": 81731, 
+                "totEvents": 81731, 
+                "weights": 1454456320.0
+            }, 
+            {
+                "bad": false, 
+                "events": 96092, 
+                "name": "/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_2_0/3_2_0/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17-3_2_0-3_2_0-v0-RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/180817_110444/0001/myMicroAODOutputFile_1959.root", 
+                "nevents": 96092, 
+                "totEvents": 96092, 
+                "weights": 1716952064.0
+            }, 
+            {
+                "bad": false, 
+                "events": 93693, 
+                "name": "/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_2_0/3_2_0/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17-3_2_0-3_2_0-v0-RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/180817_110444/0001/myMicroAODOutputFile_1874.root", 
+                "nevents": 93693, 
+                "totEvents": 93693, 
+                "weights": 1676428544.0
+            }, 
+            {
+                "bad": false, 
+                "events": 95153, 
+                "name": "/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_2_0/3_2_0/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17-3_2_0-3_2_0-v0-RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/180817_110444/0001/myMicroAODOutputFile_1531.root", 
+                "nevents": 95153, 
+                "totEvents": 95153, 
+                "weights": 1693070208.0
+            }, 
+            {
+                "bad": false, 
+                "events": 94050, 
+                "name": "/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_2_0/3_2_0/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17-3_2_0-3_2_0-v0-RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/180817_110444/0001/myMicroAODOutputFile_1849.root", 
+                "nevents": 94050, 
+                "totEvents": 94050, 
+                "weights": 1676402176.0
             }
         ], 
         "vetted": true
