@@ -4741,6 +4741,14 @@
                 "nevents": 89632, 
                 "totEvents": 89632, 
                 "weights": 89632.0
+            }, 
+            {
+                "bad": false, 
+                "events": 94551, 
+                "name": "/store/group/phys_higgs/cmshgg/sethzenz/flashgg/RunIIFall17-3_2_0/3_2_0/GJet_Pt-20toInf_DoubleEMEnriched_MGG-40to80_TuneCP5_13TeV_Pythia8/RunIIFall17-3_2_0-3_2_0-v0-RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/180817_111721/0000/myMicroAODOutputFile_136.root", 
+                "nevents": 94551, 
+                "totEvents": 94551, 
+                "weights": 94551.0
             }
         ], 
         "vetted": true
